@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OurUI</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #0052CC;
+      --gray-light: #F7F8FA;
+      --card-bg: #E5E7EB;
+      --text-dark: #0A0A0A;
+      --text-muted: #333333;
+      --red: #D32F2F;
+      --purple: #6A1B9A;
+      --green: #2E7D32;
+      --drawer-width: 240px;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Roboto', sans-serif; background-color: var(--gray-light); color: var(--text-dark); line-height: 1.6; padding: 1rem; overflow-x: hidden; }
+    .container { max-width: 480px; margin: 0 auto; }
+
+    /* Header */
+    header { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 0; }
+    .hamburger { width: 32px; height: 24px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 1001; }
+    .hamburger div { height: 4px; background-color: var(--text-dark); border-radius: 2px; transition: transform 0.2s ease, opacity 0.2s ease; }
+    .hamburger.open div:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+    .hamburger.open div:nth-child(2) { opacity: 0; }
+    .hamburger.open div:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+    .logo { font-size: 1.25rem; font-weight: 700; font-family: 'Noto Sans', sans-serif; color: var(--text-dark); }
+
+    /* Auth area (top-right) */
+    .auth-area { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+    .auth-area .btn { padding: 0.5rem 0.85rem; font-size: 0.9rem; border-radius: 999px; font-weight: 700; cursor: pointer; text-decoration: none; }
+    .auth-area .btn.outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
+    .user-circle { width: 36px; height: 36px; border-radius: 50%; background-color: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; }
+
+    /* Drawer & Overlay */
+    .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.2); opacity: 0; visibility: hidden; transition: opacity 0.2s ease; z-index: 1000; }
+    .overlay.active { opacity: 1; visibility: visible; }
+    .drawer { position: fixed; top: 0; left: 0; height: 100%; width: var(--drawer-width); background-color: var(--gray-light); box-shadow: 2px 0 12px rgba(0,0,0,0.2); border-radius: 0 16px 16px 0; transform: translateX(-100%); transition: transform 0.2s ease; z-index: 1001; display: flex; flex-direction: column; }
+    .drawer.active { transform: translateX(0); }
+    .drawer-header { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--card-bg); }
+    .drawer-header .close { font-size: 1.5rem; cursor: pointer; color: var(--text-dark); }
+    .drawer-header .logo-drawer { font-size: 1.25rem; font-weight: 700; margin-left: 1rem; font-family: 'Noto Sans', sans-serif; }
+    .drawer-header .logo-drawer span { color: var(--blue); }
+    .drawer nav { padding: 1rem 0; }
+    .drawer nav a { display: block; padding: 1rem 1.25rem; font-size: 1.125rem; font-weight: 600; color: var(--text-dark); text-decoration: none; margin: 0.25rem 0; border-radius: 8px; transition: background 0.2s; }
+    .drawer nav a:hover { background-color: var(--card-bg); }
+
+    /* Hero Section */
+    .hero { text-align: center; padding: 2rem 0; }
+    .hero h1 { font-size: 2.5rem; font-weight: 700; font-family: 'Noto Sans', sans-serif; }
+    .hero h1 span { color: var(--blue); }
+    .hero h2 { font-size: 1.25rem; margin-top: 0.5rem; font-weight: 600; }
+    .hero p { margin: 1rem 0 2rem; font-size: 1rem; color: var(--text-muted); }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; }
+    .btn { padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 700; border: 2px solid transparent; border-radius: 999px; cursor: pointer; text-decoration: none; }
+    .btn.primary { background-color: var(--blue); color: #fff; }
+    .btn.outline { background: transparent; color: var(--blue); border-color: var(--blue); }
+
+    /* Grey Card Section */
+    .card { background-color: var(--card-bg); border-radius: 16px; padding: 1.5rem; margin-top: 2rem; text-align: center; }
+    .card h3 { font-size: 1.25rem; font-weight: 700; }
+    .card h3 span { color: var(--blue); }
+    .card .subtitle { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+    .card p { margin-bottom: 1rem; color: var(--text-muted); }
+    .card p.left { text-align: left; margin: 0 0 1rem; padding: 0; }
+    .card h2.section-title { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 1rem; font-family: 'Noto Sans', sans-serif; text-align: left; }
+    .card ul { list-style: disc inside; text-align: left; margin-bottom: 1rem; }
+
+    /* Feature Sections */
+    .feature { text-align: center; padding: 2rem 0; }
+    .feature h2 { font-size: 2rem; font-weight: 700; font-family: 'Noto Sans', sans-serif; margin-bottom: 1rem; }
+    .feature h2 span { color: var(--blue); }
+    .feature p { font-size: 1rem; max-width: 440px; margin: 0 auto; color: var(--text-muted); }
+
+    /* Animated Text */
+    .animated-text { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; text-align: left; font-family: 'Noto Sans', sans-serif; }
+
+    /* Footer Nav Box */
+    .footer-nav { background-color: var(--card-bg); padding: 1.5rem; border-radius: 16px; margin-top: 2rem; text-align: left; }
+    .footer-nav .title { font-size: 2rem; font-weight: 700; font-family: 'Noto Sans', sans-serif; margin-bottom: 1rem; }
+    .footer-nav .link { display: block; font-size: 1.25rem; font-weight: 700; color: var(--blue); text-decoration: none; margin-bottom: 0.75rem; }
+    .footer-nav .credit { text-align: center; margin-top: 1.5rem; font-size: 1rem; }
+    .footer-nav .credit .name { color: #6b5e7f; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="hamburger" id="hamburger">
+        <div></div><div></div><div></div>
+      </div>
+      <div class="logo">OurUI</div>
+
+      <!-- Auth area (top-right) -->
+      <div class="auth-area" id="authArea">
+        <!-- Sign up button shown when NOT logged in -->
+        <a id="signupTop" class="btn outline" href="signup.html" style="display:none">Sign Up</a>
+        <!-- User circle shown when logged in (first letter) -->
+        <div id="userCircle" class="user-circle" style="display:none" title="Account"></div>
+      </div>
+    </header>
+
+    <!-- Drawer & Overlay -->
+    <div class="overlay" id="overlay"></div>
+    <div class="drawer" id="drawer">
+      <div class="drawer-header">
+        <span class="close" id="close">✕</span>
+        <div class="logo-drawer">Our<span>UI</span></div>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="apps.html">Apps</a>
+        <a href="mailto:feedback.ourui@outlook.com">Feedback</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1>Our<span>UI</span></h1>
+      <h2>Introducing Unique and epic User Interface.</h2>
+      <p>Explore our apps.</p>
+      <div class="btn-group">
+        <a href="apps.html" class="btn primary">View</a>
+        <a href="mailto:feedback.ourui@outlook.com" class="btn outline">Feedback</a>
+      </div>
+    </div>
+
+    <!-- Grey Card Section -->
+    <div class="card">
+      <h3>OurUI <span>1.0</span></h3>
+      <div class="subtitle">Easy &amp; Fast</div>
+      <p>We respect your feedbacks, please give your views about are apps.</p>
+      <h2 class="section-title">About</h2>
+      <p class="left">OurUI 1.0 is the letest version of OurUI community. 1.0 version come with very morden changes, style and more.</p>
+      <h2 class="section-title">What's New</h2>
+      <ul>
+        <li>New UI</li>
+        <li>Improve Colors and animations</li>
+        <li>More user friendly</li>
+        <li>Unique style</li>
+      </ul>
+      <h2 class="section-title">Version date</h2>
+      <p class="left">Saturday, 26 July 2025</p>
+    </div>
+
+    <!-- Feature Sections -->
+    <div class="feature">
+      <h2>OurUI <span>focus</span> on.</h2>
+    </div>
+    <div class="feature">
+      <h2>Easy to use</h2>
+      <p>Our team focus to create apps that are easy to use and provide user friendly experience to everyone.</p>
+    </div>
+    <div class="feature">
+      <h2>UI Design</h2>
+      <p>We always try to provide something new to users. Our UI give fresh feel and all things look compact.</p>
+    </div>
+    <div class="feature">
+      <h2>Users Feedback</h2>
+      <p>We always try to improve our apps by users feedback. We always ready for your feedback.</p>
+    </div>
+
+    <!-- Animated Text -->
+    <div class="animated-text">
+      OurUI apps <span id="changing-word" style="color: var(--red);">Unique</span> try here.
+    </div>
+
+    <!-- Footer Nav Box -->
+    <div class="footer-nav">
+      <div class="title">OurUI</div>
+      <a href="apps.html" class="link">Apps</a>
+      <a href="mailto:feedback.ourui@outlook.com" class="link">Feedback</a>
+      <a href="about.html" class="link">About</a>
+      <div class="credit">Made by <span class="name">Vishal Vaishnav</span></div>
+    </div>
+  </div>
+
+  <!-- Existing page scripts (menu + animated words) -->
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('close');
+    function toggleMenu() {
+      hamburger.classList.toggle('open');
+      drawer.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+    hamburger.addEventListener('click', toggleMenu);
+    closeBtn.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+
+    // Animated Words
+    const words = [
+      {text: 'Unique', color: 'var(--red)'},
+      {text: 'Modern', color: 'var(--blue)'},
+      {text: 'Epic', color: 'var(--purple)'},
+      {text: 'New Style', color: 'var(--green)'}
+    ];
+    let index = 0;
+    const span = document.getElementById('changing-word');
+    setInterval(() => {
+      index = (index + 1) % words.length;
+      span.textContent = words[index].text;
+      span.style.color = words[index].color;
+    }, 2000);
+  </script>
+
+  <!-- Firebase + Auth script (using CDN) -->
+  <script type="module">
+    // Import Firebase (CDN modular)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    // Your Firebase config (as you provided)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
+      authDomain: "ouruiofficial.firebaseapp.com",
+      projectId: "ouruiofficial",
+      storageBucket: "ouruiofficial.firebasestorage.app",
+      messagingSenderId: "513335403025",
+      appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+      measurementId: "G-X5QWNP8DMK"
+    };
+
+    // Initialize firebase & auth
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const signupTop = document.getElementById('signupTop');
+    const userCircle = document.getElementById('userCircle');
+
+    // Update top-right UI based on auth state
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Show user circle with first letter (displayName or email)
+        signupTop.style.display = 'none';
+        const name = (user.displayName) ? user.displayName : (user.email || 'U');
+        userCircle.textContent = name.charAt(0).toUpperCase();
+        userCircle.style.display = 'flex';
+      } else {
+        // Not logged in: show Sign Up button
+        userCircle.style.display = 'none';
+        signupTop.style.display = 'inline-block';
+      }
+    });
+
+    // When user clicks the circle, go to account page
+    userCircle.addEventListener('click', () => {
+      window.location.href = 'account.html';
+    });
+
+  </script>
+
+</body>
+</html>
