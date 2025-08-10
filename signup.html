@@ -1,399 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cynvia One- Sign Up</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>OurUI - Sign In</title>
     <style>
-        /* (your original styles kept exactly the same) */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; min-height: 100vh; padding: 60px 40px; }
-        .container { max-width: 400px; margin: 0 auto; }
-        .logo { font-size: 22px; font-weight: 700; color: #000; margin-bottom: 16px; text-align: center; letter-spacing: -1px; transition: all 0.5s ease; }
-        .subtitle { font-size: 18px; color: #666; margin-bottom: 80px; font-weight: 400; text-align: center; transition: all 0.5s ease; }
-        .signup-title { font-size: 52px; font-weight: 700; margin-bottom: 60px; color: #000; text-align: left; transition: all 0.5s ease; }
-        .signup-title .up { color: #4a6fa5; }
-        .form-container { transition: all 0.5s ease; }
-        .form-group { margin-bottom: 20px; opacity: 1; transform: translateX(0); transition: all 0.5s ease; }
-        .form-group.hidden { opacity: 0; transform: translateX(-100%); height: 0; margin-bottom: 0; overflow: hidden; }
-        .form-group.slide-in-right { opacity: 0; transform: translateX(100%); }
-        .form-group.slide-in-right.show { opacity: 1; transform: translateX(0); }
-        .input-field { width: 100%; padding: 24px 28px; border: none; border-radius: 50px; background-color: #d8d8d8; font-size: 18px; color: #666; outline: none; transition: all 0.3s ease; }
-        .input-field:focus { background-color: #ccc; color: #333; }
-        .input-field::placeholder { color: #999; font-weight: 400; }
-        .input-field.shake { animation: shake 0.5s ease-in-out; background-color: #ffcccc; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-5px)} 20%,40%,60%,80%{transform:translateX(5px)} }
-        .next-btn, .signup-btn { padding: 22px 40px; border: none; border-radius: 50px; background-color: #4a6fa5; color: white; font-size: 20px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 40px; float: right; min-width: 120px; }
-        .next-btn:hover, .signup-btn:hover { background-color: #3d5a8a; transform: translateY(-2px); }
-        .next-btn:disabled, .signup-btn:disabled { background-color: #ccc; cursor: not-allowed; transform: none; }
-        .success-screen { display: none; text-align: center; padding-top: 100px; }
-        .success-screen.show { display: block; animation: fadeIn 0.8s ease; }
-        .success-logo { font-size: 48px; font-weight: 700; color: #000; margin-bottom: 100px; letter-spacing: -1px; }
-        .success-message { font-size: 52px; font-weight: 700; color: #000; text-align: left; margin-left: 0; }
-        .success-message .moment { color: #4a6fa5; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateX(100%);} to { opacity: 1; transform: translateX(0); } }
-        .slide-up { animation: slideUp 0.5s ease; }
-        @keyframes slideLeft { from { transform: translateX(0);} to { transform: translateX(-100%); opacity: 0; } }
-        .slide-left { animation: slideLeft 0.5s ease forwards; }
-        @media (max-width: 480px) { body { padding: 40px 30px; } .logo, .success-logo { font-size: 40px; } .signup-title, .success-message { font-size: 44px; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            padding: 60px 40px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 16px;
+            text-align: center;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 80px;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .signin-title {
+            font-size: 52px;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: #000;
+            text-align: left;
+        }
+
+        .signin-title .in {
+            color: #4a6fa5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 24px 28px;
+            border: none;
+            border-radius: 50px;
+            background-color: #d8d8d8;
+            font-size: 18px;
+            color: #999;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .input-field::placeholder {
+            color: #999;
+            font-weight: 400;
+        }
+
+        .forgot-password {
+            text-align: left;
+            margin: 40px 0 50px 0;
+        }
+
+        .forgot-password a {
+            color: #000;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .signin-btn {
+            width: 100%;
+            padding: 22px;
+            border: none;
+            border-radius: 50px;
+            background-color: #4a6fa5;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 40px;
+        }
+
+        .signin-btn:hover {
+            background-color: #3d5a8a;
+        }
+
+        .create-account {
+            text-align: center;
+        }
+
+        .create-account a {
+            color: #4a6fa5;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .create-account a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 40px 30px;
+            }
+            
+            .logo {
+                font-size: 40px;
+            }
+            
+            .signin-title {
+                font-size: 44px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Main Form -->
-        <div id="mainForm">
-            <h1 class="logo">Cynvia One</h1>
-            <p class="subtitle">Welcome to our community</p>
-            <h2 class="signup-title">Sign <span class="up">Up</span></h2>
-            
-            <div class="form-container">
-                <!-- Step 1: Name fields -->
-                <div class="form-group" id="firstNameGroup">
-                    <input type="text" id="firstName" class="input-field" placeholder="First name" required>
-                </div>
-                <div class="form-group" id="lastNameGroup">
-                    <input type="text" id="lastName" class="input-field" placeholder="Last name" required>
-                </div>
-                
-                <!-- Step 2: Email field -->
-                <div class="form-group hidden slide-in-right" id="emailGroup">
-                    <input type="email" id="email" class="input-field" placeholder="Email" required>
-                </div>
-                
-                <!-- Step 3: Password fields -->
-                <div class="form-group hidden slide-in-right" id="passwordGroup">
-                    <input type="password" id="password" class="input-field" placeholder="Password" required>
-                </div>
-                <div class="form-group hidden slide-in-right" id="confirmPasswordGroup">
-                    <input type="password" id="confirmPassword" class="input-field" placeholder="Confirm password" required>
-                </div>
-                
-                <button type="button" id="nextBtn" class="next-btn" disabled>Next</button>
-                <button type="button" id="signupBtn" class="signup-btn hidden" style="display: none;" disabled>Sign up</button>
+        <h1 class="logo">OurUI</h1>
+        <p class="subtitle">Welcome to our community</p>
+        
+        <h2 class="signin-title">Sign <span class="in">in</span></h2>
+        
+        <form id="signinForm">
+            <div class="form-group">
+                <input id="emailInput" type="email" class="input-field" placeholder="Email" required>
             </div>
-        </div>
-
-        <!-- Success / waiting for verification Screen -->
-        <div id="successScreen" class="success-screen">
-            <h1 class="success-logo">OurUI</h1>
-            <h2 class="success-message">Just a <span class="moment">moment...</span></h2>
-            <p id="verifyNote" style="max-width:360px;margin:18px auto;color:#444;font-size:16px;text-align:center;">
-              We sent a verification email. Please check your inbox and click the verification link. This page will wait and complete your account automatically after verification.
-            </p>
-            <p id="verifyActions" style="max-width:360px;margin:6px auto;color:#444;font-size:14px;text-align:center;display:none;">
-              <button id="checkNowBtn" style="margin-right:8px;padding:8px 12px;border-radius:8px;border:1px solid #4a6fa5;background:#fff;color:#4a6fa5;cursor:pointer;">I've verified — Check now</button>
-              <button id="resendBtn" style="padding:8px 12px;border-radius:8px;border:none;background:#4a6fa5;color:#fff;cursor:pointer;">Resend email</button>
-            </p>
+            
+            <div class="form-group">
+                <input id="passwordInput" type="password" class="input-field" placeholder="Password" required>
+            </div>
+            
+            <div class="forgot-password">
+                <a href="#" id="forgotPasswordLink">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="signin-btn">Sign in</button>
+        </form>
+        
+        <div class="create-account">
+            <a href="signup.html" id="createAccountLink">Create a account</a>
         </div>
     </div>
 
+    <!-- Firebase + auth logic (CDN, modular) -->
     <script type="module">
-    // Firebase + signup actions (verification-before-profile)
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js';
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      updateProfile,
-      reload,
-      sendEmailVerification,
-      signOut
-    } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js';
-    import {
-      getFirestore,
-      doc,
-      setDoc,
-      serverTimestamp
-    } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js';
+      // Import Firebase (modular CDN)
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+      import { 
+        getAuth,
+        signInWithEmailAndPassword,
+        sendPasswordResetEmail,
+        onAuthStateChanged,
+        sendEmailVerification,
+        signOut
+      } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
-      authDomain: "ouruiofficial.firebaseapp.com",
-      projectId: "ouruiofficial",
-      storageBucket: "ouruiofficial.firebasestorage.app",
-      messagingSenderId: "513335403025",
-      appId: "1:513335403025:web:b965e1187d5386d52d87b0",
-      measurementId: "G-X5QWNP8DMK"
-    };
+      const firebaseConfig = {
+        apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
+        authDomain: "ouruiofficial.firebaseapp.com",
+        projectId: "ouruiofficial",
+        storageBucket: "ouruiofficial.firebasestorage.app",
+        messagingSenderId: "513335403025",
+        appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+        measurementId: "G-X5QWNP8DMK"
+      };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-    let currentStep = 1;
-    const maxSteps = 3;
+      // Elements
+      const signinForm = document.getElementById('signinForm');
+      const emailInput = document.getElementById('emailInput');
+      const passwordInput = document.getElementById('passwordInput');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const createAccountLink = document.getElementById('createAccountLink');
 
-    const firstName = document.getElementById('firstName');
-    const lastName = document.getElementById('lastName');
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const confirmPassword = document.getElementById('confirmPassword');
-    const nextBtn = document.getElementById('nextBtn');
-    const signupBtn = document.getElementById('signupBtn');
-    const successScreen = document.getElementById('successScreen');
-    const mainForm = document.getElementById('mainForm');
-    const verifyNote = document.getElementById('verifyNote');
-    const verifyActions = document.getElementById('verifyActions');
-    const checkNowBtn = document.getElementById('checkNowBtn');
-    const resendBtn = document.getElementById('resendBtn');
-
-    // Helper: get query param (for prefill)
-    function getQueryParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name);
-    }
-
-    // Prefill email if ?email= present
-    const prefillEmail = getQueryParam('email');
-    if (prefillEmail) {
-      email.value = decodeURIComponent(prefillEmail);
-    }
-
-    // Enable/disable next button based on current step
-    function checkCurrentStepValidity() {
-        let isValid = false;
-        switch(currentStep) {
-            case 1: isValid = firstName.value.trim() !== '' && lastName.value.trim() !== ''; break;
-            case 2: isValid = email.value.trim() !== '' && email.checkValidity(); break;
-            case 3: isValid = password.value.trim() !== '' && confirmPassword.value.trim() !== '' && password.value === confirmPassword.value; break;
+      // Only auto-redirect if the user is already signed in AND email is verified
+      onAuthStateChanged(auth, (user) => {
+        if (user && user.emailVerified) {
+          // User is signed in and verified — go to home
+          window.location.href = 'index.html';
         }
-        if (currentStep < 3) nextBtn.disabled = !isValid;
-        else signupBtn.disabled = !isValid;
-    }
+      });
 
-    // Add event listeners for validation
-    [firstName, lastName, email, password, confirmPassword].forEach(input => {
-        input.addEventListener('input', checkCurrentStepValidity);
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                if (currentStep < 4 && !nextBtn.disabled) nextStep();
-                else if (currentStep === 4 && !signupBtn.disabled) completeSignup();
-            }
-        });
-    });
-
-    function nextStep() {
-        // Validation per step
-        switch(currentStep) {
-            case 1:
-                if (firstName.value.trim() === '' || lastName.value.trim() === '') {
-                    if (firstName.value.trim() === '') shakeField(firstName);
-                    if (lastName.value.trim() === '') shakeField(lastName);
-                    return;
-                }
-                break;
-            case 2:
-                if (email.value.trim() === '' || !email.checkValidity()) { shakeField(email); return; }
-                break;
-            case 3:
-                if (password.value.trim() === '' || confirmPassword.value.trim() === '') {
-                    if (password.value.trim() === '') shakeField(password);
-                    if (confirmPassword.value.trim() === '') shakeField(confirmPassword);
-                    return;
-                }
-                if (password.value !== confirmPassword.value) { shakeField(password); shakeField(confirmPassword); return; }
-                break;
+      // Helper: send reset email and notify
+      async function sendReset(email) {
+        try {
+          await sendPasswordResetEmail(auth, email);
+          alert('✅ Password reset email sent. Check your inbox.');
+        } catch (err) {
+          let msg = err.message || String(err);
+          if (err.code === 'auth/user-not-found') msg = 'No account found with this email.';
+          if (err.code === 'auth/invalid-email') msg = 'Invalid email address.';
+          alert('❌ ' + msg);
         }
-        if (currentStep >= maxSteps) return;
-
-        switch(currentStep) {
-            case 1:
-                document.getElementById('firstNameGroup').classList.add('slide-left');
-                document.getElementById('lastNameGroup').classList.add('slide-left');
-                setTimeout(() => {
-                    document.getElementById('firstNameGroup').classList.add('hidden');
-                    document.getElementById('lastNameGroup').classList.add('hidden');
-                    document.getElementById('emailGroup').classList.remove('hidden');
-                    document.getElementById('emailGroup').classList.add('slide-in-right');
-                    setTimeout(() => { document.getElementById('emailGroup').classList.add('show'); email.focus(); }, 50);
-                }, 250);
-                break;
-            case 2:
-                document.getElementById('emailGroup').classList.add('slide-left');
-                setTimeout(() => {
-                    document.getElementById('emailGroup').classList.add('hidden');
-                    document.getElementById('passwordGroup').classList.remove('hidden');
-                    document.getElementById('confirmPasswordGroup').classList.remove('hidden');
-                    document.getElementById('passwordGroup').classList.add('slide-in-right');
-                    document.getElementById('confirmPasswordGroup').classList.add('slide-in-right');
-                    setTimeout(() => {
-                        document.getElementById('passwordGroup').classList.add('show');
-                        document.getElementById('confirmPasswordGroup').classList.add('show');
-                        password.focus();
-                        nextBtn.style.display = 'none';
-                        signupBtn.style.display = 'inline-block';
-                        signupBtn.classList.remove('hidden');
-                    }, 50);
-                }, 250);
-                break;
-        }
-        currentStep++;
-        setTimeout(checkCurrentStepValidity, 300);
-    }
-
-    function shakeField(field) {
-        field.classList.add('shake');
-        setTimeout(() => field.classList.remove('shake'), 500);
-    }
-
-    // Password policy
-    function passwordValid(pwd) {
-      if (!pwd) return false;
-      if (pwd.length < 8) return false;
-      if (!/[A-Za-z]/.test(pwd)) return false;
-      return true;
-    }
-
-    // Main signup flow:
-    async function performSignupFlow() {
-      const pwd = password.value.trim();
-      if (!passwordValid(pwd)) {
-        alert('Password must be at least 8 characters and contain at least one letter.');
-        shakeField(password); shakeField(confirmPassword);
-        successScreen.classList.remove('show'); mainForm.style.display = ''; return;
       }
 
-      const fName = firstName.value.trim();
-      const lName = lastName.value.trim();
-      const em = email.value.trim().toLowerCase();
+      // Sign in handler
+      signinForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = (emailInput.value || '').trim();
+        const password = passwordInput.value || '';
 
-      try {
-        // 1) Create Auth user (user will be signed in automatically)
-        const cred = await createUserWithEmailAndPassword(auth, em, pwd);
-        const user = cred.user;
-
-        // 2) Send verification email
-        try {
-          await sendEmailVerification(user);
-        } catch (e) {
-          console.warn('sendEmailVerification failed:', e);
-          // continue — we'll still poll for verification if user clicks the link
-        }
-
-        // Show waiting screen and explain verification
-        mainForm.style.display = 'none';
-        successScreen.classList.add('show');
-        verifyActions.style.display = 'block';
-
-        // Polling: check emailVerified every 5s, up to 5 minutes (60 checks)
-        let checks = 0;
-        const maxChecks = 60;
-        const intervalMs = 5000;
-        const poller = setInterval(async () => {
-          checks++;
-          try {
-            await reload(user); // refresh user data
-          } catch (e) {
-            console.warn('reload user failed', e);
-          }
-          if (user.emailVerified) {
-            clearInterval(poller);
-            // set displayName & write profile
-            const displayName = `${fName} ${lName}`.trim();
-            try {
-              await updateProfile(user, { displayName });
-            } catch (e) {
-              console.warn('updateProfile failed:', e);
-            }
-            try {
-              await setDoc(doc(db, 'users', user.uid), {
-                uid: user.uid,
-                email: user.email,
-                firstName: fName,
-                lastName: lName,
-                displayName,
-                createdAt: serverTimestamp()
-              });
-            } catch (e) {
-              console.warn('setDoc failed:', e);
-            }
-            // Finally redirect
-            window.location.href = 'index.html';
-            return;
-          }
-          if (checks >= maxChecks) {
-            clearInterval(poller);
-            alert('We did not detect verification. A verification email was sent to ' + em + '.\n\nPlease check your inbox or spam. You can click "Resend" or try again later.');
-            successScreen.classList.remove('show');
-            mainForm.style.display = '';
-            // optional: sign out to be safe
-            try { await signOut(auth); } catch (_) {}
-            return;
-          }
-        }, intervalMs);
-
-        // Provide a "check now" button to force one immediate check
-        checkNowBtn.onclick = async () => {
-          try { await reload(user); } catch (e) { console.warn(e); }
-          if (user.emailVerified) {
-            clearInterval(poller);
-            const displayName = `${fName} ${lName}`.trim();
-            try { await updateProfile(user, { displayName }); } catch (_) {}
-            try {
-              await setDoc(doc(db, 'users', user.uid), {
-                uid: user.uid,
-                email: user.email,
-                firstName: fName,
-                lastName: lName,
-                displayName,
-                createdAt: serverTimestamp()
-              });
-            } catch (e) { console.warn(e); }
-            window.location.href = 'index.html';
-          } else {
-            alert('Not verified yet. Please open the verification email and click the link, then click this again.');
-          }
-        };
-
-        // Resend verification email
-        resendBtn.onclick = async () => {
-          try {
-            await sendEmailVerification(user);
-            alert('Verification email resent. Check your inbox (and spam).');
-          } catch (e) {
-            alert('Failed to resend verification email. Try again later.');
-            console.warn(e);
-          }
-        };
-
-      } catch (err) {
-        // revert UI and show friendly message
-        successScreen.classList.remove('show');
-        mainForm.style.display = '';
-        const code = err.code || '';
-        let msg = err.message || String(err);
-        if (code === 'auth/email-already-in-use') {
-          msg = 'This email is already in use. Try signing in instead.';
-          const goSignIn = confirm(msg + '\n\nClick OK to go to Sign in page.');
-          if (goSignIn) window.location.href = `signin.html?email=${encodeURIComponent(email.value.trim())}`;
+        if (!email) {
+          alert('Please enter your email.');
           return;
         }
-        if (code === 'auth/invalid-email') { msg = 'Invalid email address.'; shakeField(email); }
-        if (code === 'auth/weak-password') { msg = 'Weak password. Make sure it is at least 8 characters and contains a letter.'; shakeField(password); shakeField(confirmPassword); }
-        alert('❌ ' + msg);
-      }
-    }
 
-    function completeSignup() {
-        if (password.value.trim() === '' || confirmPassword.value.trim() === '') {
-            if (password.value.trim() === '') shakeField(password);
-            if (confirmPassword.value.trim() === '') shakeField(confirmPassword);
-            return;
+        // If password empty, ask to send reset email
+        if (!password) {
+          const send = confirm('Password is empty. Did you forget your password?\n\nClick OK to send a password reset email, or Cancel to enter password.');
+          if (send) {
+            await sendReset(email);
+          }
+          return;
         }
-        if (password.value !== confirmPassword.value) { shakeField(password); shakeField(confirmPassword); return; }
-        if (!passwordValid(password.value.trim())) { alert('Password must be at least 8 characters and contain at least one letter.'); shakeField(password); shakeField(confirmPassword); return; }
-        // start waiting UI and start registration (includes verification send & poll)
-        mainForm.style.display = 'none';
-        successScreen.classList.add('show');
-        performSignupFlow();
-    }
 
-    nextBtn.addEventListener('click', nextStep);
-    signupBtn.addEventListener('click', completeSignup);
+        try {
+          const cred = await signInWithEmailAndPassword(auth, email, password);
+          const user = cred.user;
 
-    // Initialize
-    firstName.focus();
-    checkCurrentStepValidity();
+          // NEW: require email verification before allowing access
+          if (!user.emailVerified) {
+            try {
+              await sendEmailVerification(user);
+            } catch (e) {
+              console.warn('Resend verification failed:', e);
+            }
+            // sign out unverified user to prevent access
+            try {
+              await signOut(auth);
+            } catch (e) {
+              console.warn('Sign out failed:', e);
+            }
+            alert('✅ Verification required. A verification email has been sent to ' + email + '. Please verify your email and then sign in.');
+            return;
+          }
+
+          // Verified — proceed
+          alert('✅ Logged in: ' + (user.email || ''));
+          window.location.href = 'index.html';
+        } catch (err) {
+          // Friendly messages and actions
+          let code = err.code || '';
+          let msg = err.message || String(err);
+
+          if (code === 'auth/user-not-found') {
+            const create = confirm('No account found with this email. Create an OurUI account now?');
+            if (create) {
+              window.location.href = `signup.html?email=${encodeURIComponent(email)}`;
+            }
+            return;
+          }
+
+          if (code === 'auth/wrong-password') {
+            const reset = confirm('Wrong password. Forgot password?\n\nClick OK to send a password reset email.');
+            if (reset) {
+              await sendReset(email);
+            }
+            return;
+          }
+
+          if (code === 'auth/invalid-email') {
+            msg = 'Invalid email address.';
+          }
+
+          alert('❌ ' + msg);
+        }
+      });
+
+      // Forgot password link handler (asks for email if empty)
+      forgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        let email = (emailInput.value || '').trim();
+
+        if (!email) {
+          email = window.prompt('Enter your email to receive password reset link:');
+          if (!email) return; // user cancelled or didn't provide
+        }
+
+        await sendReset(email.trim());
+      });
+
+      // If user clicks Create Account link but we have an email, pass it to signup page
+      createAccountLink.addEventListener('click', (e) => {
+        const email = (emailInput.value || '').trim();
+        if (email) {
+          e.preventDefault();
+          window.location.href = `signup.html?email=${encodeURIComponent(email)}`;
+        }
+      });
     </script>
 </body>
-    </html>
+        </html>
