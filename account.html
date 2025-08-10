@@ -124,7 +124,8 @@
     <div class="profile">
       <div id="avatar" class="avatar">U</div>
       <div class="meta">
-        <h2 id="userName">(User name here)</h2>
+        <!-- Default text changed as requested -->
+        <h2 id="userName">Wait a sec...</h2>
         <p>Your account</p>
       </div>
     </div>
@@ -239,7 +240,6 @@
 
     // Add click handlers to navigate (no visual changes)
     function safeNavigate(url) {
-      // small guard in case url missing
       if (!url) {
         console.warn('No URL provided for navigation.');
         return;
@@ -262,7 +262,21 @@
       });
     });
 
-    // Load user and profile
+    // Try to show instant name using cache or auth info, then overwrite with Firestore
+    function setNameAndAvatar(name, initial) {
+      if (name) userNameEl.textContent = name;
+      if (initial) avatarEl.textContent = initial.toUpperCase();
+    }
+
+    // try local cache
+    try {
+      const cachedName = localStorage.getItem('ourui_displayName');
+      const cachedInitial = localStorage.getItem('ourui_avatarInitial');
+      if (cachedName) setNameAndAvatar(cachedName, cachedInitial || cachedName.charAt(0));
+    } catch (e) {
+      // ignore localStorage errors
+    }
+
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         // not signed in -> redirect to signin
@@ -270,7 +284,16 @@
         return;
       }
 
-      // try to load Firestore profile /users/{uid}
+      // immediate fallback from Auth (fast)
+      let fastName = user.displayName || '';
+      if (!fastName && user.email) {
+        const local = user.email.split('@')[0].replace(/[._]/g, ' ');
+        fastName = local.charAt(0).toUpperCase() + local.slice(1);
+      }
+      const fastInitial = (fastName && fastName.length ? fastName.charAt(0) : (user.email ? user.email.charAt(0) : 'U'));
+      setNameAndAvatar(fastName, fastInitial);
+
+      // then try Firestore for canonical firstName + lastName
       try {
         const userDocRef = doc(db, 'users', user.uid);
         const snap = await getDoc(userDocRef);
@@ -278,38 +301,32 @@
           const data = snap.data();
           const f = (data.firstName || '').trim();
           const l = (data.lastName || '').trim();
-          const name = `${f} ${l}`.trim() || (user.displayName || user.email || '');
-          userNameEl.textContent = name;
-          // avatar initial: first letter of firstName else displayName else email
-          let initial = 'U';
-          if (f) initial = f.charAt(0).toUpperCase();
-          else if (user.displayName) initial = user.displayName.charAt(0).toUpperCase();
-          else if (user.email) initial = user.email.charAt(0).toUpperCase();
-          avatarEl.textContent = initial;
-        } else {
-          // no user doc -> fallback to auth profile
-          const display = user.displayName || user.email || 'User';
-          // if displayName contains spaces, assume first + last available
-          if (user.displayName && user.displayName.trim().includes(' ')) {
-            userNameEl.textContent = user.displayName;
-          } else if (user.email) {
-            // try to make friendly name from email local-part
-            const local = user.email.split('@')[0].replace(/[._]/g, ' ');
-            userNameEl.textContent = local.charAt(0).toUpperCase() + local.slice(1);
-          } else {
-            userNameEl.textContent = display;
+          const full = `${f} ${l}`.trim();
+          const finalName = full || user.displayName || '';
+          const initial = (f ? f.charAt(0) : (finalName ? finalName.charAt(0) : (user.email ? user.email.charAt(0) : 'U'))).toUpperCase();
+
+          if (finalName) {
+            setNameAndAvatar(finalName, initial);
+            // cache for next load
+            try {
+              localStorage.setItem('ourui_displayName', finalName);
+              localStorage.setItem('ourui_avatarInitial', initial);
+            } catch (e) { /* ignore storage errors */ }
           }
-          // avatar initial
-          avatarEl.textContent = (user.displayName ? user.displayName.charAt(0) : (user.email ? user.email.charAt(0) : 'U')).toUpperCase();
+        } else {
+          // if no doc, still cache the fastName so next time it's instant
+          if (fastName) {
+            try {
+              localStorage.setItem('ourui_displayName', fastName);
+              localStorage.setItem('ourui_avatarInitial', fastInitial);
+            } catch (e) {}
+          }
         }
       } catch (err) {
         console.error('Failed to load profile:', err);
-        // fallback: use auth profile
-        const display = user.displayName || user.email || 'User';
-        userNameEl.textContent = display;
-        avatarEl.textContent = display.charAt(0).toUpperCase();
+        // fallback: already showing fastName
       }
     });
   </script>
 </body>
-</html>
+          </html>
