@@ -86,15 +86,7 @@
     .footer-nav .title { font-size: 2rem; font-weight: 700; font-family: 'Noto Sans', sans-serif; margin-bottom: 1rem; }
     .footer-nav .link { display: block; font-size: 1.25rem; font-weight: 700; color: var(--blue); text-decoration: none; margin-bottom: 0.75rem; }
     .footer-nav .credit { text-align: center; margin-top: 1.5rem; font-size: 1rem; }
-
-    /* Slide-up page modal (account) */
-    .page-modal { position: fixed; left: 0; right: 0; bottom: 0; height: 100%; background: #fff; transform: translateY(100%); transition: transform 330ms cubic-bezier(.2,.9,.3,1); z-index: 1200; box-shadow: 0 -12px 30px rgba(0,0,0,0.25); display: flex; flex-direction: column; }
-    .page-modal.show { transform: translateY(0%); }
-    .page-modal .modal-top { display:flex; align-items:center; justify-content:flex-end; padding:10px 12px; border-bottom:1px solid var(--card-bg); }
-    .page-modal .modal-top .close-btn { background:transparent; border:0; font-size:20px; cursor:pointer; padding:6px; }
-    .page-modal iframe{ border:0; width:100%; height:100%; flex:1; }
-
-    @media (max-width:420px){ :root{--max-w:100%} .wrap{padding-left:10px;padding-right:10px} }
+    .footer-nav .credit .name { color: #6b5e7f; }
   </style>
 </head>
 <body>
@@ -191,12 +183,6 @@
     </div>
   </div>
 
-  <!-- Slide-up page modal (hidden by default) -->
-  <div id="pageModal" class="page-modal" aria-hidden="true">
-    <div class="modal-top"><button class="close-btn" id="modalClose" aria-label="Close account">✕</button></div>
-    <iframe id="pageFrame" src="" title="Account page"></iframe>
-  </div>
-
   <!-- Existing page scripts (menu + animated words) -->
   <script>
     const hamburger = document.getElementById('hamburger');
@@ -228,7 +214,7 @@
     }, 2000);
   </script>
 
-  <!-- Firebase + Auth script (using CDN) + slide-up modal logic -->
+  <!-- Firebase + Auth script (using CDN) -->
   <script type="module">
     // Import Firebase (CDN modular)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -251,38 +237,6 @@
 
     const signupTop = document.getElementById('signupTop');
     const userCircle = document.getElementById('userCircle');
-
-    const pageModal = document.getElementById('pageModal');
-    const pageFrame = document.getElementById('pageFrame');
-    const modalClose = document.getElementById('modalClose');
-
-    // Function to open account page in slide-up modal
-    function openAccountModal(){
-      // set iframe src (use account.html — change if your file is named differently)
-      pageFrame.src = 'account.html';
-      pageModal.setAttribute('aria-hidden','false');
-      // small delay to ensure src starts loading then show animation
-      requestAnimationFrame(()=> pageModal.classList.add('show'));
-      // push history state so back button closes modal
-      history.pushState({accountModal:true}, '', '#account');
-    }
-
-    function closeAccountModal(){
-      pageModal.classList.remove('show');
-      pageModal.setAttribute('aria-hidden','true');
-      // after transition, clear iframe src to free memory
-      setTimeout(()=>{ pageFrame.src = ''; }, 350);
-      // if we opened via pushState, go back one step
-      if (location.hash === '#account') history.back();
-    }
-
-    // Close modal on popstate (back button)
-    window.addEventListener('popstate', (e)=>{
-      if (!location.hash || location.hash !== '#account') {
-        // ensure modal closed
-        if (pageModal.classList.contains('show')) closeAccountModal();
-      }
-    });
 
     // Update top-right UI based on auth state
     onAuthStateChanged(auth, (user) => {
@@ -313,25 +267,12 @@
       }
     });
 
-    // When user clicks the circle, open account page as slide-up modal
-    userCircle.addEventListener('click', (e)=>{
-      e.preventDefault();
-      openAccountModal();
-    });
-
-    // Close modal handlers
-    modalClose.addEventListener('click', closeAccountModal);
-
-    // Also allow clicking the overlay area (outside modal) to close — but avoid interfering with drawer overlay
-    document.addEventListener('click', (ev)=>{
-      // if click target outside the modal and modal is shown, close it
-      if (!pageModal.classList.contains('show')) return;
-      const inside = pageModal.contains(ev.target);
-      if (!inside) closeAccountModal();
+    // When user clicks the circle, go to account page
+    userCircle.addEventListener('click', () => {
+      window.location.href = 'account.html';
     });
 
   </script>
 
 </body>
-  </html>
-  
+</html>
