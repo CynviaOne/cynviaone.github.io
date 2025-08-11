@@ -35,7 +35,8 @@
     .auth-area { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
     .auth-area .btn { padding: 0.5rem 0.85rem; font-size: 0.9rem; border-radius: 999px; font-weight: 700; cursor: pointer; text-decoration: none; }
     .auth-area .btn.outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
-    .user-circle { width: 36px; height: 36px; border-radius: 50%; background-color: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; }
+    .user-circle { width: 36px; height: 36px; border-radius: 50%; background-color: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; overflow: hidden; }
+    .user-circle img{ width:100%; height:100%; object-fit:cover; display:block; }
 
     /* Drawer & Overlay */
     .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.2); opacity: 0; visibility: hidden; transition: opacity 0.2s ease; z-index: 1000; }
@@ -101,7 +102,7 @@
       <div class="auth-area" id="authArea">
         <!-- Sign up button shown when NOT logged in -->
         <a id="signupTop" class="btn outline" href="signin.html" style="display:none">Sign Up</a>
-        <!-- User circle shown when logged in (first letter) -->
+        <!-- User circle shown when logged in (first letter or photo) -->
         <div id="userCircle" class="user-circle" style="display:none" title="Account"></div>
       </div>
     </header>
@@ -243,7 +244,21 @@
         // Show user circle with first letter (displayName or email)
         signupTop.style.display = 'none';
         const name = (user.displayName) ? user.displayName : (user.email || 'U');
-        userCircle.textContent = name.charAt(0).toUpperCase();
+
+        // Try to show saved custom profile photo (saved by Personal Info page)
+        try {
+          const savedPic = localStorage.getItem('ourui_profilePicture');
+          if (savedPic) {
+            userCircle.innerHTML = `<img src="${savedPic}" alt="Profile">`;
+          } else {
+            userCircle.textContent = name.charAt(0).toUpperCase();
+          }
+        } catch (e) {
+          // fallback to initial on error
+          console.warn('Error reading profile picture from localStorage', e);
+          userCircle.textContent = name.charAt(0).toUpperCase();
+        }
+
         userCircle.style.display = 'flex';
       } else {
         // Not logged in: show Sign Up button
