@@ -238,32 +238,73 @@
     const signupTop = document.getElementById('signupTop');
     const userCircle = document.getElementById('userCircle');
 
+    // Utility: set avatar image or initial fast
+    function renderUserCircle(imgDataUrl, fallbackInitial){
+      if (imgDataUrl){
+        userCircle.innerHTML = `<img src="${imgDataUrl}" alt="Profile">`;
+      } else {
+        userCircle.innerHTML = '';
+        userCircle.textContent = (fallbackInitial||'U').charAt(0).toUpperCase();
+      }
+    }
+
+    // Try to show a last-known avatar quickly (before auth state settles)
+    (function fastInitialRender(){
+      try{
+        const lastUid = localStorage.getItem('ourui_lastUserUid');
+        if (lastUid){
+          const key = 'ourui_profilePicture_' + lastUid;
+          const pic = localStorage.getItem(key) || localStorage.getItem('ourui_profilePicture');
+          if (pic){ renderUserCircle(pic); userCircle.style.display = 'flex'; signupTop.style.display = 'none'; }
+        }
+      }catch(e){/* ignore */}
+    })();
+
     // Update top-right UI based on auth state
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // Show user circle with first letter (displayName or email)
         signupTop.style.display = 'none';
-        const name = (user.displayName) ? user.displayName : (user.email || 'U');
 
-        // Try to show saved custom profile photo (saved by Personal Info page)
+        const name = (user.displayName) ? user.displayName : (user.email || 'U');
+        const uid = user.uid || (user.email ? user.email.replace(/[^a-z0-9]/gi,'_') : 'anon');
+
+        // per-user storage key (preferred) to avoid mixing avatars between accounts
+        const perUserKey = 'ourui_profilePicture_' + uid;
+
         try {
-          const savedPic = localStorage.getItem('ourui_profilePicture');
-          if (savedPic) {
-            userCircle.innerHTML = `<img src="${savedPic}" alt="Profile">`;
+          // prefer per-user stored picture; fall back to legacy global key only if per-user missing
+          const savedPerUser = localStorage.getItem(perUserKey);
+          const legacy = localStorage.getItem('ourui_profilePicture');
+          const picToUse = savedPerUser || legacy;
+
+          if (picToUse) {
+            renderUserCircle(picToUse);
           } else {
-            userCircle.textContent = name.charAt(0).toUpperCase();
+            renderUserCircle(null, name.charAt(0));
           }
+
+          // keep track of last logged-in uid so next page can show avatar fast
+          try{ localStorage.setItem('ourui_lastUserUid', uid); }catch(e){}
+
         } catch (e) {
           // fallback to initial on error
           console.warn('Error reading profile picture from localStorage', e);
-          userCircle.textContent = name.charAt(0).toUpperCase();
+          renderUserCircle(null, name.charAt(0));
         }
 
         userCircle.style.display = 'flex';
       } else {
-        // Not logged in: show Sign Up button
+        // Not logged in: show Sign Up button and clear top-right avatar to avoid leaking previous user's image
         userCircle.style.display = 'none';
         signupTop.style.display = 'inline-block';
+
+        try{
+          // remove legacy global key to prevent old image showing for another user
+          localStorage.removeItem('ourui_profilePicture');
+          // do NOT remove per-user keys (so returning user keeps their picture), but remove lastUserUid
+          localStorage.removeItem('ourui_lastUserUid');
+        }catch(e){ /* ignore */ }
       }
     });
 
@@ -272,7 +313,16 @@
       window.location.href = 'account.html';
     });
 
+    // Optional: function to sign out (call from UI when needed)
+    window.appSignOut = async function(){
+      try{
+        await signOut(auth);
+        // onAuthStateChanged will run and clean up local UI
+      }catch(e){ console.error('Sign out failed', e); }
+    };
+
   </script>
 
 </body>
-</html>
+  </html>
+  
