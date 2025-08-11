@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>CynviaOne — Profile (22px spacing)</title>
+<title>CynviaOne — Profile (Updated)</title>
 
 <!-- Roboto -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700,800&display=swap" rel="stylesheet">
@@ -29,45 +29,30 @@
   .wrap{max-width:var(--max-w);margin:8px auto;padding:8px 12px 64px}
 
   /* Material filled (rounded) */
-  .material-rounded{
-    font-family: 'Material Symbols Rounded';
-    font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 40;
-    display:inline-block;
-    line-height:1;
-    vertical-align:middle;
-  }
-
-  .icon-sm{font-size:14px}
-  .icon-md{font-size:var(--icon-size-md)}
-  .icon-lg{font-size:var(--icon-size-lg)}
+  .material-rounded{font-family: 'Material Symbols Rounded';font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 40;display:inline-block;line-height:1;vertical-align:middle}
+  .icon-sm{font-size:14px}.icon-md{font-size:var(--icon-size-md)}.icon-lg{font-size:var(--icon-size-lg)}
 
   /* TOP BAR */
   .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
   .left{display:flex;align-items:center;gap:8px}
-  .btn-close{
-    background:transparent;border:0;padding:0;margin:0;font-size:18px;cursor:pointer;color:var(--title);
-    display:inline-flex;align-items:center;justify-content:center;
-  }
-  .btn-close:focus{outline:2px solid rgba(0,0,0,0.08);outline-offset:2px;border-radius:6px}
-  .logo{font-weight:800;font-size:20px;line-height:1}
-  .logo .one{color:var(--accent);font-weight:700}
+  .btn-close{background:transparent;border:0;padding:0;margin:0;font-size:18px;cursor:pointer;color:var(--title);display:inline-flex;align-items:center;justify-content:center}
+  .logo{font-weight:800;font-size:20px;line-height:1}.logo .one{color:var(--accent);font-weight:700}
   .actions{display:flex;gap:12px;align-items:center}
   .action-icon{background:transparent;border:0;padding:6px;font-size:24px;cursor:pointer;color:var(--title)}
-  .action-icon:focus{outline:2px solid rgba(0,0,0,0.06);outline-offset:2px;border-radius:6px}
 
   /* PROFILE */
   .profile{display:flex;align-items:center;gap:12px;padding:6px 2px 20px}
-  .avatar{width:76px;height:76px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:700;flex-shrink:0}
+  .avatar{width:76px;height:76px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:700;flex-shrink:0;overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
   .meta h2{margin:0 0 6px;font-size:20px;font-weight:800}
   .meta p{margin:0;font-size:15px;font-weight:600;color:#111;opacity:0.9}
 
-  /* Personal info card: keep top gap 25px, bottom gap set to 22px per request */
+  /* Personal info card */
   .big-card{background:var(--card);border-radius:var(--radius);padding:16px 16px;display:flex;gap:14px;align-items:center;margin-top:25px;margin-bottom:var(--gap-22)}
   .big-card .icon{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center}
   .big-card h3{margin:0 0 6px;font-size:18px;font-weight:800}
   .big-card p{margin:0;color:var(--muted);font-size:14px;font-weight:700;line-height:1.45}
 
-  /* Card group: bottom gap set to 22px */
   .card-group{background:var(--card);border-radius:var(--radius);overflow:hidden;margin-bottom:var(--gap-22)}
   .row{display:flex;gap:14px;align-items:center;padding:14px 16px}
   .row + .row{border-top:4px solid rgba(255,255,255,0.55)}
@@ -75,22 +60,18 @@
   .row h4{margin:0 0 6px;font-size:17px;font-weight:800}
   .row p{margin:0;color:var(--muted);font-size:14px;font-weight:700;line-height:1.45;opacity:0.95}
 
-  /* Notification card: bottom gap to "Looking for..." set to 22px */
   .notify{background:var(--card);border-radius:var(--radius);padding:14px 16px;display:flex;gap:14px;align-items:center;margin-bottom:var(--gap-22)}
-  .notify .icon{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center}
-  .notify h3{margin:0 0 6px;font-size:18px;font-weight:800}
-  .notify p{margin:0;color:var(--muted);font-size:14px;font-weight:700;line-height:1.45}
-
   .more{font-size:22px;font-weight:800;margin-top:6px;padding-left:2px}
 
-  /* icon sizing tweaks */
-  .material-rounded.icon-lg{line-height:1;width:var(--icon-size-lg);height:var(--icon-size-lg);display:block;text-align:center}
-  .material-rounded.icon-md{line-height:1;width:var(--icon-size-md);height:var(--icon-size-md);display:block;text-align:center}
+  /* profile-section used for the two small options */
+  .profile-section{background:var(--card);border-radius:var(--radius);padding:14px;margin-top:16px}
+  .profile-item{display:flex;align-items:center;gap:14px;padding:12px 0;cursor:pointer}
+  .profile-item .icon{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center}
+  .profile-item .content{flex:1}
+  .profile-item h3{margin:0 0 3px;font-size:16px;font-weight:600;color:var(--title)}
+  .profile-item p{margin:0;font-size:13px;font-weight:400;color:var(--muted);line-height:1.3}
 
-  @media (max-width:420px){
-    :root{--max-w:100%}
-    .wrap{padding-left:10px;padding-right:10px}
-  }
+  @media (max-width:420px){:root{--max-w:100%}.wrap{padding-left:10px;padding-right:10px}}
 </style>
 </head>
 <body>
@@ -99,32 +80,26 @@
     <!-- TOP BAR -->
     <div class="topbar">
       <div class="left">
-        <!-- Close button triggers history.back() -->
         <button class="btn-close" aria-label="Close / Go back" onclick="goBack()">
           <span class="material-rounded icon-md">close</span>
         </button>
-        <!-- single-word logo with only "One" colored -->
         <div class="logo">Cynvia<span class="one">One</span></div>
       </div>
 
       <div class="actions" aria-hidden="true">
-        <!-- help (bigger, no circle) -->
         <button class="action-icon" title="Help" aria-label="Help">
           <span class="material-rounded icon-md">help</span>
         </button>
-
-        <!-- search (bigger, no circle) -->
         <button class="action-icon" title="Search" aria-label="Search">
           <span class="material-rounded icon-md">search</span>
         </button>
       </div>
     </div>
 
-    <!-- PROFILE -->
+    <!-- PROFILE HEADER -->
     <div class="profile">
       <div id="avatar" class="avatar">U</div>
       <div class="meta">
-        <!-- Default text changed as requested -->
         <h2 id="userName">Wait a sec...</h2>
         <p>Your account</p>
       </div>
@@ -143,7 +118,7 @@
 
     <!-- Card group -->
     <div class="card-group" role="list">
-      <div id="securityRow" class="row" role="listitem" tabindex="0" role="button" aria-pressed="false">
+      <div id="securityRow" class="row" role="listitem" tabindex="0">
         <div class="icon" aria-hidden="true">
           <span class="material-rounded icon-lg">lock</span>
         </div>
@@ -153,7 +128,7 @@
         </div>
       </div>
 
-      <div id="deviceRow" class="row" role="listitem" tabindex="0" role="button" aria-pressed="false">
+      <div id="deviceRow" class="row" role="listitem" tabindex="0">
         <div class="icon">
           <span class="material-rounded icon-lg">smartphone</span>
         </div>
@@ -163,7 +138,7 @@
         </div>
       </div>
 
-      <div id="dataRow" class="row" role="listitem" tabindex="0" role="button" aria-pressed="false">
+      <div id="dataRow" class="row" role="listitem" tabindex="0">
         <div class="icon">
           <span class="material-rounded icon-lg">toggle_off</span>
         </div>
@@ -175,7 +150,7 @@
     </div>
 
     <!-- Notifications -->
-    <div id="notifyRow" class="notify" tabindex="0" role="button" aria-pressed="false">
+    <div id="notifyRow" class="notify" tabindex="0">
       <div class="icon">
         <span class="material-rounded icon-lg">notifications</span>
       </div>
@@ -187,25 +162,33 @@
 
     <div class="more">Looking for something else?</div>
 
+    <!-- ADDED: About + Feedback (same as personalinfo) -->
+    <div class="profile-section">
+      <div class="profile-item" id="aboutItem" tabindex="0" role="button" onclick="alert('About CynviaOne - Coming soon!')">
+        <div class="icon"><span class="material-rounded icon-lg">info</span></div>
+        <div class="content"><h3>About CynviaOne</h3><p>Learn more about CynviaOne</p></div>
+      </div>
+
+      <div class="profile-item" id="feedbackItem" tabindex="0" role="button" onclick="window.location.href='mailto:support.cynviaone@outlook.com?subject=Feedback'">
+        <div class="icon"><span class="material-rounded icon-lg">feedback</span></div>
+        <div class="content"><h3>Send feedback</h3><p>Share your thoughts with us</p></div>
+      </div>
+    </div>
+
   </div>
 
   <script>
     function goBack(){
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        console.log('No history to go back to.');
-      }
+      if (window.history.length > 1) window.history.back(); else console.log('No history to go back to.');
     }
   </script>
 
-  <!-- UPDATED Firebase logic to properly show signup names -->
+  <!-- Firebase + localStorage logic (updated to sync header + profile avatars) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-    // same firebaseConfig you've been using
     const firebaseConfig = {
       apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
       authDomain: "ouruiofficial.firebaseapp.com",
@@ -221,7 +204,8 @@
     const db = getFirestore(app);
 
     const userNameEl = document.getElementById('userName');
-    const avatarEl = document.getElementById('avatar');
+    const headerAvatarEl = document.getElementById('avatar');
+    const profileAvatarEl = document.getElementById('userAvatar');
 
     const personalCard = document.getElementById('personalCard');
     const securityRow = document.getElementById('securityRow');
@@ -229,7 +213,6 @@
     const dataRow = document.getElementById('dataRow');
     const notifyRow = document.getElementById('notifyRow');
 
-    // Navigation targets (you'll provide files later)
     const targets = {
       personal: 'personalinfo.html',
       security: 'securitysignin.html',
@@ -238,128 +221,138 @@
       notify: 'notificationsoffers.html'
     };
 
-    // Add click handlers to navigate (no visual changes)
-    function safeNavigate(url) {
-      if (!url) {
-        console.warn('No URL provided for navigation.');
-        return;
-      }
-      window.location.href = url;
-    }
-    personalCard.addEventListener('click', () => safeNavigate(targets.personal));
-    securityRow.addEventListener('click', () => safeNavigate(targets.security));
-    deviceRow.addEventListener('click', () => safeNavigate(targets.device));
-    dataRow.addEventListener('click', () => safeNavigate(targets.data));
-    notifyRow.addEventListener('click', () => safeNavigate(targets.notify));
+    function safeNavigate(url){ if(!url){console.warn('No URL provided for navigation.');return;} window.location.href = url; }
+    [personalCard, securityRow, deviceRow, dataRow, notifyRow].forEach(el => { if (!el) return; el.addEventListener('click', ()=> safeNavigate(targets[el.id.replace('Row','').toLowerCase()])); el.addEventListener('keydown', (e)=>{ if (e.key==='Enter' || e.key===' '){ e.preventDefault(); el.click(); } }); });
 
-    // keyboard accessibility (Enter key)
-    [personalCard, securityRow, deviceRow, dataRow, notifyRow].forEach(el => {
-      el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          el.click();
-        }
-      });
-    });
-
-    // IMPROVED: Function to update name and avatar with better handling
-    function setNameAndAvatar(name, initial) {
-      if (name && name !== 'Wait a sec...') {
-        userNameEl.textContent = name;
-        console.log('✅ Name set to:', name);
-      }
-      if (initial) {
-        avatarEl.textContent = initial.toUpperCase();
-        console.log('✅ Avatar set to:', initial.toUpperCase());
+    // Helper to set avatar DOM (both header and profile)
+    function setAvatarImage(dataUrlOrNull, fallbackInitial){
+      if (dataUrlOrNull){
+        headerAvatarEl.innerHTML = `<img src="${dataUrlOrNull}" alt="Profile">`;
+        profileAvatarEl.innerHTML = `<img src="${dataUrlOrNull}" alt="Profile">`;
+      } else {
+        headerAvatarEl.textContent = (fallbackInitial||'U').charAt(0).toUpperCase();
+        profileAvatarEl.textContent = (fallbackInitial||'U').charAt(0).toUpperCase();
       }
     }
 
-    // IMPROVED: Try to show cached name immediately for instant loading
-    try {
+    function setNameAndAvatar(name, initial){
+      if (name && name !== 'Wait a sec...') userNameEl.textContent = name;
+      if (initial){
+        // only set text initials when there is no custom profile picture saved
+        const savedPic = localStorage.getItem('ourui_profilePicture');
+        if (!savedPic) setAvatarImage(null, initial);
+      }
+    }
+
+    // Try cached values first for instant UI
+    try{
       const cachedName = localStorage.getItem('ourui_displayName');
-      const cachedInitial = localStorage.getItem('ourui_avatarInitial');
-      if (cachedName && cachedName !== 'null' && cachedName !== 'undefined') {
-        console.log('📦 Using cached name:', cachedName);
-        setNameAndAvatar(cachedName, cachedInitial || cachedName.charAt(0));
-      }
-    } catch (e) {
-      console.warn('Cache error:', e);
-    }
+      const cachedInitial = localStorage.getItem('ourui_avatarInitial') || (cachedName ? cachedName.charAt(0) : 'U');
+      const cachedProfile = localStorage.getItem('ourui_profilePicture');
+      if (cachedName) userNameEl.textContent = cachedName;
+      if (cachedProfile){ setAvatarImage(cachedProfile, cachedInitial); }
+      else { setAvatarImage(null, cachedInitial); }
+    }catch(e){ console.warn('Cache read failed', e); }
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        // not signed in -> redirect to signin
-        console.log('❌ No user, redirecting to signin');
-        window.location.href = 'signin.html';
-        return;
-      }
+    onAuthStateChanged(auth, async (user)=>{
+      if (!user){ console.log('No user, redirecting to signin'); window.location.href='signin.html'; return; }
 
-      console.log('👤 User authenticated:', user.email);
-
-      // STEP 1: Try Firestore first (most reliable source)
-      try {
+      // Try Firestore
+      try{
         const userDocRef = doc(db, 'users', user.uid);
         const snap = await getDoc(userDocRef);
-        
-        if (snap.exists()) {
+        if (snap.exists()){
           const data = snap.data();
-          console.log('🔥 Firestore data found:', data);
-          
-          const firstName = (data.firstName || '').trim();
-          const lastName = (data.lastName || '').trim();
-          
-          if (firstName || lastName) {
-            const fullName = `${firstName} ${lastName}`.trim();
-            const initial = firstName ? firstName.charAt(0) : (fullName ? fullName.charAt(0) : 'U');
-            
-            console.log('✅ Using Firestore name:', fullName);
-            setNameAndAvatar(fullName, initial);
-            
-            // Cache for next time
-            try {
-              localStorage.setItem('ourui_displayName', fullName);
-              localStorage.setItem('ourui_avatarInitial', initial);
-              console.log('💾 Cached name for next load');
-            } catch (e) {
-              console.warn('Cache write failed:', e);
-            }
-            return; // Successfully set from Firestore
-          }
-        } else {
-          console.log('❌ No Firestore document found for user');
+          const firstName = (data.firstName||'').trim();
+          const lastName = (data.lastName||'').trim();
+          const fullName = `${firstName} ${lastName}`.trim();
+          const initial = firstName ? firstName.charAt(0) : (fullName ? fullName.charAt(0) : 'U');
+          if (fullName) { userNameEl.textContent = fullName; try{ localStorage.setItem('ourui_displayName', fullName); localStorage.setItem('ourui_avatarInitial', initial); }catch(e){} }
         }
-      } catch (err) {
-        console.error('🔥 Firestore error:', err);
+      }catch(err){ console.warn('Firestore read failed', err); }
+
+      // Fallback to auth displayName or email-based
+      if (!userNameEl.textContent || userNameEl.textContent==='Wait a sec...'){
+        if (user.displayName){ setNameAndAvatar(user.displayName, user.displayName.charAt(0)); try{ localStorage.setItem('ourui_displayName', user.displayName); localStorage.setItem('ourui_avatarInitial', user.displayName.charAt(0)); }catch(e){} }
+        else if (user.email){ const local = user.email.split('@')[0].replace(/[._]/g,' '); const fallbackName = local.charAt(0).toUpperCase() + local.slice(1); setNameAndAvatar(fallbackName, fallbackName.charAt(0)); }
       }
 
-      // STEP 2: Fallback to Auth displayName
-      if (user.displayName && user.displayName.trim()) {
-        const displayName = user.displayName.trim();
-        const initial = displayName.charAt(0);
-        console.log('✅ Using Auth displayName:', displayName);
-        setNameAndAvatar(displayName, initial);
-        
-        // Cache it
-        try {
-          localStorage.setItem('ourui_displayName', displayName);
-          localStorage.setItem('ourui_avatarInitial', initial);
-        } catch (e) {
-          console.warn('Cache write failed:', e);
-        }
-        return;
-      }
-
-      // STEP 3: Final fallback to email-based name
-      if (user.email) {
-        const local = user.email.split('@')[0].replace(/[._]/g, ' ');
-        const fallbackName = local.charAt(0).toUpperCase() + local.slice(1);
-        const initial = user.email.charAt(0);
-        console.log('✅ Using email fallback:', fallbackName);
-        setNameAndAvatar(fallbackName, initial);
-      } else {
-        console.log('❌ No name source available');
-      }
+      // Ensure avatar uses any saved profile picture
+      try{
+        const savedPic = localStorage.getItem('ourui_profilePicture');
+        const cachedInitial = localStorage.getItem('ourui_avatarInitial') || (userNameEl.textContent ? userNameEl.textContent.charAt(0) : 'U');
+        if (savedPic) setAvatarImage(savedPic, cachedInitial);
+      }catch(e){ console.warn('Error applying saved profile picture', e); }
     });
+
+    // --- Profile picture modal logic (non-module part targets same ids) ---
+    // Keep a simple listener: when user picks a photo, write to localStorage and update both avatars
+    const photoInput = document.getElementById('photoInput');
+    const photoPreview = document.getElementById('photoPreview');
+    if (photoInput){
+      photoInput.addEventListener('change', (ev)=>{
+        const file = ev.target.files && ev.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = (e)=>{
+          const dataUrl = e.target.result;
+          if (photoPreview) photoPreview.innerHTML = `<img src="${dataUrl}" alt="Profile">`;
+          try{ localStorage.setItem('ourui_profilePicture', dataUrl); }catch(e){ console.warn('Failed to save image to localStorage', e); }
+          setAvatarImage(dataUrl, null);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Remove profile picture button (if present)
+    function removeProfilePicture(){
+      const initial = (localStorage.getItem('ourui_avatarInitial') || (userNameEl.textContent? userNameEl.textContent.charAt(0) : 'U')).charAt(0).toUpperCase();
+      if (photoPreview) photoPreview.textContent = initial;
+      try{ localStorage.removeItem('ourui_profilePicture'); }catch(e){}
+      setAvatarImage(null, initial);
+    }
+    // Expose to global scope so onclick works
+    window.removeProfilePicture = removeProfilePicture;
+
+    // Live name editing (if modals exist in this page)
+    const firstNameInput = document.getElementById('firstNameInput');
+    const lastNameInput = document.getElementById('lastNameInput');
+    if (firstNameInput) firstNameInput.addEventListener('input', updateNameLive);
+    if (lastNameInput) lastNameInput.addEventListener('input', updateNameLive);
+
+    function updateNameLive(){
+      const first = firstNameInput ? firstNameInput.value.trim() : '';
+      const last = lastNameInput ? lastNameInput.value.trim() : '';
+      const full = `${first} ${last}`.trim() || 'User Name';
+      userNameEl.textContent = full;
+      const currentPic = localStorage.getItem('ourui_profilePicture');
+      const initial = (first || full).charAt(0).toUpperCase();
+      if (!currentPic){ setAvatarImage(null, initial); }
+      try{ localStorage.setItem('ourui_displayName', full); localStorage.setItem('ourui_firstName', first); localStorage.setItem('ourui_avatarInitial', initial); }catch(e){}
+    }
+
+    // Populate country grid & gender options if present (reuse major list)
+    const majorCountries = ['Global','United States','United Kingdom','Canada','Australia','Germany','France','Italy','Spain','Netherlands','India','China','Japan','South Korea','Singapore','Brazil','Mexico','Argentina','South Africa','Nigeria'];
+    const countryGrid = document.getElementById('countryGrid');
+    if (countryGrid){ countryGrid.innerHTML=''; majorCountries.forEach(c=>{ const d=document.createElement('div'); d.className='country-option'; d.textContent=c; d.onclick=()=>{ document.getElementById('userCountry').textContent=c; try{ localStorage.setItem('ourui_country',c);}catch(e){}; document.querySelectorAll('.country-option').forEach(x=>x.classList.remove('selected')); d.classList.add('selected');}; countryGrid.appendChild(d); }); }
+    document.querySelectorAll('.gender-option').forEach(el=> el.onclick = ()=>{ document.getElementById('userGender').textContent = el.dataset.gender; try{ localStorage.setItem('ourui_gender', el.dataset.gender);}catch(e){}; document.querySelectorAll('.gender-option').forEach(x=>x.classList.remove('selected')); el.classList.add('selected'); });
+
+    // Initialize UI from localStorage values (name/avatar/date/gender/country)
+    (function initFromCache(){
+      try{
+        const name = localStorage.getItem('ourui_displayName');
+        const birthday = localStorage.getItem('ourui_birthday');
+        const gender = localStorage.getItem('ourui_gender');
+        const country = localStorage.getItem('ourui_country');
+        if (name) userNameEl.textContent = name;
+        if (birthday){ const d = new Date(birthday); document.getElementById('userBirthday').textContent = d.toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}); }
+        if (gender) document.getElementById('userGender').textContent = gender;
+        if (country) document.getElementById('userCountry').textContent = country;
+      }catch(e){ console.warn('init cache failed', e); }
+    })();
+
   </script>
 </body>
-</html>
+        </html>
+  
