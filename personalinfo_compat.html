@@ -1,0 +1,578 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CynviaOne — Personal Info (Compat)</title>
+
+<!-- Roboto -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- Material Symbols Rounded (filled) -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,600,1,0" rel="stylesheet">
+
+<style>
+/* --- (same styles as previous file) --- */
+:root{--bg:#fbf9fb;--card:#e6e4e7;--muted:#a7a5a6;--title:#0b0b0b;--accent:#3f5f90;--radius:18px;--max-w:380px;--icon-size-lg:32px;--icon-size-md:24px;--icon-slot:44px;--gap-22:18px}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-ui,Arial;color:var(--title);-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max-w);margin:8px auto;padding:8px 12px 40px}
+.material-rounded{font-family: 'Material Symbols Rounded';font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 40;display:inline-block;line-height:1;vertical-align:middle}
+.icon-sm{font-size:14px}.icon-md{font-size:var(--icon-size-md)}.icon-lg{font-size:var(--icon-size-lg)}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}.left{display:flex;align-items:center;gap:8px}
+.btn-close{background:transparent;border:0;padding:0;margin:0;font-size:18px;cursor:pointer;color:var(--title);display:inline-flex;align-items:center;justify-content:center}
+.btn-close:focus{outline:2px solid rgba(0,0,0,0.08);outline-offset:2px;border-radius:6px}
+.logo{font-weight:700;font-size:20px;line-height:1}.logo .one{color:var(--accent);font-weight:600}
+.actions{display:flex;gap:12px;align-items:center}.action-icon{background:transparent;border:0;padding:6px;font-size:24px;cursor:pointer;color:var(--title)}
+.action-icon:focus{outline:2px solid rgba(0,0,0,0.06);outline-offset:2px;border-radius:6px}
+.page-header{padding:16px 2px 20px}.page-header h1{margin:0 0 8px;font-size:32px;font-weight:700;line-height:1.1}
+.page-header .subtitle{margin:0 0 12px;font-size:16px;font-weight:600;color:var(--title)}
+.page-header .description{margin:0;font-size:14px;line-height:1.4;color:var(--title);opacity:0.8;font-weight:400}
+.profile-section{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:var(--gap-22)}
+.profile-item{display:flex;align-items:center;gap:14px;padding:12px 0;cursor:pointer;transition:all 0.2s ease}
+.profile-item:hover{opacity:0.8;transform:translateX(2px)}
+.profile-item:first-child{padding-top:0}.profile-item:last-child{padding-bottom:0}
+.profile-item + .profile-item{border-top:1px solid rgba(0,0,0,0.06)}
+.profile-item .icon{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.profile-item .content{flex:1}.profile-item h3{Margin:0 0 3px;font-size:16px;font-weight:600;color:var(--title)}
+.profile-item p{margin:0;font-size:13px;font-weight:400;color:var(--muted);line-height:1.3}
+.profile-item .right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.avatar-display{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700;position:relative;overflow:hidden}
+.avatar-display img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.more{font-size:18px;font-weight:600;margin-top:24px;margin-bottom:20px;padding-left:2px}
+.material-rounded.icon-lg{line-height:1;width:var(--icon-size-lg);height:var(--icon-size-lg);display:block;text-align:center;font-size:var(--icon-size-lg)}
+.material-rounded.icon-md{line-height:1;width:var(--icon-size-md);height:var(--icon-size-md);display:block;text-align:center;font-size:var(--icon-size-md)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border-radius:var(--radius);width:100%;max-width:400px;max-height:80vh;overflow-y:auto;animation:modalSlideIn 0.3s ease-out}
+@keyframes modalSlideIn{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-header{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:20px;font-weight:700;margin:0}.modal-close{background:transparent;border:none;font-size:24px;cursor:pointer;padding:4px;color:var(--muted)}
+.modal-body{padding:20px}.form-group{margin-bottom:20px}.form-label{display:block;font-weight:600;margin-bottom:8px;color:var(--title)}
+.form-input{width:100%;padding:12px 16px;border:1px solid rgba(0,0,0,0.1);border-radius:12px;font-size:16px;font-family:"Roboto",system-ui,Arial;background:var(--bg);transition:all 0.2s ease}
+.form-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(63,95,144,0.1)}
+.form-select{width:100%;padding:12px 16px;border:1px solid rgba(0,0,0,0.1);border-radius:12px;font-size:16px;font-family:"Roboto",system-ui,Arial;background:var(--bg);cursor:pointer}
+.form-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(63,95,144,0.1)}
+.modal-actions{padding:0 20px 20px;display:flex;gap:12px;justify-content:flex-end}
+.btn{padding:12px 24px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all 0.2s ease}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#334f7a}
+.btn-secondary{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.1)}
+.btn-secondary:hover{background:rgba(0,0,0,0.05)}
+.photo-upload{text-align:center;padding:20px}.photo-preview{width:100px;height:100px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:700;margin:0 auto 20px;position:relative;overflow:hidden}
+.photo-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.upload-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;background:var(--card);border:1px solid rgba(0,0,0,0.1);border-radius:12px;cursor:pointer;font-size:16px;font-weight:500;transition:all 0.2s ease}
+.upload-btn:hover{background:rgba(0,0,0,0.05)}.file-input{display:none}
+.country-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.country-option{padding:12px;border:1px solid rgba(0,0,0,0.1);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s ease;background:var(--bg)}
+.country-option:hover{border-color:var(--accent);background:rgba(63,95,144,0.05)}
+.country-option.selected{border-color:var(--accent);background:rgba(63,95,144,0.1);color:var(--accent);font-weight:600}
+.gender-options{display:flex;gap:12px;margin-top:16px}.gender-option{flex:1;padding:12px;border:1px solid rgba(0,0,0,0.1);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s ease;background:var(--bg)}
+.gender-option:hover{border-color:var(--accent);background:rgba(63,95,144,0.05)}.gender-option.selected{border-color:var(--accent);background:rgba(63,95,144,0.1);color:var(--accent);font-weight:600}
+@media (max-width:420px){:root{--max-w:100%}.wrap{padding-left:10px;padding-right:10px}.modal{margin:10px}.country-grid{grid-template-columns:1fr}.gender-options{flex-direction:column}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="left">
+        <button class="btn-close" aria-label="Go back" onclick="goBack()">
+          <span class="material-rounded icon-md">arrow_back</span>
+        </button>
+        <div class="logo">Cynvia<span class="one">One</span></div>
+      </div>
+      <div class="actions" aria-hidden="true">
+        <button class="action-icon" title="Help" aria-label="Help" onclick="window.location.href='mailto:support.cynviaone@outlook.com'">
+          <span class="material-rounded icon-md">help</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>Personal info</h1>
+      <p class="subtitle">Your CynviaOne profile information</p>
+      <p class="description">Manage and update your basic details such as your name, profile photo, gender, date of birth etc. Keeping your information up to date helps us personalize your experience and keep your account secure.</p>
+    </div>
+
+    <div class="profile-section">
+      <div class="profile-item" id="profilePictureItem" tabindex="0" role="button" onclick="openModal('profilePictureModal')">
+        <div class="icon"><span class="material-rounded icon-lg">photo_camera</span></div>
+        <div class="content"><h3>Profile picture</h3><p>Add your profile picture</p></div>
+        <div class="right"><div id="userAvatar" class="avatar-display">U</div></div>
+      </div>
+
+      <div class="profile-item" id="nameItem" tabindex="0" role="button" onclick="openModal('nameModal')">
+        <div class="icon"><span class="material-rounded icon-lg">badge</span></div>
+        <div class="content"><h3>Name</h3><p id="userName">User Name</p></div>
+      </div>
+
+      <div class="profile-item" id="birthdayItem" tabindex="0" role="button" onclick="openModal('birthdayModal')">
+        <div class="icon"><span class="material-rounded icon-lg">cake</span></div>
+        <div class="content"><h3>Birthday</h3><p id="userBirthday">Not specified</p></div>
+      </div>
+
+      <div class="profile-item" id="genderItem" tabindex="0" role="button" onclick="openModal('genderModal')">
+        <div class="icon"><span class="material-rounded icon-lg">person</span></div>
+        <div class="content"><h3>Gender</h3><p id="userGender">Not specified</p></div>
+      </div>
+
+      <div class="profile-item" id="countryItem" tabindex="0" role="button" onclick="openModal('countryModal')">
+        <div class="icon"><span class="material-rounded icon-lg">public</span></div>
+        <div class="content"><h3>Country</h3><p id="userCountry">Not specified</p></div>
+      </div>
+    </div>
+
+    <div class="more">Looking for something else?</div>
+
+    <div class="profile-section">
+      <div class="profile-item" id="aboutItem" tabindex="0" role="button" onclick="alert('About CynviaOne - Coming soon!')">
+        <div class="icon"><span class="material-rounded icon-lg">info</span></div>
+        <div class="content"><h3>About CynviaOne</h3><p>Learn more about CynviaOne</p></div>
+      </div>
+
+      <div class="profile-item" id="feedbackItem" tabindex="0" role="button" onclick="window.location.href='mailto:support.cynviaone@outlook.com?subject=Feedback'">
+        <div class="icon"><span class="material-rounded icon-lg">feedback</span></div>
+        <div class="content"><h3>Send feedback</h3><p>Share your thoughts with us</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS (same as previous) -->
+  <div id="profilePictureModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header"><h2 class="modal-title">Profile Picture</h2><button class="modal-close" onclick="closeModal('profilePictureModal')"><span class="material-rounded">close</span></button></div>
+      <div class="modal-body">
+        <div class="photo-upload">
+          <div id="photoPreview" class="photo-preview">U</div>
+          <label for="photoInput" class="upload-btn"><span class="material-rounded icon-md">upload</span>Choose Photo</label>
+          <input type="file" id="photoInput" class="file-input" accept="image/*">
+          <p style="margin-top:12px;font-size:14px;color:var(--muted);">Upload a photo to personalize your profile</p>
+        </div>
+      </div>
+      <div class="modal-actions"><button class="btn btn-secondary" onclick="removeProfilePicture()">Remove</button><button class="btn btn-primary" onclick="closeModal('profilePictureModal')">Done</button></div>
+    </div>
+  </div>
+
+  <div id="nameModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header"><h2 class="modal-title">Edit Name</h2><button class="modal-close" onclick="closeModal('nameModal')"><span class="material-rounded">close</span></button></div>
+      <div class="modal-body">
+        <div class="form-group"><label class="form-label">First Name</label><input type="text" id="firstNameInput" class="form-input" placeholder="Enter your first name"></div>
+        <div class="form-group"><label class="form-label">Last Name</label><input type="text" id="lastNameInput" class="form-input" placeholder="Enter your last name"></div>
+        <p style="font-size:13px;color:var(--muted);margin-top:-8px">Changes update in real time as you type.</p>
+      </div>
+      <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('nameModal')">Close</button></div>
+    </div>
+  </div>
+
+  <div id="birthdayModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header"><h2 class="modal-title">Birthday</h2><button class="modal-close" onclick="closeModal('birthdayModal')"><span class="material-rounded">close</span></button></div>
+      <div class="modal-body"><div class="form-group"><label class="form-label">Date of Birth</label><input type="date" id="birthdayInput" class="form-input"><p style="margin-top:8px;font-size:14px;color:var(--muted);">Your birthday helps us personalize your experience</p></div></div>
+      <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('birthdayModal')">Close</button></div>
+    </div>
+  </div>
+
+  <div id="genderModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header"><h2 class="modal-title">Gender</h2><button class="modal-close" onclick="closeModal('genderModal')"><span class="material-rounded">close</span></button></div>
+      <div class="modal-body"><p style="margin-bottom:16px;color:var(--muted);">How do you identify?</p><div class="gender-options"><div class="gender-option" data-gender="Male">Male</div><div class="gender-option" data-gender="Female">Female</div><div class="gender-option" data-gender="Other">Other</div></div><p style="font-size:13px;color:var(--muted);margin-top:12px">Selecting an option updates your profile immediately.</p></div>
+      <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('genderModal')">Close</button></div>
+    </div>
+  </div>
+
+  <div id="countryModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header"><h2 class="modal-title">Country</h2><button class="modal-close" onclick="closeModal('countryModal')"><span class="material-rounded">close</span></button></div>
+      <div class="modal-body"><p style="margin-bottom:16px;color:var(--muted);">Select your country</p><div class="country-grid" id="countryGrid"></div><p style="font-size:13px;color:var(--muted);margin-top:12px">Picking a country updates your profile immediately.</p></div>
+      <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('countryModal')">Close</button></div>
+    </div>
+  </div>
+
+  <!-- Firebase compat scripts (non-module). These load on file:// as well. -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <script>
+    // --------------------------
+    // TODO: PASTE YOUR FIREBASE CONFIG HERE (same format)
+    // --------------------------
+    var firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var auth = firebase.auth();
+    var db = firebase.firestore();
+    var storage = firebase.storage();
+
+    // Global variables
+    var selectedGender = '';
+    var selectedCountry = '';
+    var currentProfilePicture = null;
+    var currentUser = null;
+
+    var majorCountries = ['Global','United States','United Kingdom','Canada','Australia','Germany','France','Italy','Spain','Netherlands','India','China','Japan','South Korea','Singapore','Brazil','Mexico','Argentina','South Africa','Nigeria'];
+
+    function goBack(){
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
+    function loadInitialUserData() {
+      try {
+        var cachedName = localStorage.getItem('ourui_displayName') || 'User Name';
+        var cachedInitial = localStorage.getItem('ourui_avatarInitial') || cachedName.charAt(0).toUpperCase();
+        var cachedGender = localStorage.getItem('ourui_gender') || 'Not specified';
+        var cachedCountry = localStorage.getItem('ourui_country') || 'Not specified';
+        var cachedBirthday = localStorage.getItem('ourui_birthday');
+        var cachedProfilePicture = localStorage.getItem('ourui_profilePicture');
+
+        document.getElementById('userName').textContent = cachedName;
+        document.getElementById('userGender').textContent = cachedGender;
+        document.getElementById('userCountry').textContent = cachedCountry;
+        selectedGender = (cachedGender && cachedGender !== 'Not specified') ? cachedGender : '';
+        selectedCountry = (cachedCountry && cachedCountry !== 'Not specified') ? cachedCountry : '';
+
+        var avatarEl = document.getElementById('userAvatar');
+        if (cachedProfilePicture) {
+          avatarEl.innerHTML = '<img src="'+cachedProfilePicture+'" alt="Profile">';
+          currentProfilePicture = cachedProfilePicture;
+        } else {
+          avatarEl.textContent = cachedInitial;
+        }
+
+        if (cachedBirthday) {
+          var date = new Date(cachedBirthday);
+          var formattedDate = date.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+          document.getElementById('userBirthday').textContent = formattedDate;
+          document.getElementById('birthdayInput').value = cachedBirthday;
+        }
+      } catch (e) {
+        console.log('Error loading cached data:', e);
+      }
+    }
+
+    // Firestore read
+    function loadUserFromServer(uid) {
+      if (!uid) return;
+      var userDocRef = db.collection('users').doc(uid);
+      userDocRef.get().then(function(snap) {
+        if (!snap.exists) {
+          // seed initial data
+          var authProfile = auth.currentUser;
+          var initialData = {
+            displayName: localStorage.getItem('ourui_displayName') || (authProfile && authProfile.displayName) || null,
+            firstName: localStorage.getItem('ourui_firstName') || null,
+            avatarInitial: localStorage.getItem('ourui_avatarInitial') || null,
+            birthday: localStorage.getItem('ourui_birthday') || null,
+            gender: localStorage.getItem('ourui_gender') || null,
+            country: localStorage.getItem('ourui_country') || null,
+            photoURL: (authProfile && authProfile.photoURL) || localStorage.getItem('ourui_profilePicture') || null,
+            updatedAt: new Date().toISOString()
+          };
+          userDocRef.set(initialData, { merge: true }).then(function() {
+            applyUserDataToUI(initialData, true);
+          });
+          return;
+        }
+        var data = snap.data();
+        applyUserDataToUI(data, true);
+      }).catch(function(err){
+        console.error('Error loading user from server:', err);
+      });
+    }
+
+    function applyUserDataToUI(data, persistLocal) {
+      if (!data) return;
+      var name = data.displayName || 'User Name';
+      var gender = data.gender || 'Not specified';
+      var country = data.country || 'Not specified';
+      var birthday = data.birthday || null;
+      var photoURL = data.photoURL || null;
+
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userGender').textContent = gender;
+      document.getElementById('userCountry').textContent = country;
+      selectedGender = (gender && gender !== 'Not specified') ? gender : '';
+      selectedCountry = (country && country !== 'Not specified') ? country : '';
+
+      var avatarEl = document.getElementById('userAvatar');
+      if (photoURL) {
+        avatarEl.innerHTML = '<img src="'+photoURL+'" alt="Profile">';
+        currentProfilePicture = photoURL;
+      } else {
+        var initial = (data.firstName && data.firstName.charAt(0).toUpperCase()) || (name && name.charAt(0).toUpperCase()) || 'U';
+        avatarEl.textContent = initial;
+        currentProfilePicture = null;
+      }
+
+      if (birthday) {
+        try {
+          var date = new Date(birthday);
+          if (!isNaN(date)) {
+            var formattedDate = date.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+            document.getElementById('userBirthday').textContent = formattedDate;
+            document.getElementById('birthdayInput').value = birthday;
+          }
+        } catch(e){}
+      } else {
+        document.getElementById('userBirthday').textContent = 'Not specified';
+      }
+
+      if (persistLocal) {
+        if (data.displayName) localStorage.setItem('ourui_displayName', data.displayName);
+        if (data.firstName) localStorage.setItem('ourui_firstName', data.firstName);
+        if (data.avatarInitial) localStorage.setItem('ourui_avatarInitial', data.avatarInitial);
+        if (data.gender) localStorage.setItem('ourui_gender', data.gender);
+        if (data.country) localStorage.setItem('ourui_country', data.country);
+        if (data.birthday) localStorage.setItem('ourui_birthday', data.birthday);
+        if (data.photoURL) localStorage.setItem('ourui_profilePicture', data.photoURL);
+      }
+    }
+
+    function updateFirebaseUserData() {
+      if (!currentUser) return;
+      var uid = currentUser.uid;
+      var displayName = document.getElementById('userName').textContent || null;
+      var firstName = document.getElementById('firstNameInput').value.trim() || null;
+      var photoURL = currentProfilePicture || null;
+      var gender = selectedGender || null;
+      var country = selectedCountry || null;
+      var birthdayInput = document.getElementById('birthdayInput').value || null;
+
+      var payload = {
+        displayName: displayName,
+        firstName: firstName,
+        photoURL: photoURL,
+        gender: gender,
+        country: country,
+        birthday: birthdayInput || null,
+        updatedAt: new Date().toISOString()
+      };
+
+      var userDocRef = db.collection('users').doc(uid);
+      userDocRef.set(payload, { merge: true }).then(function() {
+        // update auth profile
+        try {
+          if (auth.currentUser && auth.currentUser.updateProfile) {
+            auth.currentUser.updateProfile({ displayName: displayName || null, photoURL: photoURL || null }).catch(function(){});
+          }
+        } catch(e){}
+        if (payload.displayName) localStorage.setItem('ourui_displayName', payload.displayName);
+        if (payload.firstName) localStorage.setItem('ourui_firstName', payload.firstName);
+        if (payload.photoURL) localStorage.setItem('ourui_profilePicture', payload.photoURL);
+        if (payload.gender) localStorage.setItem('ourui_gender', payload.gender);
+        if (payload.country) localStorage.setItem('ourui_country', payload.country);
+        if (payload.birthday) localStorage.setItem('ourui_birthday', payload.birthday);
+        console.log('User data saved to Firestore (compat).');
+      }).catch(function(err){
+        console.error('Failed to update firebase user data (compat):', err);
+      });
+    }
+
+    auth.onAuthStateChanged(function(user){
+      currentUser = user || null;
+      if (currentUser) {
+        loadUserFromServer(currentUser.uid);
+      } else {
+        console.log('No user signed in.');
+      }
+    });
+
+    function openModal(modalId) {
+      var modal = document.getElementById(modalId);
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      switch(modalId) {
+        case 'nameModal': initNameModal(); break;
+        case 'birthdayModal': initBirthdayModal(); break;
+        case 'genderModal': initGenderModal(); break;
+        case 'countryModal': initCountryModal(); break;
+        case 'profilePictureModal': initProfilePictureModal(); break;
+      }
+    }
+    function closeModal(modalId) {
+      var modal = document.getElementById(modalId);
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.querySelectorAll('.modal-overlay').forEach(function(overlay){
+      overlay.addEventListener('click', function(e){
+        if (e.target === overlay) closeModal(overlay.id);
+      });
+    });
+
+    function initProfilePictureModal() {
+      var preview = document.getElementById('photoPreview');
+      var avatar = document.getElementById('userAvatar');
+      if (avatar.innerHTML.indexOf('<img') !== -1) preview.innerHTML = avatar.innerHTML;
+      else preview.textContent = avatar.textContent;
+      currentProfilePicture = localStorage.getItem('ourui_profilePicture');
+    }
+
+    document.getElementById('photoInput').addEventListener('change', function(e){
+      var file = e.target.files[0];
+      if (file && file.type && file.type.indexOf('image/') === 0) {
+        var reader = new FileReader();
+        reader.onload = function(evt) {
+          var preview = document.getElementById('photoPreview');
+          preview.innerHTML = '<img src="'+evt.target.result+'" alt="Profile">';
+        };
+        reader.readAsDataURL(file);
+
+        if (currentUser) {
+          var uid = currentUser.uid;
+          var filename = Date.now() + '-' + file.name.replace(/\s+/g,'_');
+          var ref = storage.ref('profilePictures/' + uid + '/' + filename);
+          ref.put(file).then(function(snapshot){
+            return snapshot.ref.getDownloadURL();
+          }).then(function(downloadURL){
+            var avatar = document.getElementById('userAvatar');
+            avatar.innerHTML = '<img src="'+downloadURL+'" alt="Profile">';
+            currentProfilePicture = downloadURL;
+            localStorage.setItem('ourui_profilePicture', downloadURL);
+            updateFirebaseUserData();
+          }).catch(function(err){
+            console.error('Upload failed (compat), falling back to base64:', err);
+            var fallbackReader = new FileReader();
+            fallbackReader.onload = function(rt){
+              var base64 = rt.target.result;
+              var avatar = document.getElementById('userAvatar');
+              avatar.innerHTML = '<img src="'+base64+'" alt="Profile">';
+              currentProfilePicture = base64;
+              localStorage.setItem('ourui_profilePicture', base64);
+            };
+            fallbackReader.readAsDataURL(file);
+          });
+        } else {
+          var fallbackReader = new FileReader();
+          fallbackReader.onload = function(rt){
+            var base64 = rt.target.result;
+            var avatar = document.getElementById('userAvatar');
+            avatar.innerHTML = '<img src="'+base64+'" alt="Profile">';
+            currentProfilePicture = base64;
+            localStorage.setItem('ourui_profilePicture', base64);
+          };
+          fallbackReader.readAsDataURL(file);
+        }
+      }
+    });
+
+    function removeProfilePicture(){
+      var preview = document.getElementById('photoPreview');
+      var userName = document.getElementById('userName').textContent;
+      var initial = userName.charAt(0).toUpperCase();
+      preview.textContent = initial;
+      currentProfilePicture = null;
+      var avatar = document.getElementById('userAvatar');
+      avatar.textContent = initial;
+      localStorage.removeItem('ourui_profilePicture');
+      if (currentUser) {
+        var uid = currentUser.uid;
+        var userDocRef = db.collection('users').doc(uid);
+        userDocRef.set({ photoURL: null }, { merge: true }).then(function(){
+          try { if (auth.currentUser && auth.currentUser.updateProfile) auth.currentUser.updateProfile({ photoURL: null }); } catch(e){}
+        }).catch(function(err){ console.warn('Failed to remove photo on server (compat):', err); });
+      }
+    }
+
+    function initNameModal(){
+      var userName = document.getElementById('userName').textContent;
+      var nameParts = userName.split(' ');
+      document.getElementById('firstNameInput').value = nameParts[0] || '';
+      document.getElementById('lastNameInput').value = nameParts.slice(1).join(' ') || '';
+    }
+
+    function updateNameLive(){
+      var firstName = document.getElementById('firstNameInput').value.trim();
+      var lastName = document.getElementById('lastNameInput').value.trim();
+      var fullName = (firstName + ' ' + lastName).trim() || 'User Name';
+      document.getElementById('userName').textContent = fullName;
+      var avatar = document.getElementById('userAvatar');
+      if (avatar.innerHTML.indexOf('<img') === -1) avatar.textContent = (firstName || fullName).charAt(0).toUpperCase();
+      localStorage.setItem('ourui_displayName', fullName);
+      localStorage.setItem('ourui_firstName', firstName);
+      localStorage.setItem('ourui_avatarInitial', (firstName || fullName).charAt(0).toUpperCase());
+      if (currentUser) updateFirebaseUserData();
+    }
+    document.getElementById('firstNameInput').addEventListener('input', updateNameLive);
+    document.getElementById('lastNameInput').addEventListener('input', updateNameLive);
+
+    document.getElementById('birthdayInput').addEventListener('input', function(e){
+      var val = e.target.value;
+      if (!val) {
+        document.getElementById('userBirthday').textContent = 'Not specified';
+        localStorage.removeItem('ourui_birthday');
+        if (currentUser) updateFirebaseUserData();
+        return;
+      }
+      var date = new Date(val);
+      var formattedDate = date.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+      document.getElementById('userBirthday').textContent = formattedDate;
+      localStorage.setItem('ourui_birthday', val);
+      if (currentUser) updateFirebaseUserData();
+    });
+
+    function initGenderModal(){
+      document.querySelectorAll('.gender-option').forEach(function(el){
+        el.classList.remove('selected');
+        if (el.getAttribute('data-gender') === selectedGender) el.classList.add('selected');
+        el.onclick = function(){ selectGender(el); };
+      });
+    }
+
+    function selectGender(el){
+      document.querySelectorAll('.gender-option').forEach(function(g){g.classList.remove('selected');});
+      el.classList.add('selected');
+      selectedGender = el.getAttribute('data-gender');
+      document.getElementById('userGender').textContent = selectedGender;
+      localStorage.setItem('ourui_gender', selectedGender);
+      if (currentUser) updateFirebaseUserData();
+    }
+
+    function initCountryModal(){
+      var grid = document.getElementById('countryGrid');
+      grid.innerHTML = '';
+      majorCountries.forEach(function(c){
+        var div = document.createElement('div');
+        div.className = 'country-option';
+        div.textContent = c;
+        if (c === selectedCountry) div.classList.add('selected');
+        div.onclick = function(){ selectCountry(c, div); };
+        grid.appendChild(div);
+      });
+    }
+
+    function selectCountry(countryName, el){
+      document.querySelectorAll('.country-option').forEach(function(x){x.classList.remove('selected');});
+      if (el) el.classList.add('selected');
+      selectedCountry = countryName;
+      document.getElementById('userCountry').textContent = countryName;
+      localStorage.setItem('ourui_country', countryName);
+      if (currentUser) updateFirebaseUserData();
+    }
+
+    (function(){
+      loadInitialUserData();
+      initCountryModal();
+      initGenderModal();
+      document.querySelectorAll('.profile-item').forEach(function(item){
+        item.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' ') { item.click(); e.preventDefault(); }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
