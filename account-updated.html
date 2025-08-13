@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CynviaOne — Profile (Updated)</title>
+
+<!-- Roboto -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500,700,800&display=swap" rel="stylesheet">
+<!-- Material Symbols Rounded (filled) -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,600,1,0" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#fbf9fb;
+    --card:#e6e4e7;
+    --muted:#a7a5a6;
+    --title:#0b0b0b;
+    --accent:#3f5f90;
+    --radius:18px;
+    --max-w:380px;
+    --icon-size-lg:32px;
+    --icon-size-md:24px;
+    --icon-slot:44px;
+    --gap-22:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-ui,Arial;color:var(--title);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--max-w);margin:8px auto;padding:8px 12px 64px}
+
+  /* Material filled (rounded) */
+  .material-rounded{font-family: 'Material Symbols Rounded';font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 40;display:inline-block;line-height:1;vertical-align:middle}
+  .icon-sm{font-size:14px}.icon-md{font-size:var(--icon-size-md)}.icon-lg{font-size:var(--icon-size-lg)}
+
+  /* TOP BAR - FLOATING ON SCROLL */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:6px;
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:var(--bg);
+    padding:8px 0;
+    transition:all 0.28s ease;
+  }
+  .topbar.scrolled{
+    background:rgba(251, 249, 251, 0.95);
+    backdrop-filter:blur(12px);
+    box-shadow:0 2px 20px rgba(0,0,0,0.08);
+    margin-bottom:12px;
+  }
+  .left{display:flex;align-items:center;gap:8px}
+  .btn-close{background:transparent;border:0;padding:0;margin:0;font-size:18px;cursor:pointer;color:var(--title);display:inline-flex;align-items:center;justify-content:center}
+  .logo{font-weight:800;font-size:20px;line-height:1}.logo .one{color:var(--accent);font-weight:700}
+  .actions{display:flex;gap:12px;align-items:center;padding-right:8px}
+  .action-icon{background:transparent;border:0;padding:6px;font-size:24px;cursor:pointer;color:var(--title);transition:transform 240ms ease}
+  .action-icon.help{transition:transform 360ms cubic-bezier(.2,.9,.28,1);margin-right:0}
+
+  /* small avatar that appears on scroll */
+  .avatar-small{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:var(--accent);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(-6px) scale(.95);
+    transition:all 320ms cubic-bezier(.2,.9,.28,1);
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    position:absolute;
+    right:8px;
+  }
+  .avatar-small img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+
+  /* when scrolled - show avatar and nudge help button */
+  .topbar.scrolled .avatar-small{opacity:1;transform:translateY(0) scale(1)}
+  .topbar.scrolled .action-icon.help{transform:translateX(-52px)}
+
+  /* PROFILE */
+  .profile{display:flex;align-items:center;gap:12px;padding:6px 2px 20px}
+  .avatar{width:76px;height:76px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:40px;font-weight:700;flex-shrink:0;overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .meta h2{margin:0 0 6px;font-size:20px;font-weight:800}
+  .meta p{margin:0;font-size:15px;font-weight:600;color:#111;opacity:0.9}
+
+  /* Personal info card */
+  .big-card{background:var(--card);border-radius:var(--radius);padding:16px 16px;display:flex;gap:14px;align-items:center;margin-top:25px;margin-bottom:var(--gap-22);cursor:pointer}
+  .big-card .icon{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center}
+  .big-card h3{margin:0 0 6px;font-size:18px;font-weight:800}
+  .big-card p{margin:0;color:var(--muted);font-size:14px;font-weight:700;line-height:1.45}
+
+  .card-group{background:var(--card);border-radius:var(--radius);overflow:hidden;margin-bottom:var(--gap-22)}
+  .row{display:flex;gap:14px;align-items:center;padding:14px 16px;cursor:pointer}
+  .row + .row{border-top:4px solid rgba(255,255,255,0.55)}
+  .row .icon{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .row h4{margin:0 0 6px;font-size:17px;font-weight:800}
+  .row p{margin:0;color:var(--muted);font-size:14px;font-weight:700;line-height:1.45;opacity:0.95}
+
+  .notify{background:var(--card);border-radius:var(--radius);padding:14px 16px;display:flex;gap:14px;align-items:center;margin-bottom:var(--gap-22)}
+  .more{font-size:18px;font-weight:600;margin-top:24px;margin-bottom:20px;padding-left:2px;color:var(--title)}
+
+  /* UPDATED BOTTOM SECTION - Match personalinfo.html style as GROUP CARD */
+  .profile-section{
+    background:var(--card);
+    border-radius:var(--radius);
+    overflow:hidden;
+    margin-top:16px;
+  }
+  .profile-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:14px 16px;
+    cursor:pointer;
+    background:transparent;
+    border-radius:0;
+    margin-bottom:0;
+    transition:all 0.2s ease;
+  }
+  .profile-item + .profile-item{
+    border-top:4px solid rgba(255,255,255,0.4);
+  }
+  .profile-item:hover{
+    opacity:0.8;
+    transform:translateX(2px);
+  }
+  .profile-item .icon{
+    width:var(--icon-slot);
+    height:var(--icon-slot);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .profile-item .content{
+    flex:1;
+  }
+  .profile-item h3{
+    margin:0 0 3px;
+    font-size:16px;
+    font-weight:600;
+    color:var(--title);
+  }
+  .profile-item p{
+    margin:0;
+    font-size:13px;
+    font-weight:400;
+    color:var(--muted);
+    line-height:1.3;
+  }
+
+  @media (max-width:420px){:root{--max-w:100%}.wrap{padding-left:10px;padding-right:10px}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- TOP BAR -->
+    <div class="topbar" id="topbar">
+      <div class="left">
+        <button class="btn-close" aria-label="Close / Go back" onclick="goBack()">
+          <span class="material-rounded icon-md">close</span>
+        </button>
+        <div class="logo">Cynvia<span class="one">One</span></div>
+      </div>
+
+      <div class="actions" aria-hidden="true">
+        <button class="action-icon help" title="Help" aria-label="Help" id="helpBtn">
+          <span class="material-rounded icon-md">help</span>
+        </button>
+        <!-- top-right avatar that appears when scrolling -->
+        <div id="topRightAvatar" class="avatar-small" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE HEADER -->
+    <div class="profile">
+      <div id="avatar" class="avatar">U</div>
+      <div class="meta">
+        <h2 id="userName">Wait a sec...</h2>
+        <p>Your account</p>
+      </div>
+    </div>
+
+    <!-- Personal info -->
+    <div id="personalCard" class="big-card" tabindex="0" role="button" aria-pressed="false">
+      <div class="icon" aria-hidden="true">
+        <span class="material-rounded icon-lg">account_circle</span>
+      </div>
+      <div class="texts">
+        <h3>Personal info</h3>
+        <p>Profile picture, Name,<br>Birthday, gender</p>
+      </div>
+    </div>
+
+    <!-- Card group -->
+    <div class="card-group" role="list">
+      <div id="securityRow" class="row" role="listitem" tabindex="0">
+        <div class="icon" aria-hidden="true">
+          <span class="material-rounded icon-lg">lock</span>
+        </div>
+        <div class="texts">
+          <h4>Security & sign-in</h4>
+          <p>E-mail, phone number,<br>password</p>
+        </div>
+      </div>
+
+      <div id="deviceRow" class="row" role="listitem" tabindex="0">
+        <div class="icon">
+          <span class="material-rounded icon-lg">smartphone</span>
+        </div>
+        <div class="texts">
+          <h4>Your device</h4>
+          <p>Your mobile information</p>
+        </div>
+      </div>
+
+      <div id="dataRow" class="row" role="listitem" tabindex="0">
+        <div class="icon">
+          <span class="material-rounded icon-lg">toggle_off</span>
+        </div>
+        <div class="texts">
+          <h4>Data & privacy</h4>
+          <p>About data & privacy</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications (styled same as personal info) -->
+    <div id="notifyRow" class="big-card" tabindex="0" role="button">
+      <div class="icon">
+        <span class="material-rounded icon-lg">notifications</span>
+      </div>
+      <div class="texts">
+        <h3>Notification & offers</h3>
+        <p>All new updates and<br>offers notifications</p>
+      </div>
+    </div>
+
+    <div class="more">Looking for something else?</div>
+
+    <!-- UPDATED BOTTOM SECTION - Match personalinfo.html style -->
+    <div class="profile-section">
+      <div class="profile-item" id="aboutItem" tabindex="0" role="button">
+        <div class="icon"><span class="material-rounded icon-lg">info</span></div>
+        <div class="content">
+          <h3>About CynviaOne</h3>
+          <p>Learn more about CynviaOne</p>
+        </div>
+      </div>
+
+      <div class="profile-item" id="feedbackItem" tabindex="0" role="button">
+        <div class="icon"><span class="material-rounded icon-lg">feedback</span></div>
+        <div class="content">
+          <h3>Send feedback</h3>
+          <p>Share your thoughts with us</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function goBack(){
+      if (window.history.length > 1) window.history.back(); else console.log('No history to go back to.');
+    }
+  </script>
+
+  <!-- Firebase + localStorage logic (updated for REAL-TIME and duplication fixes) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
+      authDomain: "ouruiofficial.firebaseapp.com",
+      projectId: "ouruiofficial",
+      storageBucket: "ouruiofficial.firebasestorage.app",
+      messagingSenderId: "513335403025",
+      appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+      measurementId: "G-X5QWNP8DMK"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const userNameEl = document.getElementById('userName');
+    const headerAvatarEl = document.getElementById('avatar');
+    const topRightAvatarEl = document.getElementById('topRightAvatar');
+
+    const personalCard = document.getElementById('personalCard');
+    const securityRow = document.getElementById('securityRow');
+    const deviceRow = document.getElementById('deviceRow');
+    const dataRow = document.getElementById('dataRow');
+    const notifyRow = document.getElementById('notifyRow');
+    const aboutItem = document.getElementById('aboutItem');
+    const feedbackItem = document.getElementById('feedbackItem');
+
+    const targets = {
+      personal: 'personalinfo.html',
+      security: 'securitysignin.html',
+      device: 'yourdevice.html',
+      data: 'dataprivacy.html',
+      notify: 'notificationsoffers.html',
+      about: '#',
+      feedback: 'mailto:support.cynviaone@outlook.com?subject=Feedback'
+    };
+
+    function safeNavigate(url){ if(!url){console.warn('No URL provided for navigation.');return;} window.location.href = url; }
+
+    // Set explicit handlers
+    if (personalCard) personalCard.addEventListener('click', ()=> safeNavigate(targets.personal));
+    if (securityRow) securityRow.addEventListener('click', ()=> safeNavigate(targets.security));
+    if (deviceRow) deviceRow.addEventListener('click', ()=> safeNavigate(targets.device));
+    if (dataRow) dataRow.addEventListener('click', ()=> safeNavigate(targets.data));
+    if (notifyRow) notifyRow.addEventListener('click', ()=> safeNavigate(targets.notify));
+    if (aboutItem) { aboutItem.addEventListener('click', ()=> alert('About CynviaOne - Coming soon!')); }
+    if (feedbackItem) { feedbackItem.addEventListener('click', ()=> window.location.href = targets.feedback); }
+
+    // Helper to set avatar DOM (left and top-right)
+    function setAvatarImage(dataUrlOrNull, fallbackInitial){
+      if (dataUrlOrNull){
+        headerAvatarEl.innerHTML = `<img src="${dataUrlOrNull}" alt="Profile">`;
+        if (topRightAvatarEl) topRightAvatarEl.innerHTML = `<img src="${dataUrlOrNull}" alt="Profile">`;
+      } else {
+        const initial = (fallbackInitial||'U').charAt(0).toUpperCase();
+        headerAvatarEl.textContent = initial;
+        if (topRightAvatarEl) topRightAvatarEl.textContent = initial;
+      }
+    }
+
+    // Build a robust full name string and avoid duplicates (e.g. "John John")
+    function buildFullName(first, last, display){
+      const f = (first||'').trim();
+      const l = (last||'').trim();
+      const d = (display||'').trim();
+      if (f && l) {
+        // avoid repeated identical names
+        if (f.toLowerCase() === l.toLowerCase()) return f;
+        return `${f} ${l}`;
+      }
+      if (f) return f;
+      if (l) return l;
+      if (d) return d;
+      return '';
+    }
+
+    function updateDisplayName(fullName, initial) {
+      if (fullName && fullName.trim() !== '') {
+        userNameEl.textContent = fullName;
+        console.log('Display name updated to:', fullName);
+
+        // Cache the full name
+        try {
+          localStorage.setItem('ourui_displayName', fullName);
+          localStorage.setItem('ourui_avatarInitial', initial);
+        } catch(e) {
+          console.warn('Failed to cache display name:', e);
+        }
+      }
+    }
+
+    // FAST LOADING: Try cached values first for instant UI
+    (function loadCachedDataFast(){
+      try{
+        const cachedName = localStorage.getItem('ourui_displayName');
+        const cachedInitial = localStorage.getItem('ourui_avatarInitial') || (cachedName ? cachedName.charAt(0) : 'U');
+        const cachedProfile = localStorage.getItem('ourui_profilePicture');
+
+        // Immediate UI update from cache
+        if (cachedName && cachedName.trim() !== '') {
+          userNameEl.textContent = cachedName;
+          console.log('Fast loaded name:', cachedName);
+        }
+
+        if (cachedProfile){ 
+          setAvatarImage(cachedProfile, cachedInitial);
+          console.log('Fast loaded profile picture from cache');
+        } else { 
+          setAvatarImage(null, cachedInitial);
+          console.log('Fast loaded avatar initial:', cachedInitial);
+        }
+      }catch(e){ 
+        console.warn('Cache read failed', e);
+        // Fallback to default
+        setAvatarImage(null, 'U');
+      }
+    })();
+
+    // Keep reference to current user's document so we can write on edits
+    let currentUserDocRef = null;
+
+    // Realtime listener + robust name handling
+    onAuthStateChanged(auth, async (user)=>{
+      if (!user){ 
+        console.log('No user, redirecting to signin'); 
+        window.location.href='signin.html'; 
+        return; 
+      }
+
+      console.log('User authenticated, setting up realtime profile listener...');
+
+      try{
+        currentUserDocRef = doc(db, 'users', user.uid);
+
+        // Use onSnapshot for realtime updates; this will update the UI automatically when user document changes
+        const unsubscribe = onSnapshot(currentUserDocRef, (snap) => {
+          if (snap.exists()){
+            const data = snap.data() || {};
+            const fullName = buildFullName(data.firstName, data.lastName, data.displayName || user.displayName || '');
+            const initial = (data.firstName || fullName || user.displayName || user.email || 'U').charAt(0).toUpperCase();
+
+            console.log('Realtime snapshot - name parts:', data.firstName, data.lastName, 'display:', data.displayName);
+
+            if (fullName) {
+              updateDisplayName(fullName, initial);
+            }
+
+            if (data.photoURL){
+              setAvatarImage(data.photoURL, initial);
+              try{ localStorage.setItem('ourui_profilePicture', data.photoURL); }catch(e){}
+            }
+
+            // also cache name parts for fast load
+            try{ localStorage.setItem('ourui_firstName', data.firstName || ''); localStorage.setItem('ourui_lastName', data.lastName || ''); }catch(e){}
+
+          } else {
+            // no document found: fallback to auth profile
+            console.log('No user document found in Firestore, falling back to auth profile');
+            const fallbackName = user.displayName ? user.displayName : (user.email ? user.email.split('@')[0] : 'User');
+            updateDisplayName(fallbackName, (fallbackName||'U').charAt(0).toUpperCase());
+            if (user.photoURL) setAvatarImage(user.photoURL, (fallbackName||'U').charAt(0).toUpperCase());
+          }
+        }, (err)=>{
+          console.warn('Realtime profile listener failed:', err);
+        });
+
+        // store unsubscribe so other modules can call it if necessary
+        window.__ourui_unsubscribeProfile = unsubscribe;
+
+      }catch(err){ 
+        console.warn('Setting up realtime listener failed', err); 
+      }
+
+    });
+
+    // SCROLL: Enhanced floating top bar with smooth transitions
+    const topbar = document.getElementById('topbar');
+    let isScrolled = false;
+    let ticking = false;
+
+    function updateTopBar() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const shouldFloat = scrollY > 40;
+
+      if (shouldFloat !== isScrolled) {
+        isScrolled = shouldFloat;
+        if (shouldFloat) {
+          topbar.classList.add('scrolled');
+        } else {
+          topbar.classList.remove('scrolled');
+        }
+      }
+      ticking = false;
+    }
+
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateTopBar);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', requestTick, { passive: true });
+
+    // Profile picture modal logic (kept simple)
+    const photoInput = document.getElementById('photoInput');
+    const photoPreview = document.getElementById('photoPreview');
+    if (photoInput){
+      photoInput.addEventListener('change', (ev)=>{
+        const file = ev.target.files && ev.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = (e)=>{
+          const dataUrl = e.target.result;
+          if (photoPreview) photoPreview.innerHTML = `<img src="${dataUrl}" alt="Profile">`;
+          try{ localStorage.setItem('ourui_profilePicture', dataUrl); }catch(e){ console.warn('Failed to save image to localStorage', e); }
+          setAvatarImage(dataUrl, null);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function removeProfilePicture(){
+      const initial = (localStorage.getItem('ourui_avatarInitial') || (userNameEl.textContent? userNameEl.textContent.charAt(0) : 'U')).charAt(0).toUpperCase();
+      if (photoPreview) photoPreview.textContent = initial;
+      try{ localStorage.removeItem('ourui_profilePicture'); }catch(e){}
+      setAvatarImage(null, initial);
+    }
+    window.removeProfilePicture = removeProfilePicture;
+
+    // Live name editing (if modals exist in this page)
+    const firstNameInput = document.getElementById('firstNameInput');
+    const lastNameInput = document.getElementById('lastNameInput');
+
+    // Debounce helper for saving to Firestore
+    function debounce(fn, wait){ let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), wait); }; }
+
+    // Save name to Firestore (best-effort; will fail silently if rules block it)
+    async function saveNameToFirestore(first, last){
+      if (!currentUserDocRef) return;
+      try{
+        const payload = {};
+        if (typeof first === 'string') payload.firstName = first.trim();
+        if (typeof last === 'string') payload.lastName = last.trim();
+        // also set displayName to join of both (useful fallback)
+        const display = buildFullName(payload.firstName, payload.lastName, '');
+        if (display) payload.displayName = display;
+        await updateDoc(currentUserDocRef, payload);
+        console.log('Saved name to Firestore:', payload);
+      }catch(e){
+        console.warn('Failed to save name to Firestore (this may be due to security rules):', e);
+      }
+    }
+    const debouncedSave = debounce(saveNameToFirestore, 900);
+
+    if (firstNameInput) firstNameInput.addEventListener('input', onLocalNameChange);
+    if (lastNameInput) lastNameInput.addEventListener('input', onLocalNameChange);
+
+    function onLocalNameChange(){
+      const first = firstNameInput ? firstNameInput.value.trim() : '';
+      const last = lastNameInput ? lastNameInput.value.trim() : '';
+      const full = buildFullName(first, last, localStorage.getItem('ourui_displayName') || '');
+      updateDisplayName(full || 'User Name', (first || full).charAt(0).toUpperCase());
+
+      // store locally
+      try{ localStorage.setItem('ourui_firstName', first); localStorage.setItem('ourui_lastName', last); }catch(e){}
+
+      // write to Firestore (debounced) so other devices/pages get realtime update
+      debouncedSave(first, last);
+    }
+
+    // Initialize other UI components
+    const majorCountries = ['Global','United States','United Kingdom','Canada','Australia','Germany','France','Italy','Spain','Netherlands','India','China','Japan','South Korea','Singapore','Brazil','Mexico','Argentina','South Africa','Nigeria'];
+    const countryGrid = document.getElementById('countryGrid');
+    if (countryGrid){ countryGrid.innerHTML=''; majorCountries.forEach(c=>{ const d=document.createElement('div'); d.className='country-option'; d.textContent=c; d.onclick=()=>{ document.getElementById('userCountry').textContent=c; try{ localStorage.setItem('ourui_country',c);}catch(e){}; document.querySelectorAll('.country-option').forEach(x=>x.classList.remove('selected')); d.classList.add('selected');}; countryGrid.appendChild(d); }); }
+    document.querySelectorAll('.gender-option').forEach(el=> el.onclick = ()=>{ document.getElementById('userGender').textContent = el.dataset.gender; try{ localStorage.setItem('ourui_gender', el.dataset.gender);}catch(e){}; document.querySelectorAll('.gender-option').forEach(x=>x.classList.remove('selected')); el.classList.add('selected'); });
+
+    // Initialize UI from localStorage values (name/avatar/date/gender/country)
+    (function initFromCache(){
+      try{
+        const name = localStorage.getItem('ourui_displayName');
+        const birthday = localStorage.getItem('ourui_birthday');
+        const gender = localStorage.getItem('ourui_gender');
+        const country = localStorage.getItem('ourui_country');
+        if (name && name.trim()) userNameEl.textContent = name;
+        if (birthday){ const d = new Date(birthday); const el = document.getElementById('userBirthday'); if (el) el.textContent = d.toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}); }
+        if (gender){ const el = document.getElementById('userGender'); if (el) el.textContent = gender; }
+        if (country){ const el = document.getElementById('userCountry'); if (el) el.textContent = country; }
+      }catch(e){ console.warn('init cache failed', e); }
+    })();
+
+  </script>
+</body>
+</html>
