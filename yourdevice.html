@@ -69,8 +69,22 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
 /* "Looking for something else?" and options */
 .more{font-weight:700;font-size:20px;margin-top:26px;padding-left:2px}
 .profile-section{background:var(--card);border-radius:var(--radius);padding:10px;margin-top:12px}
-.profile-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;cursor:pointer}
-.profile-item + .profile-item{margin-top:8px}
+.profile-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;cursor:pointer;position:relative}
+.profile-item + .profile-item{margin-top:12px}
+
+/* 4px divider between adjacent items (color = page background) */
+.profile-item + .profile-item::before{
+  content: "";
+  display: block;
+  position: absolute;
+  left: 10px;      /* align with profile-section padding */
+  right: 10px;     /* align with profile-section padding */
+  height: 4px;
+  top: -6px;       /* centers the 4px line in the 12px gap */
+  background: var(--bg);
+  border-radius: 2px;
+}
+
 .profile-item .icon{width:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent;border-radius:12px}
 .icon-lg{font-size:var(--icon-size-lg)}
 .profile-item .content h3{margin:0;font-size:15px;font-weight:700}
@@ -232,7 +246,7 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
       // logged in — clear any redirect flag
       sessionStorage.removeItem(REDIRECT_FLAG);
       console.log('Auth OK:', user.uid || user.email || user);
-      // you can show user info here if needed
+      // optionally show user info here if you want
     }
   })();
 
@@ -243,7 +257,7 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
   function detectAndroidVersion() {
     try {
       if (navigator.userAgentData && navigator.userAgentData.brands) {
-        // client hints often don't expose Android version — fall back to UA
+        // client hints often don't expose Android version — fallback to UA
       }
     } catch(e){}
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
@@ -283,4 +297,4 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
   setInterval(function(){ setAndroidVersionText(); setScreenResolutionText(); setStatusText(); }, 1500);
 </script>
 </body>
-        </html>
+  </html>
