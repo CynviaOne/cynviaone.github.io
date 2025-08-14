@@ -12,39 +12,40 @@
 <style>
 :root{
   --bg:#fbf9fb;
-  --card:#ece9ec;
+  --card:#e6e4e7;
   --muted:#a7a5a6;
   --title:#0b0b0b;
   --accent:#3f5f90;
-  --radius:22px;
+  --radius:18px;
   --max-w:380px;
-  --icon-size-lg:28px;
-  --icon-slot:56px;
+  --icon-size-lg:32px;
+  --icon-size-md:24px;
+  --icon-slot:56px; /* bigger slot for large icons */
+  --gap-22:18px;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-ui,Arial;color:var(--title);-webkit-font-smoothing:antialiased}
 .wrap{max-width:var(--max-w);margin:8px auto;padding:18px 16px 40px}
 .material-rounded{font-family: 'Material Symbols Rounded';font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 40;display:inline-block;line-height:1;vertical-align:middle}
+
+/* Topbar */
 .topbar{display:flex;align-items:center;justify-content:flex-start;margin-bottom:6px;gap:8px}
 .btn-close{background:transparent;border:0;padding:6px;margin:0;font-size:18px;cursor:pointer;color:var(--title);display:inline-flex;align-items:center;justify-content:center;border-radius:8px}
-.logo{font-weight:700;font-size:18px}.logo .one{color:var(--accent);font-weight:600}
+.logo{font-weight:700;font-size:20px}.logo .one{color:var(--accent);font-weight:600}
 
-/* Header */
-.page-header{padding:6px 2px 14px}
-.page-header h1{margin:0 0 8px;font-size:36px;font-weight:800;line-height:1.02}
-.page-header .subtitle{margin:0 0 8px;font-size:17px;font-weight:700;color:var(--title)}
-.page-header .description{margin:0;font-size:14px;line-height:1.4;color:var(--title);opacity:0.85;font-weight:400}
+/* Header (match personalinfo sizes) */
+.page-header{padding:16px 2px 20px}
+.page-header h1{margin:0 0 8px;font-size:32px;font-weight:700;line-height:1.1}
+.page-header .subtitle{margin:0 0 12px;font-size:16px;font-weight:600;color:var(--title)}
+.page-header .description{margin:0;font-size:14px;line-height:1.4;color:var(--title);opacity:0.8;font-weight:400}
 
-/* big rounded group card */
+/* device card matches personalinfo card corner radius */
 .device-card{
   background:var(--card);
-  border-radius:28px;
+  border-radius:var(--radius);
   overflow:hidden;
   padding:6px;
-  box-shadow: none;
   margin-top:18px;
-  -webkit-backdrop-filter: blur(0.5px);
-  backdrop-filter: blur(0.5px);
 }
 
 /* rows */
@@ -57,22 +58,29 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
 }
 .device-row + .device-row{border-top:1px solid rgba(0,0,0,0.06)}
 .icon-slot{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.icon-slot .material-rounded{font-size:22px;color:#000}
+.icon-slot .material-rounded{font-size:var(--icon-size-lg);color:#000}
 .row-content{flex:1}
 .row-content h3{margin:0 0 6px;font-size:16px;font-weight:800}
 .row-content p{margin:0;font-size:14px;color:var(--muted);font-weight:600}
 
-/* status circle on left in last row */
+/* status dot uses black always (as requested) */
 .status-dot{width:16px;height:16px;border-radius:50%;background:#000;display:inline-block;box-shadow:none}
 
-/* bottom text */
+/* "Looking for something else?" and options (take from personalinfo styles) */
 .more{font-weight:700;font-size:20px;margin-top:26px;padding-left:2px}
+.profile-section{background:var(--card);border-radius:var(--radius);padding:10px;margin-top:12px}
+.profile-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;cursor:pointer}
+.profile-item + .profile-item{margin-top:8px}
+.profile-item .icon{width:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent;border-radius:12px}
+.icon-lg{font-size:var(--icon-size-lg)}
+.profile-item .content h3{margin:0;font-size:15px;font-weight:700}
+.profile-item .content p{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
 
 /* small view adjustments */
 @media (max-width:420px){
   :root{--max-w:100%}
   .wrap{padding-left:12px;padding-right:12px}
-  .page-header h1{font-size:34px}
+  .page-header h1{font-size:30px}
 }
 </style>
 </head>
@@ -120,60 +128,107 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
     </div>
 
     <div class="more">Looking for something else?</div>
+
+    <!-- Two options (About and Feedback) copied from your personalinfo UI -->
+    <div class="profile-section" role="list" aria-label="More options">
+      <div class="profile-item" id="aboutItem" tabindex="0" role="button" onclick="alert('About CynviaOne - Coming soon!')">
+        <div class="icon"><span class="material-rounded icon-lg">info</span></div>
+        <div class="content"><h3>About CynviaOne</h3><p>Learn more about CynviaOne</p></div>
+      </div>
+
+      <div class="profile-item" id="feedbackItem" tabindex="0" role="button" onclick="window.location.href='mailto:support.cynviaone@outlook.com?subject=Feedback'">
+        <div class="icon"><span class="material-rounded icon-lg">feedback</span></div>
+        <div class="content"><h3>Send feedback</h3><p>Share your thoughts with us</p></div>
+      </div>
+    </div>
+
   </div>
 
+  <!-- Firebase scripts and initialization copied from your personalinfo file so auth redirect works -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
 <script>
+  // Paste your firebaseConfig from personalinfo (keeps auth consistent with your site)
+  const firebaseConfig = {
+    apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtL... (redacted)",
+    authDomain: "ouruiofficial.firebaseapp.com",
+    projectId: "ouruiofficial",
+    storageBucket: "ouruiofficial.appspot.com",
+    messagingSenderId: "513335403025",
+    appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+    measurementId: "G-X5QWNP8DMK"
+  };
+  // initialize firebase (only once)
+  if (!window.firebase || !firebase.apps || !firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const auth = firebase.auth();
+
+  // Redirect to signin.html if user is NOT logged in
+  auth.onAuthStateChanged(function(user){
+    if (!user) {
+      // not logged in -> redirect to signin
+      window.location.href = 'signin.html';
+    } else {
+      // user is present; nothing special needed
+      // you can update UI if you want (e.g. show display name)
+      console.log('Logged in as', user.uid);
+    }
+  });
+
   // Back button behavior
   function goBack() {
     if (window.history.length > 1) window.history.back();
     else window.location.href = 'index.html';
   }
 
-  // Get Android version from userAgent (if present)
+  // Improved Android detection: use userAgentData if available, then fallback to userAgent regex
   function detectAndroidVersion() {
+    try {
+      if (navigator.userAgentData && navigator.userAgentData.brands) {
+        // UA Client Hints may not expose version, fall back to userAgent regex below
+      }
+    } catch(e){}
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
-    const match = ua.match(/Android\s+([\d\.]+)/i);
-    if (match && match[1]) return match[1];
-    // Try parse WebView strings sometimes like "Android 14;"
-    const alt = ua.match(/Android\/([\d\.]+)/i);
-    if (alt && alt[1]) return alt[1];
-    return null;
+    const m = ua.match(/Android\s+([\d\.]+)/i) || ua.match(/Android\/([\d\.]+)/i);
+    if (m && m[1]) return m[1];
+    // Some WebViews include "Android 14;" or similar patterns
+    const m2 = ua.match(/Android\s*([0-9]+)/i);
+    if (m2 && m2[1]) return m2[1];
+    return 'Unknown';
   }
 
   function setAndroidVersionText() {
-    const ver = detectAndroidVersion();
     const el = document.getElementById('androidVersionText');
-    if (ver) el.textContent = ver;
-    else {
-      // as a fallback, show "Unknown (desktop or hidden UA)"
-      el.textContent = 'Unknown';
-    }
+    const ver = detectAndroidVersion();
+    el.textContent = ver ? ver : 'Unknown';
   }
 
+  // Use viewport/current window size for resolution (more accurate for responsive)
   function setScreenResolutionText() {
-    const w = window.screen.width;
-    const h = window.screen.height;
+    const w = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
+    const h = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
     const dpr = window.devicePixelRatio || 1;
     document.getElementById('screenResText').textContent = `${w} × ${h} (dpr ${dpr})`;
   }
 
+  // Status: show Online/Offline text correctly, but keep the dot black (user requested no green)
   function setStatusText() {
     const online = navigator.onLine;
     const txt = online ? 'Online' : 'Offline';
     const el = document.getElementById('statusText');
-    const dot = document.getElementById('statusDot');
     el.textContent = txt;
-    // Match the visual style in the photo (solid dot). Use black when offline, green when online.
-    if (online) {
-      dot.style.background = '#22a551'; // green for online
-    } else {
-      dot.style.background = '#000'; // black for offline like the photo
-    }
+    // keep dot black regardless (as requested). If you want colored dot, change here.
+    const dot = document.getElementById('statusDot');
+    dot.style.background = '#000';
   }
 
   // Real-time updates
-  window.addEventListener('resize', function(){ setScreenResolutionText(); });
-  window.addEventListener('orientationchange', function(){ setScreenResolutionText(); });
+  window.addEventListener('resize', setScreenResolutionText);
+  window.addEventListener('orientationchange', setScreenResolutionText);
   window.addEventListener('online', setStatusText);
   window.addEventListener('offline', setStatusText);
 
@@ -182,13 +237,12 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
   setScreenResolutionText();
   setStatusText();
 
-  // Optional: keep Android version more live if UA changes (rare)
+  // small periodic refresh
   setInterval(function(){
-    // update all periodically (small interval)
     setAndroidVersionText();
     setScreenResolutionText();
     setStatusText();
-  }, 1200);
+  }, 1500);
 </script>
 </body>
 </html>
