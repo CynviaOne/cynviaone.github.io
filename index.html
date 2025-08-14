@@ -88,6 +88,15 @@
     .footer-nav .credit { text-align: center; margin-top: 1.5rem; font-size: 1rem; }
     .footer-nav .credit .name { color: #6b5e7f; }
   </style>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "75d18bde-b5d1-490d-b6ab-672a77f594c5",
+    });
+  });
+</script>
 </head>
 <body>
   <div class="container">
