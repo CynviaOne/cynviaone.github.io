@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>CynviaOne — Your device</title>
+<title>CynviaOne â€" Your device</title>
 
 <!-- Fonts / icons -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500,700&display=swap" rel="stylesheet">
@@ -44,19 +44,33 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
   background:var(--card);
   border-radius:var(--radius);
   overflow:hidden;
-  padding:6px;
+  padding:14px;
   margin-top:18px;
 }
 
-/* rows */
+/* rows - updated to match personalinfo divider style */
 .device-row{
   display:flex;
   align-items:center;
   gap:14px;
-  padding:18px 18px;
+  padding:12px 0;
   min-height:72px;
+  position:relative;
 }
-.device-row + .device-row{border-top:1px solid rgba(0,0,0,0.06)}
+.device-row:first-child{padding-top:0}
+.device-row:last-child{padding-bottom:0}
+.device-row + .device-row::before{
+  content: "";
+  display: block;
+  position: absolute;
+  left: -14px;      /* extend to card padding edge */
+  right: -14px;     /* extend to card padding edge */
+  height: 4px;
+  top: -6px;       /* centers the 4px line in the 12px gap */
+  background: var(--bg);
+  border-radius: 2px;
+}
+
 .icon-slot{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .icon-slot .material-rounded{font-size:var(--icon-size-lg);color:#000}
 .row-content{flex:1}
@@ -68,27 +82,30 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
 
 /* "Looking for something else?" and options */
 .more{font-weight:700;font-size:20px;margin-top:26px;padding-left:2px}
-.profile-section{background:var(--card);border-radius:var(--radius);padding:10px;margin-top:12px}
-.profile-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;cursor:pointer;position:relative}
-.profile-item + .profile-item{margin-top:12px}
+.profile-section{background:var(--card);border-radius:var(--radius);padding:14px;margin-top:12px}
+.profile-item{display:flex;align-items:center;gap:12px;padding:12px 0;cursor:pointer;position:relative;transition:all 0.2s ease}
+.profile-item:hover{opacity:0.8;transform:translateX(2px)}
+.profile-item:first-child{padding-top:0}
+.profile-item:last-child{padding-bottom:0}
 
 /* 4px divider between adjacent items (color = page background) */
 .profile-item + .profile-item::before{
   content: "";
   display: block;
   position: absolute;
-  left: 10px;      /* align with profile-section padding */
-  right: 10px;     /* align with profile-section padding */
+  left: -14px;      /* extend to card padding edge */
+  right: -14px;     /* extend to card padding edge */
   height: 4px;
   top: -6px;       /* centers the 4px line in the 12px gap */
   background: var(--bg);
   border-radius: 2px;
 }
 
-.profile-item .icon{width:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent;border-radius:12px}
+.profile-item .icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent;border-radius:12px}
 .icon-lg{font-size:var(--icon-size-lg)}
-.profile-item .content h3{margin:0;font-size:15px;font-weight:700}
-.profile-item .content p{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
+.profile-item .content{flex:1}
+.profile-item .content h3{margin:0 0 3px;font-size:16px;font-weight:600;color:var(--title)}
+.profile-item .content p{margin:0;font-size:13px;color:var(--muted);font-weight:400;line-height:1.3}
 
 /* notice area for diagnostics */
 .notice{margin-top:12px;padding:10px;background:#fff;border-radius:12px;color:#333;border:1px solid rgba(0,0,0,0.04);font-size:13px;display:none}
@@ -234,7 +251,7 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
         } else {
           const n = document.getElementById('notice');
           n.style.display = 'block';
-          n.textContent = "Firebase config missing/invalid — paste your firebaseConfig into this file so auth redirect works.";
+          n.textContent = "Firebase config missing/invalid â€" paste your firebaseConfig into this file so auth redirect works.";
           console.warn('Firebase config invalid; skipping redirect.');
         }
       } else {
@@ -243,7 +260,7 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
         n.textContent = "Auth check: no user found. If you're signed in on another page, ensure this file uses the same firebaseConfig.";
       }
     } else {
-      // logged in — clear any redirect flag
+      // logged in â€" clear any redirect flag
       sessionStorage.removeItem(REDIRECT_FLAG);
       console.log('Auth OK:', user.uid || user.email || user);
       // optionally show user info here if you want
@@ -257,7 +274,7 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
   function detectAndroidVersion() {
     try {
       if (navigator.userAgentData && navigator.userAgentData.brands) {
-        // client hints often don't expose Android version — fallback to UA
+        // client hints often don't expose Android version â€" fallback to UA
       }
     } catch(e){}
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
@@ -276,7 +293,7 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
     const w = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
     const h = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
     const dpr = window.devicePixelRatio || 1;
-    document.getElementById('screenResText').textContent = `${w} × ${h} (dpr ${dpr})`;
+    document.getElementById('screenResText').textContent = `${w} Ã— ${h} (dpr ${dpr})`;
   }
   function setStatusText() {
     const online = navigator.onLine;
@@ -297,4 +314,4 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
   setInterval(function(){ setAndroidVersionText(); setScreenResolutionText(); setStatusText(); }, 1500);
 </script>
 </body>
-  </html>
+        </html>
