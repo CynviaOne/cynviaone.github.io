@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>CynviaOne — Your device</title>
 
-<!-- Roboto + Material Symbols Rounded -->
+<!-- Fonts / icons -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,600,1,0" rel="stylesheet">
 
@@ -20,7 +20,7 @@
   --max-w:380px;
   --icon-size-lg:32px;
   --icon-size-md:24px;
-  --icon-slot:56px; /* bigger slot for large icons */
+  --icon-slot:56px;
   --gap-22:18px;
 }
 *{box-sizing:border-box}
@@ -66,7 +66,7 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
 /* status dot uses black always (as requested) */
 .status-dot{width:16px;height:16px;border-radius:50%;background:#000;display:inline-block;box-shadow:none}
 
-/* "Looking for something else?" and options (take from personalinfo styles) */
+/* "Looking for something else?" and options */
 .more{font-weight:700;font-size:20px;margin-top:26px;padding-left:2px}
 .profile-section{background:var(--card);border-radius:var(--radius);padding:10px;margin-top:12px}
 .profile-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;cursor:pointer}
@@ -75,6 +75,9 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
 .icon-lg{font-size:var(--icon-size-lg)}
 .profile-item .content h3{margin:0;font-size:15px;font-weight:700}
 .profile-item .content p{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
+
+/* notice area for diagnostics */
+.notice{margin-top:12px;padding:10px;background:#fff;border-radius:12px;color:#333;border:1px solid rgba(0,0,0,0.04);font-size:13px;display:none}
 
 /* small view adjustments */
 @media (max-width:420px){
@@ -129,7 +132,6 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
 
     <div class="more">Looking for something else?</div>
 
-    <!-- Two options (About and Feedback) copied from your personalinfo UI -->
     <div class="profile-section" role="list" aria-label="More options">
       <div class="profile-item" id="aboutItem" tabindex="0" role="button" onclick="alert('About CynviaOne - Coming soon!')">
         <div class="icon"><span class="material-rounded icon-lg">info</span></div>
@@ -142,107 +144,143 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-
       </div>
     </div>
 
+    <div id="notice" class="notice"></div>
   </div>
 
-  <!-- Firebase scripts and initialization copied from your personalinfo file so auth redirect works -->
+  <!-- Firebase compat scripts (client-side only) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 <script>
-  // Paste your firebaseConfig from personalinfo (keeps auth consistent with your site)
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
-    apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtL... (redacted)",
+    apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
     authDomain: "ouruiofficial.firebaseapp.com",
     projectId: "ouruiofficial",
-    storageBucket: "ouruiofficial.appspot.com",
+    storageBucket: "ouruiofficial.firebasestorage.app",
     messagingSenderId: "513335403025",
     appId: "1:513335403025:web:b965e1187d5386d52d87b0",
     measurementId: "G-X5QWNP8DMK"
   };
-  // initialize firebase (only once)
-  if (!window.firebase || !firebase.apps || !firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+
+  // initialize firebase safely (avoid double-init)
+  try {
+    if (!window.firebase || !firebase.apps || !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+  } catch(e) {
+    console.warn('Firebase init error:', e);
   }
   const auth = firebase.auth();
 
-  // Redirect to signin.html if user is NOT logged in
-  auth.onAuthStateChanged(function(user){
-    if (!user) {
-      // not logged in -> redirect to signin
-      window.location.href = 'signin.html';
-    } else {
-      // user is present; nothing special needed
-      // you can update UI if you want (e.g. show display name)
-      console.log('Logged in as', user.uid);
-    }
-  });
-
-  // Back button behavior
-  function goBack() {
-    if (window.history.length > 1) window.history.back();
-    else window.location.href = 'index.html';
+  // Wait for auth state with timeout to avoid redirecting too early
+  function waitForAuthState(timeoutMs = 3000) {
+    return new Promise((resolve) => {
+      let done = false;
+      try {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+          if (!done) {
+            done = true;
+            try { unsubscribe(); } catch(e){}
+            resolve(user);
+          }
+        });
+        // fallback: resolve null after timeout
+        setTimeout(() => {
+          if (!done) {
+            done = true;
+            try { unsubscribe(); } catch(e){}
+            resolve(null);
+          }
+        }, timeoutMs);
+      } catch(e) {
+        resolve(null);
+      }
+    });
   }
 
-  // Improved Android detection: use userAgentData if available, then fallback to userAgent regex
+  // session flag used to avoid redirect loops
+  const REDIRECT_FLAG = 'cynvia_auth_redirected';
+
+  (async function checkAuthAndMaybeRedirect(){
+    // don't redirect if already on signin page
+    if (/\/?signin\.html$/i.test(location.pathname)) return;
+
+    const user = await waitForAuthState(3000);
+    if (!user) {
+      // if already redirected in this session, do not redirect again
+      if (!sessionStorage.getItem(REDIRECT_FLAG)) {
+        sessionStorage.setItem(REDIRECT_FLAG, '1');
+
+        // redirect only if config seems valid (basic check)
+        const apiKeyLooksReal = firebaseConfig && firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('YOUR_API_KEY') && firebaseConfig.apiKey.length > 10;
+        if (apiKeyLooksReal) {
+          // go to signin (client-side only)
+          window.location.href = 'signin.html';
+        } else {
+          const n = document.getElementById('notice');
+          n.style.display = 'block';
+          n.textContent = "Firebase config missing/invalid — paste your firebaseConfig into this file so auth redirect works.";
+          console.warn('Firebase config invalid; skipping redirect.');
+        }
+      } else {
+        const n = document.getElementById('notice');
+        n.style.display = 'block';
+        n.textContent = "Auth check: no user found. If you're signed in on another page, ensure this file uses the same firebaseConfig.";
+      }
+    } else {
+      // logged in — clear any redirect flag
+      sessionStorage.removeItem(REDIRECT_FLAG);
+      console.log('Auth OK:', user.uid || user.email || user);
+      // you can show user info here if needed
+    }
+  })();
+
+  // UX helpers
+  function goBack(){ if (window.history.length>1) window.history.back(); else window.location.href='index.html'; }
+
+  // Device info functions
   function detectAndroidVersion() {
     try {
       if (navigator.userAgentData && navigator.userAgentData.brands) {
-        // UA Client Hints may not expose version, fall back to userAgent regex below
+        // client hints often don't expose Android version — fall back to UA
       }
     } catch(e){}
     const ua = navigator.userAgent || navigator.vendor || window.opera || '';
     const m = ua.match(/Android\s+([\d\.]+)/i) || ua.match(/Android\/([\d\.]+)/i);
     if (m && m[1]) return m[1];
-    // Some WebViews include "Android 14;" or similar patterns
     const m2 = ua.match(/Android\s*([0-9]+)/i);
     if (m2 && m2[1]) return m2[1];
     return 'Unknown';
   }
-
   function setAndroidVersionText() {
     const el = document.getElementById('androidVersionText');
     const ver = detectAndroidVersion();
     el.textContent = ver ? ver : 'Unknown';
   }
-
-  // Use viewport/current window size for resolution (more accurate for responsive)
   function setScreenResolutionText() {
     const w = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
     const h = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
     const dpr = window.devicePixelRatio || 1;
     document.getElementById('screenResText').textContent = `${w} × ${h} (dpr ${dpr})`;
   }
-
-  // Status: show Online/Offline text correctly, but keep the dot black (user requested no green)
   function setStatusText() {
     const online = navigator.onLine;
-    const txt = online ? 'Online' : 'Offline';
-    const el = document.getElementById('statusText');
-    el.textContent = txt;
-    // keep dot black regardless (as requested). If you want colored dot, change here.
-    const dot = document.getElementById('statusDot');
-    dot.style.background = '#000';
+    document.getElementById('statusText').textContent = online ? 'Online' : 'Offline';
+    // keep dot black (per your request). Change this line if you want colored indicator.
+    document.getElementById('statusDot').style.background = '#000';
   }
 
-  // Real-time updates
+  // events & initial populate
   window.addEventListener('resize', setScreenResolutionText);
   window.addEventListener('orientationchange', setScreenResolutionText);
   window.addEventListener('online', setStatusText);
   window.addEventListener('offline', setStatusText);
 
-  // initial populate
   setAndroidVersionText();
   setScreenResolutionText();
   setStatusText();
-
-  // small periodic refresh
-  setInterval(function(){
-    setAndroidVersionText();
-    setScreenResolutionText();
-    setStatusText();
-  }, 1500);
+  setInterval(function(){ setAndroidVersionText(); setScreenResolutionText(); setStatusText(); }, 1500);
 </script>
 </body>
-</html>
+        </html>
