@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Security & sign-in — CynviaOne</title>
+
+<!-- Fonts / icons -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,600,1,0" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#fbf9fb;
+  --card:#e6e4e7;
+  --muted:#a7a5a6;
+  --title:#0b0b0b;
+  --accent:#3f5f90;
+  --black:#000;
+  --radius:18px;
+  --max-w:420px;
+  --icon-slot:56px;
+}
+/* base */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-ui,Arial;color:var(--title);-webkit-font-smoothing:antialiased}
+.container{max-width:var(--max-w);margin:8px auto;padding:18px}
+
+/* Topbar taken from yourdevice_updated.html */
+.topbar{display:flex;align-items:center;justify-content:flex-start;margin-bottom:6px;gap:8px}
+.btn-close{background:transparent;border:0;padding:6px;margin:0;font-size:18px;cursor:pointer;color:var(--title);display:inline-flex;align-items:center;justify-content:center;border-radius:8px}
+.logo{font-weight:700;font-size:20px}.logo .one{color:var(--accent);font-weight:600}
+
+/* Header */
+.title{font-size:32px;font-weight:800;margin:8px 0 6px}
+.subtitle{font-size:15px;color:var(--muted);line-height:1.45;margin-bottom:18px}
+
+/* group card style similar to your device file */
+.group-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  overflow:hidden;
+  padding:0;
+  margin-bottom:18px;
+}
+
+/* stacked items (email + phone) with 4px separator */
+.group-item{
+  display:flex;
+  gap:14px;
+  padding:18px;
+  align-items:center;
+  min-height:72px;
+}
+.group-item .icon{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center}
+.group-item .texts{flex:1}
+.group-item h3{margin:0;font-size:20px;font-weight:800}
+.group-item p{margin:8px 0 0;color:var(--muted);font-weight:600}
+
+/* 4px separator line between group items (background color) */
+.group-item + .group-item::before{
+  content:"";
+  display:block;
+  position:absolute;
+  left:0;
+  right:0;
+  height:4px;
+  background:var(--bg);
+  transform:translateY(-24px);
+  border-radius:2px;
+}
+
+/* Sign-in stack (account create + last signin) with 4px separator */
+.stack{border-radius:var(--radius);overflow:hidden;background:var(--card);margin-bottom:18px}
+.stack .stack-item{display:flex;gap:14px;padding:18px;align-items:center;min-height:72px}
+.stack .stack-item + .stack-item::before{
+  content:"";
+  display:block;
+  position:absolute;
+  left:18px;
+  right:18px;
+  height:4px;
+  background:var(--bg);
+  transform:translateY(-36px);
+  border-radius:2px;
+}
+
+/* action pill under the grey text */
+.pill{
+  background:var(--black);color:#fff;border-radius:999px;padding:10px 18px;border:0;font-weight:800;cursor:pointer;min-width:140px;margin-top:12px;display:inline-block;
+}
+
+/* Password card */
+.password-card{background:var(--card);border-radius:var(--radius);padding:18px;display:flex;gap:14px;align-items:center;min-height:120px}
+.password-card .texts{flex:1}
+
+/* bottom section "Looking for something else?" using your profile-section style */
+.more{font-weight:700;font-size:20px;margin-top:8px;padding-left:2px}
+.profile-section{background:var(--card);border-radius:var(--radius);padding:14px;margin-top:12px}
+.profile-item{display:flex;align-items:center;gap:12px;padding:12px 0;cursor:pointer;position:relative;transition:all 0.2s ease}
+.profile-item + .profile-item::before{
+  content:"";display:block;position:absolute;left:-14px;right:-14px;height:4px;top:-6px;background:var(--bg);border-radius:2px;
+}
+.profile-item .icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px}
+.profile-item .content h3{margin:0;font-size:16px;font-weight:600}
+.profile-item .content p{margin:0;color:var(--muted);font-size:13px}
+
+/* modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:9999}
+.modal{background:#fff;border-radius:14px;padding:18px;max-width:420px;width:92%;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+.input{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e6e6;margin-top:10px;font-size:15px}
+.actions{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+.btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.08)}
+.btn.primary{background:var(--black);color:#fff}
+
+/* recaptcha holder hidden */
+#recaptcha-container{display:none}
+.notice{margin-top:12px;padding:10px;background:#fff;border-radius:12px;color:#111;border:1px solid rgba(0,0,0,0.04);display:none}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <button class="btn-close" onclick="goBack()" aria-label="Go back">
+        <span class="material-symbols-rounded">arrow_back</span>
+      </button>
+      <div class="logo">Cynvia<span class="one">One</span></div>
+    </div>
+
+    <div>
+      <div class="title">Security & sign-in</div>
+      <div class="subtitle">Your security & sign-in information of CynviaOne profile<br>
+        Review and manage your sign-in methods, linked accounts, and security settings. Update your password, enable extra protections, and keep your account safe from unauthorized access.
+      </div>
+    </div>
+
+    <!-- group card with email + phone stacked -->
+    <div class="group-card" id="contactGroup">
+      <div class="group-item" id="emailItem" style="position:relative">
+        <div class="icon"><span class="material-symbols-rounded">mail</span></div>
+        <div class="texts">
+          <h3>E-mail</h3>
+          <p id="userEmailText">(User e-mail show here)</p>
+          <div><button class="pill" id="changeEmailBtn" style="display:none">Change email</button></div>
+        </div>
+      </div>
+
+      <div class="group-item" id="phoneItem" style="position:relative">
+        <div class="icon"><span class="material-symbols-rounded">sim_card</span></div>
+        <div class="texts">
+          <h3>Phone</h3>
+          <p id="userPhoneText">(User phone number show here)</p>
+          <div><button class="pill" id="addPhoneBtn" style="display:none">Add phone</button>
+                      <button class="pill" id="changePhoneBtn" style="display:none">Change phone</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- sign-in stack -->
+    <div class="stack" id="signinStack">
+      <div class="stack-item" style="position:relative">
+        <div class="icon"><span class="material-symbols-rounded">calendar_today</span></div>
+        <div class="texts">
+          <h3>Account create date</h3>
+          <p id="accountCreateText">(User account create date)</p>
+        </div>
+      </div>
+      <div class="stack-item" style="position:relative">
+        <div class="icon"><span class="material-symbols-rounded">history</span></div>
+        <div class="texts">
+          <h3>Last sign-in</h3>
+          <p id="lastSignInText">(User last sign in date show here)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- password card -->
+    <div class="password-card" id="passwordCard">
+      <div class="icon"><span class="material-symbols-rounded">lock</span></div>
+      <div class="texts">
+        <h3>Password</h3>
+        <p style="color:var(--muted)">Change your account password</p>
+        <div style="margin-top:12px"><button class="pill" id="changePasswordBtn" style="display:none">Change password</button></div>
+        <div class="small" style="margin-top:10px">If you forgot your password, contact <strong>support.cynviaone@outlook.com</strong></div>
+      </div>
+    </div>
+
+    <div id="mainNotice" class="notice" role="status" aria-live="polite"></div>
+
+    <div class="more">Looking for something else?</div>
+
+    <div class="profile-section">
+      <div class="profile-item" id="aboutItem" tabindex="0" role="button" onclick="alert('About CynviaOne - Coming soon!')">
+        <div class="icon"><span class="material-symbols-rounded">info</span></div>
+        <div class="content"><h3>About CynviaOne</h3><p>Learn more about CynviaOne</p></div>
+      </div>
+
+      <div class="profile-item" id="feedbackItem" tabindex="0" role="button" onclick="window.location.href='mailto:support.cynviaone@outlook.com?subject=Feedback'">
+        <div class="icon"><span class="material-symbols-rounded">feedback</span></div>
+        <div class="content"><h3>Send feedback</h3><p>Share your thoughts with us</p></div>
+      </div>
+    </div>
+
+    <!-- hidden recaptcha -->
+    <div id="recaptcha-container"></div>
+  </div>
+
+  <!-- modal -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <!-- Firebase compat libs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+/* Firebase config */
+const firebaseConfig = {
+  apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
+  authDomain: "ouruiofficial.firebaseapp.com",
+  projectId: "ouruiofficial",
+  storageBucket: "ouruiofficial.firebasestorage.app",
+  messagingSenderId: "513335403025",
+  appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+  measurementId: "G-X5QWNP8DMK"
+};
+
+try {
+  if (!window.firebase || !firebase.apps || !firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+} catch(e){ console.warn('Firebase init', e); }
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* helpers */
+function goBack(){ if (history.length>1) history.back(); else location.href='index.html'; }
+function showNotice(msg, timeout=5000){ const n = document.getElementById('mainNotice'); if(!msg){ n.style.display='none'; n.textContent=''; return;} n.style.display='block'; n.textContent = msg; if(timeout>0) setTimeout(()=>{ n.style.display='none'; }, timeout); }
+function formatDate(ts){ try{ if(!ts) return '(not available)'; const d = new Date(ts); return d.toLocaleString(); }catch(e){ return ts; } }
+const modalBackdrop = document.getElementById('modalBackdrop'); const modalEl = document.getElementById('modal');
+function openModal(html){ modalEl.innerHTML = html; modalBackdrop.style.display='flex'; const input = modalEl.querySelector('input'); if(input) setTimeout(()=>input.focus(),50); }
+function closeModal(){ modalBackdrop.style.display='none'; modalEl.innerHTML=''; }
+modalBackdrop.addEventListener('click', (e)=>{ if(e.target===modalBackdrop) closeModal(); });
+
+/* update UI visibility (buttons right place) */
+function updateUIForUser(user){
+  const emailText = document.getElementById('userEmailText');
+  const phoneText = document.getElementById('userPhoneText');
+  const createText = document.getElementById('accountCreateText');
+  const lastText = document.getElementById('lastSignInText');
+  const changeEmailBtn = document.getElementById('changeEmailBtn');
+  const addPhoneBtn = document.getElementById('addPhoneBtn');
+  const changePhoneBtn = document.getElementById('changePhoneBtn');
+  const changePasswordBtn = document.getElementById('changePasswordBtn');
+
+  if(!user){ showNotice('Not signed in — redirecting...'); setTimeout(()=>location.href='signin.html',800); return; }
+
+  emailText.textContent = user.email || '(no email)';
+  phoneText.textContent = user.phoneNumber || '(no phone number)';
+  createText.textContent = (user.metadata && user.metadata.creationTime) ? formatDate(user.metadata.creationTime) : '(unknown)';
+  lastText.textContent = (user.metadata && user.metadata.lastSignInTime) ? formatDate(user.metadata.lastSignInTime) : '(unknown)';
+
+  // email button visible if email exists and provider supports password reauth
+  changeEmailBtn.style.display = user.email ? 'inline-block' : 'none';
+
+  // phone: if phone exists show change button, else show add phone
+  if(user.phoneNumber){
+    changePhoneBtn.style.display = 'inline-block';
+    addPhoneBtn.style.display = 'none';
+  } else {
+    changePhoneBtn.style.display = 'none';
+    addPhoneBtn.style.display = 'inline-block';
+  }
+
+  // password change button only if password provider exists
+  const hasPassword = (user.providerData || []).some(p=>p.providerId==='password');
+  changePasswordBtn.style.display = hasPassword ? 'inline-block' : 'none';
+}
+
+/* auth listener */
+auth.onAuthStateChanged(async user=>{
+  if(user){
+    try{ await user.reload(); }catch(e){}
+    updateUIForUser(auth.currentUser);
+  } else {
+    // redirect to signin
+    setTimeout(()=>location.href='signin.html',600);
+  }
+});
+
+/* ========== CHANGE EMAIL ========== */
+document.getElementById('changeEmailBtn').addEventListener('click', ()=>{
+  const user = auth.currentUser;
+  if(!user){ showNotice('Not signed in'); return; }
+  const hasPassword = (user.providerData||[]).some(p=>p.providerId==='password');
+  if(!hasPassword){
+    openModal(`<h2>Confirm</h2><p>Your account doesn't use email/password sign-in. To change email sign in with that method or contact support.</p><div class="actions"><button class="btn ghost" onclick="closeModal()">Close</button></div>`);
+    return;
+  }
+  openModal(`
+    <h2>Confirm account password</h2>
+    <p>Enter your current password to continue.</p>
+    <input id="confirmPass" class="input" type="password" placeholder="Current password" />
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" id="confirmPassBtn">Verify</button></div>
+  `);
+  modalEl.querySelector('#confirmPassBtn').onclick = async ()=>{
+    const pass = modalEl.querySelector('#confirmPass').value||'';
+    if(!pass){ alert('Enter password'); return; }
+    try{
+      const cred = firebase.auth.EmailAuthProvider.credential(user.email, pass);
+      await user.reauthenticateWithCredential(cred);
+      // ask for new email
+      openModal(`
+        <h2>Enter new email</h2>
+        <input id="newEmail" class="input" type="email" placeholder="you@example.com" />
+        <div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" id="doChangeEmail">Send change email</button></div>
+      `);
+      modalEl.querySelector('#doChangeEmail').onclick = async ()=>{
+        const newEmail = modalEl.querySelector('#newEmail').value.trim();
+        if(!newEmail){ alert('Enter email'); return; }
+        try{
+          // Use applyActionCode? We'll update email and send verification (user must click verification link)
+          await user.updateEmail(newEmail);
+          await user.sendEmailVerification();
+          await user.reload();
+          updateUIForUser(auth.currentUser);
+          closeModal();
+          showNotice('Email updated and verification sent to the new address. Please check inbox.',7000);
+        }catch(err){
+          console.error(err);
+          alert('Failed to update email: '+(err.message||err));
+        }
+      };
+    }catch(err){
+      console.error('reauth',err);
+      alert('Reauthentication failed. If you forgot your password, contact support.cynviaone@outlook.com');
+    }
+  };
+});
+
+/* ========== ADD / CHANGE PHONE ========== */
+let currentVerificationId = null;
+async function startPhoneFlow(prefillPhone){
+  openModal(`
+    <h2>${prefillPhone ? 'Change phone' : 'Add phone'}</h2>
+    <p>Enter phone number in international format (e.g. +9198xxxxxxx)</p>
+    <input id="phoneInput" class="input" value="${prefillPhone||''}" placeholder="+91..." />
+    <div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" id="sendOtpBtn">Send OTP</button></div>
+  `);
+  modalEl.querySelector('#sendOtpBtn').onclick = async ()=>{
+    const phone = modalEl.querySelector('#phoneInput').value.trim();
+    if(!phone){ alert('Enter phone'); return; }
+    try{
+      if(window.recaptchaVerifier){ try{ window.recaptchaVerifier.clear(); }catch(e){} }
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container',{size:'invisible'});
+      await window.recaptchaVerifier.render();
+      const provider = new firebase.auth.PhoneAuthProvider(firebase.auth());
+      const verificationId = await provider.verifyPhoneNumber(phone, window.recaptchaVerifier);
+      currentVerificationId = verificationId;
+      // ask code
+      openModal(`<h2>Enter OTP</h2><p>We sent an SMS to ${phone}</p><input id="otp" class="input" placeholder="123456" /><div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" id="verifyOtpBtn">Verify & Save</button></div>`);
+      modalEl.querySelector('#verifyOtpBtn').onclick = async ()=>{
+        const code = modalEl.querySelector('#otp').value.trim();
+        if(!code){ alert('Enter code'); return; }
+        try{
+          const cred = firebase.auth.PhoneAuthProvider.credential(currentVerificationId, code);
+          // try to update user's phone number
+          await auth.currentUser.updatePhoneNumber(cred);
+          // also save in Firestore under users/{uid}.phone
+          const uid = auth.currentUser.uid;
+          await db.collection('users').doc(uid).set({phone: phone}, {merge:true});
+          await auth.currentUser.reload();
+          updateUIForUser(auth.currentUser);
+          closeModal();
+          showNotice('Phone updated and saved.',5000);
+        }catch(err){
+          console.error('updatePhone error',err);
+          // fallback: save phone to Firestore only
+          try{
+            const uid = auth.currentUser.uid;
+            await db.collection('users').doc(uid).set({phone: phone}, {merge:true});
+            closeModal();
+            showNotice('Could not link phone to auth provider but phone saved in your profile (Firestore).',7000);
+            // update displayed phone from firestore
+            const doc = await db.collection('users').doc(auth.currentUser.uid).get();
+            if(doc.exists && doc.data().phone) document.getElementById('userPhoneText').textContent = doc.data().phone;
+          }catch(e){
+            console.error('firestore save fallback failed', e);
+            alert('Failed to save phone: '+(e.message||e));
+          }
+        }
+      };
+    }catch(err){
+      console.error('send otp',err);
+      alert('Could not send OTP: '+(err.message||err));
+    }
+  };
+}
+
+document.getElementById('addPhoneBtn').addEventListener('click', ()=>startPhoneFlow(''));
+document.getElementById('changePhoneBtn').addEventListener('click', ()=>startPhoneFlow(''));
+
+/* ========== CHANGE PASSWORD ========== */
+document.getElementById('changePasswordBtn').addEventListener('click', ()=>{
+  const user = auth.currentUser;
+  if(!user){ showNotice('Not signed in'); return; }
+  const hasPassword = (user.providerData||[]).some(p=>p.providerId==='password');
+  if(!hasPassword){
+    openModal(`<h2>Change password</h2><p>Your account doesn't have a password sign-in method. Contact support.cynviaone@outlook.com</p><div class="actions"><button class="btn ghost" onclick="closeModal()">Close</button></div>`);
+    return;
+  }
+  openModal(`<h2>Confirm current password</h2><input id="oldPass" class="input" type="password" placeholder="Current password" /><div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" id="verifyOld">Verify</button></div><p style="margin-top:8px;font-size:13px;color:#666">Forgot password? Contact <strong>support.cynviaone@outlook.com</strong></p>`);
+  modalEl.querySelector('#verifyOld').onclick = async ()=>{
+    const old = modalEl.querySelector('#oldPass').value||'';
+    if(!old){ alert('Enter password'); return; }
+    try{
+      const cred = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, old);
+      await auth.currentUser.reauthenticateWithCredential(cred);
+      openModal(`<h2>Set new password</h2><input id="new1" class="input" type="password" placeholder="New password" /><input id="new2" class="input" type="password" placeholder="Confirm new password" /><div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn primary" id="saveNew">Save</button></div>`);
+      modalEl.querySelector('#saveNew').onclick = async ()=>{
+        const p1 = modalEl.querySelector('#new1').value||''; const p2 = modalEl.querySelector('#new2').value||'';
+        if(p1.length<6){ alert('Password min 6 chars'); return; }
+        if(p1!==p2){ alert('Passwords not match'); return; }
+        try{ await auth.currentUser.updatePassword(p1); await auth.currentUser.reload(); updateUIForUser(auth.currentUser); closeModal(); showNotice('Password changed',5000); }catch(err){ console.error(err); alert('Could not update password: '+(err.message||err)); }
+      };
+    }catch(err){ console.error('reauth',err); alert('Reauthentication failed. Contact support if needed.'); }
+  };
+});
+
+/* when page loads, also try to read phone from Firestore if auth user has none */
+auth.onAuthStateChanged(async user=>{
+  if(user){
+    try{
+      const uid = user.uid;
+      const doc = await db.collection('users').doc(uid).get();
+      if(doc.exists && doc.data().phone && (!user.phoneNumber || user.phoneNumber==='')) {
+        document.getElementById('userPhoneText').textContent = doc.data().phone;
+      }
+    }catch(e){ console.warn('firestore read', e); }
+  }
+});
+
+/* ensure UI updates on reload */
+window.addEventListener('focus', ()=>{ if(auth.currentUser) auth.currentUser.reload().then(()=>updateUIForUser(auth.currentUser)).catch(()=>{}); });
+
+/* expose closeModal so modal buttons can call it */
+window.closeModal = closeModal;
+</script>
+</body>
+</html>
