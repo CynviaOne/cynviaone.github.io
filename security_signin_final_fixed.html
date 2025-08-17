@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Security & sign-in — CynviaOne</title>
+
+<!-- fonts / material icons -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,600,1,0" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=help" />
+
+<style>
+:root{
+  --bg:#FBFBFC;
+  --card:#EDEBEE;
+  --muted:#9a9a9a;
+  --title:#0b0b0b;
+  --accent:#000000; /* black pill button as screenshot */
+  --pill-radius:999px;
+  --card-radius:22px;
+  --max-w:420px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Roboto,system-ui,Arial;color:var(--title);-webkit-font-smoothing:antialiased}
+.container{max-width:var(--max-w);margin:6px auto;padding:18px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;width:100%}
+.back{background:transparent;border:0;cursor:pointer;padding:6px;border-radius:10px}
+.left-section{display:flex;align-items:center;gap:10px}
+.logo{font-weight:700;font-size:20px}
+.logo .one{color:#2b5fbf}
+.help-btn{background:transparent;border:0;cursor:pointer;padding:6px;border-radius:10px;color:#000}
+.help-btn .material-symbols-outlined{font-size:24px;font-weight:900;font-variation-settings:'FILL' 1,'wght' 700,'GRAD' 0,'opsz' 24}
+.title{font-size:34px;font-weight:800;margin:8px 0 6px}
+.subtitle{font-size:15px;color:var(--muted);line-height:1.45;margin-bottom:18px}
+
+/* big rounded card sections */
+.section{background:transparent;margin-bottom:18px}
+.card{
+  background:var(--card);
+  border-radius:var(--card-radius);
+  padding:18px 18px;
+  display:flex;
+  gap:14px;
+  align-items:center;
+  box-shadow:none;
+  position:relative;
+  overflow:hidden;
+}
+.card + .divider{height:1px;background:rgba(0,0,0,0.06);margin:0 0 18px 0;}
+.icon-wrap{width:52px;min-width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.icon-wrap .material-symbols-rounded{font-size:24px}
+.card .texts{flex:1}
+.card h3{margin:0;font-size:20px;font-weight:800}
+.card p{margin:6px 0 0;color:var(--muted);font-weight:600}
+
+/* action pill button placed under the grey text */
+.action-row{margin-top:12px;display:flex;justify-content:flex-start}
+.pill{
+  background:var(--accent);
+  color:#fff;
+  border-radius:var(--pill-radius);
+  padding:10px 18px;
+  border:0;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:none;
+  min-width:140px;
+  text-align:center;
+  display:inline-block;
+}
+
+/* special: second half rounded bottom for grouped cards */
+.group{overflow:hidden;border-radius:var(--card-radius);}
+
+/* smaller heading for sections */
+.sec-heading{font-weight:800;margin:6px 0 12px;font-size:20px}
+
+/* notice area */
+.notice{margin-top:10px;background:#fff;padding:10px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);display:none;color:#111;font-size:14px}
+
+/* layout for phone / account create rows (two stacked with separator) */
+.stack{display:flex;flex-direction:column;gap:0}
+.stack .card{border-radius:0; padding:18px 18px}
+.stack .card:first-child{border-top-left-radius:22px;border-top-right-radius:22px}
+.stack .card:last-child{border-bottom-left-radius:22px;border-bottom-right-radius:22px}
+.stack .separator{height:4px;background:var(--bg);margin:0}
+
+/* Email and Phone grouped cards */
+.email-phone-group{display:flex;flex-direction:column;gap:0;border-radius:var(--card-radius);overflow:hidden;}
+.email-phone-group .card{border-radius:0; padding:18px 18px}
+.email-phone-group .card:first-child{border-top-left-radius:22px;border-top-right-radius:22px}
+.email-phone-group .card:last-child{border-bottom-left-radius:22px;border-bottom-right-radius:22px}
+.email-phone-separator{height:4px;background:var(--bg)}
+
+/* password card single card style with pill below text */
+.password-card{display:flex;align-items:center;justify-content:flex-start;flex-direction:column;gap:10px;align-items:flex-start}
+.password-card .texts{width:100%}
+
+/* small text */
+.small{font-size:13px;color:var(--muted);margin-top:8px;font-weight:600}
+
+/* modal (simple) */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:9999}
+.modal{background:#fff;border-radius:14px;padding:18px;max-width:420px;width:92%;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+.modal h2{margin:0 0 8px;font-size:18px}
+.input{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e6e6;margin-top:10px;font-size:15px}
+.row{display:flex;gap:10px;align-items:center}
+.actions{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+.btn {padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.08)}
+.btn.primary{background:var(--accent);color:#fff}
+
+/* recaptcha holder hidden */
+#recaptcha-container{display:none}
+
+/* Loading animation */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  margin: 30px 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid transparent;
+  border-top: 4px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Skeleton loading for content */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* responsive */
+@media (max-width:440px){
+  .title{font-size:32px}
+  .card h3{font-size:18px}
+  .pill{min-width:120px}
+}
+
+/* -------- small Personal-info UI styles copied from personalinfo.html to match the look --------
+   These are minimal rules (profile-section/profile-item/more) — taken from personalinfo (so the new block matches that UI). */
+.material-rounded{font-family: 'Material Symbols Rounded';font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 40;display:inline-block;line-height:1;vertical-align:middle}
+.icon-lg{font-size:32px}
+.profile-section{background:var(--card);border-radius:18px;padding:14px;margin-bottom:18px}
+.profile-item{display:flex;align-items:center;gap:14px;padding:12px 0;cursor:pointer;transition:all 0.2s ease}
+.profile-item:hover{opacity:0.8;transform:translateX(2px)}
+.profile-item + .profile-item{border-top:1px solid rgba(0,0,0,0.06)}
+.profile-item .icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.profile-item .content{flex:1}
+.profile-item h3{margin:0 0 3px;font-size:16px;font-weight:600;color:var(--title)}
+.profile-item p{margin:0;font-size:13px;font-weight:400;color:var(--muted);line-height:1.3}
+.more{font-size:18px;font-weight:600;margin-top:24px;margin-bottom:20px;padding-left:2px}
+/* ---------------------------------------------------------------------------------------------- */
+
+/* full width divider that extends outside the rounded card */
+.full-divider {
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+  margin: 14px -18px; /* pushes horizontally outside the card padding */
+}
+
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <div class="topbar">
+      <div class="left-section">
+        <button class="back" onclick="goBack()" aria-label="Back"><span class="material-symbols-rounded">arrow_back</span></button>
+        <div class="logo">Cynvia <span class="one">One</span></div>
+      </div>
+      <button class="help-btn" onclick="openMailSupport()" aria-label="Help"><span class="material-symbols-outlined">help</span></button>
+    </div>
+
+    <div>
+      <div class="title">Security & sign-in</div>
+      <div class="subtitle">Your security & sign-in information of CynviaOne profile<br>
+        Review and manage your sign-in methods, linked accounts, and security settings. Update your password, enable extra protections, and keep your account safe from unauthorized access.
+      </div>
+    </div>
+
+    <!-- Loading animation in center -->
+    <div id="loadingContainer" class="loading-container">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Main content - hidden initially -->
+    <div id="mainContent" style="display: none;">
+      <!-- EMAIL and PHONE grouped section -->
+      <section class="section">
+      <div class="email-phone-group">
+        <div class="card" id="emailCard">
+          <div class="icon-wrap"><span class="material-symbols-rounded">mail</span></div>
+          <div class="texts">
+            <h3>E-mail</h3>
+            <p id="userEmailText">(User e-mail show here)</p>
+            <div class="action-row" id="emailActionContainer">
+              <button class="pill" id="changeEmailBtn" style="display: none;">Change email</button>
+            </div>
+          </div>
+        </div>
+        <div class="email-phone-separator"></div>
+        <div class="card" id="phoneCard">
+          <div class="icon-wrap"><span class="material-symbols-rounded">sim_card</span></div>
+          <div class="texts">
+            <h3>Phone</h3>
+            <p id="userPhoneText">(User phone number show here)</p>
+            <div class="action-row" id="phoneActionContainer">
+              <!-- button will be shown for both add and change -->
+              <button class="pill" id="addPhoneBtn" style="display:none;min-width:120px;">Add phone</button>
+              <button class="pill" id="changePhoneBtn" style="display:none;min-width:120px;">Change phone</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sign-in (Account creation + Last sign-in) -->
+    <div class="sec-heading">Sign-in</div>
+    <div class="stack" aria-hidden="false">
+      <div class="card">
+        <div class="icon-wrap"><span class="material-symbols-rounded">calendar_today</span></div>
+        <div class="texts">
+          <h3>Account create date</h3>
+          <p id="accountCreateText">(User account create date)</p>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <div class="card">
+        <div class="icon-wrap"><span class="material-symbols-rounded">history</span></div>
+        <div class="texts">
+          <h3>Last sign-in</h3>
+          <p id="lastSignInText">(User last sign in date show here)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password section -->
+    <div class="sec-heading" style="margin-top:18px">Password</div>
+    <div class="card password-card" id="passwordCard">
+      <div style="display:flex;gap:14px;align-items:center">
+        <div class="icon-wrap"><span class="material-symbols-rounded">lock</span></div>
+        <div class="texts">
+          <h3>Password</h3>
+          <div class="action-row" style="padding:0;margin:0;">
+            <button class="pill" id="changePasswordBtn" style="display: none;">Change password</button>
+          </div>
+          <div class="small" style="margin-top:10px">If you forgot your password, contact <strong>support.cynviaone@outlook.com</strong></div>
+        </div>
+      </div>
+      </div>
+
+    <!-- Account section with Sign out and Delete account -->
+    <div class="sec-heading" style="margin-top:18px">Account</div>
+    <div class="stack">
+      <div class="card" id="signoutCard">
+        <div style="display:flex;gap:14px;align-items:center">
+          <div class="icon-wrap"><span class="material-symbols-rounded">logout</span></div>
+          <div class="texts">
+            <h3>Sign out</h3>
+            <div class="action-row" style="padding:0;margin:0;">
+              <button class="pill" id="signOutBtn" style="background:#000;">Sign out</button>
+            </div>
+            <div class="small" style="margin-top:10px;color:#000;">Sign out from your CynviaOne account</div>
+          </div>
+        </div>
+      </div>
+      <div class="separator"></div>
+      <div class="card" id="deleteAccountCard">
+        <div style="display:flex;gap:14px;align-items:center">
+          <div class="icon-wrap"><span class="material-symbols-rounded">delete_forever</span></div>
+          <div class="texts">
+            <h3>Delete account</h3>
+            <div class="action-row" style="padding:0;margin:0;">
+              <button class="pill" id="deleteAccountBtn" style="background:#000;">Delete account</button>
+            </div>
+            <div class="small" style="margin-top:10px;color:#000;">Permanently delete your account and all data</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === ADDED: "Looking for something else?" block (copied from personalinfo.html UI) === -->
+    <div class="more">Looking for something else?</div>
+
+    <div class="profile-section" aria-hidden="false">
+      <div class="profile-item" id="aboutItem" tabindex="0" role="button" onclick="alert('About CynviaOne - Coming soon!')">
+        <div class="icon"><span class="material-rounded icon-lg">info</span></div>
+        <div class="content"><h3>About CynviaOne</h3><p>Learn more about CynviaOne</p></div>
+      </div>
+
+      <!-- 4px divider same as other separators -->
+      <div class="full-divider"></div>
+
+      <div class="profile-item" id="feedbackItem" tabindex="0" role="button" onclick="window.location.href='mailto:support.cynviaone@outlook.com?subject=Feedback'">
+        <div class="icon"><span class="material-rounded icon-lg">feedback</span></div>
+        <div class="content"><h3>Send feedback</h3><p>Share your thoughts with us</p></div>
+      </div>
+    </div>
+    <!-- === END ADDED BLOCK === -->
+
+      <div class="notice" id="mainNotice" role="status" aria-live="polite"></div>
+      <div style="height:28px"></div>
+
+      <!-- Hidden recaptcha container for phone auth -->
+      <div id="recaptcha-container"></div>
+    </div>
+  </div>
+
+  <!-- Modal backdrop -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <!-- Firebase compat libs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+/* =========================
+   Firebase config (your config)
+   ========================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
+  authDomain: "ouruiofficial.firebaseapp.com",
+  projectId: "ouruiofficial",
+  storageBucket: "ouruiofficial.firebasestorage.app",
+  messagingSenderId: "513335403025",
+  appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+  measurementId: "G-X5QWNP8DMK"
+};
+
+try {
+  if (!window.firebase || !firebase.apps || !firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+} catch (e) {
+  console.warn('Firebase init:', e);
+}
+const auth = firebase.auth();
+
+/* ===== helpers ===== */
+function goBack(){ if (history.length>1) history.back(); else location.href='index.html'; }
+function showNotice(msg, timeout=5000){
+  const el = document.getElementById('mainNotice');
+  if(!msg){ el.style.display='none'; el.textContent=''; return; }
+  el.textContent = msg; el.style.display = 'block';
+  if(timeout>0) setTimeout(()=>{ el.style.display='none'; }, timeout);
+}
+function formatDate(ts){
+  try {
+    if(!ts) return '(not available)';
+    const d = new Date(ts);
+    return d.toLocaleString();
+  } catch(e){ return ts; }
+}
+
+/* Modal builder functions */
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalEl = document.getElementById('modal');
+function openModal(html){
+  modalEl.innerHTML = html;
+  modalBackdrop.style.display = 'flex';
+  const input = modalEl.querySelector('input');
+  if(input) setTimeout(()=>input.focus(),50);
+}
+function closeModal(){
+  modalBackdrop.style.display = 'none';
+  modalEl.innerHTML = '';
+}
+modalBackdrop.addEventListener('click', function(e){
+  if(e.target === modalBackdrop) closeModal();
+});
+
+/* ====== UI populate and auth guard ====== */
+function updateButtonsVisibility(user){
+  const changeEmailBtn = document.getElementById('changeEmailBtn');
+  const addPhoneBtn = document.getElementById('addPhoneBtn');
+  const changePhoneBtn = document.getElementById('changePhoneBtn');
+  const changePasswordBtn = document.getElementById('changePasswordBtn');
+
+  if(!user){
+    changeEmailBtn.style.display = 'none';
+    addPhoneBtn.style.display = 'none';
+    changePhoneBtn.style.display = 'none';
+    changePasswordBtn.style.display = 'none';
+    return;
+  }
+
+  // email button visible if user has email
+  changeEmailBtn.style.display = user.email ? 'inline-block' : 'none';
+
+  // phone buttons: show "Add phone" if no phone, "Change phone" if phone exists
+  if (user.phoneNumber) {
+    addPhoneBtn.style.display = 'none';
+    changePhoneBtn.style.display = 'inline-block';
+  } else {
+    addPhoneBtn.style.display = 'inline-block';
+    changePhoneBtn.style.display = 'none';
+  }
+
+  // password button visible only if email/password provider exists
+  const hasPasswordProvider = (user.providerData || []).some(p => p.providerId === 'password');
+  changePasswordBtn.style.display = hasPasswordProvider ? 'inline-block' : 'none';
+}
+
+function populateUserUI(user){
+  const emailText = document.getElementById('userEmailText');
+  const phoneText = document.getElementById('userPhoneText');
+  const createText = document.getElementById('accountCreateText');
+  const lastText = document.getElementById('lastSignInText');
+  const loadingContainer = document.getElementById('loadingContainer');
+  const mainContent = document.getElementById('mainContent');
+
+  if(!user){
+    showNotice('Not signed in — redirecting to signin page...', 3000);
+    setTimeout(()=>location.href='signin.html', 900);
+    return;
+  }
+
+  // Populate with real data
+  emailText.textContent = user.email || '(no email)';
+  phoneText.textContent = user.phoneNumber || '(no phone number)';
+  createText.textContent = (user.metadata && user.metadata.creationTime) ? formatDate(user.metadata.creationTime) : '(unknown)';
+  lastText.textContent = (user.metadata && user.metadata.lastSignInTime) ? formatDate(user.metadata.lastSignInTime) : '(unknown)';
+
+  // update buttons visibility after populating
+  updateButtonsVisibility(user);
+
+  // Hide loading and show main content
+  loadingContainer.style.display = 'none';
+  mainContent.style.display = 'block';
+}
+
+/* react to auth changes */
+auth.onAuthStateChanged(user => {
+  populateUserUI(user || null);
+});
+
+/* ========== CHANGE EMAIL FLOW ========== */
+document.getElementById('changeEmailBtn').addEventListener('click', function(){
+  const user = auth.currentUser;
+  if(!user){ showNotice('Not signed in'); return; }
+
+  const hasPasswordProvider = (user.providerData || []).some(p => p.providerId === 'password');
+  if(!hasPasswordProvider){
+    openModal(`
+      <h2>Confirm account</h2>
+      <p style="margin-top:8px;color:#444">Your account does not have an email/password sign-in method. To change email you must sign in with email & password or contact support.</p>
+      <div class="actions">
+        <button class="btn ghost" onclick="closeModal()">Close</button>
+      </div>
+    `);
+    return;
+  }
+
+  openModal(`
+    <h2>Confirm account password</h2>
+    <p>Enter your current password to continue.</p>
+    <input id="confirmPass" type="password" class="input" placeholder="Current password" />
+    <div class="actions">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" id="confirmPassBtn">Verify</button>
+    </div>
+  `);
+
+  modalEl.querySelector('#confirmPassBtn').onclick = async function(){
+    const pass = modalEl.querySelector('#confirmPass').value || '';
+    if(!pass){ alert('Enter your password'); return; }
+    try{
+      const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, pass);
+      await auth.currentUser.reauthenticateWithCredential(credential);
+
+      // Step 2: Ask for new email to change to
+      openModal(`
+        <h2>Enter new email</h2>
+        <p>Enter the new email address you want to change to. A verification email will be sent to this address.</p>
+        <input id="newEmail" type="email" class="input" placeholder="new-email@example.com" />
+        <div class="small" style="margin-top:8px;color:#666;">You must verify the new email before the change takes effect.</div>
+        <div class="actions">
+          <button class="btn ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn primary" id="changeEmailConfirmBtn">Send Verification</button>
+        </div>
+      `);
+
+      modalEl.querySelector('#changeEmailConfirmBtn').onclick = async function(){
+        const newEmail = modalEl.querySelector('#newEmail').value.trim();
+        if(!newEmail){ alert('Enter a new email address'); return; }
+
+        try {
+          // Use Firebase's verifyBeforeUpdateEmail method
+          await auth.currentUser.verifyBeforeUpdateEmail(newEmail, {
+            url: `${window.location.origin}/securitysignin.html`,
+            handleCodeInApp: true
+          });
+
+          // Don't close modal automatically - show success message in modal
+          openModal(`
+            <h2>Verification Email Sent</h2>
+            <p style="margin-top:8px;color:#444;">A verification email has been sent by <strong>CynviaOne Team</strong> to:</p>
+            <p style="margin:8px 0;font-weight:700;color:#000;">${newEmail}</p>
+            <div style="background:#f8f9fa;padding:12px;border-radius:8px;margin:12px 0;border-left:4px solid #28a745;">
+              <p style="margin:0;font-size:14px;color:#333;"><strong>Important:</strong> Please check your email inbox (and spam folder) and click the verification link to complete your email change.</p>
+            </div>
+            <p style="font-size:13px;color:#666;margin:12px 0;">The email change will not take effect until you verify the new email address.</p>
+            <details style="margin:12px 0;font-size:13px;">
+              <summary style="cursor:pointer;color:#666;margin-bottom:8px;">Email not received? Click here for help</summary>
+              <div style="background:#f8f9fa;padding:10px;border-radius:6px;margin-top:8px;">
+                <p style="margin:0 0 6px;font-size:12px;color:#333;"><strong>Troubleshooting:</strong></p>
+                <ul style="margin:0;padding-left:16px;font-size:12px;color:#666;">
+                  <li>Check your spam/junk folder</li>
+                  <li>Wait 2-3 minutes for the email to arrive</li>
+                  <li>Make sure ${newEmail} is correct</li>
+                  <li>Contact support: support.cynviaone@outlook.com</li>
+                </ul>
+              </div>
+            </details>
+            <div class="actions">
+              <button class="btn primary" onclick="closeModal()">Got it</button>
+            </div>
+          `);
+
+        } catch(err){
+          console.error('Send verification error', err);
+          alert('Failed to send verification email: ' + (err.message || err));
+        }
+      };
+
+    }catch(err){
+      console.error('reauth error', err);
+      alert('Reauthentication failed. Please confirm your password. If you forgot your password, contact support at support.cynviaone@outlook.com');
+    }
+  };
+});
+
+/* ========== ADD/CHANGE PHONE FLOW ========== */
+let currentVerificationId = null;
+
+// Add phone number flow
+document.getElementById('addPhoneBtn').addEventListener('click', function(){
+  handlePhoneFlow('Add phone number');
+});
+
+// Change phone number flow  
+document.getElementById('changePhoneBtn').addEventListener('click', function(){
+  handlePhoneFlow('Change phone number');
+});
+
+function handlePhoneFlow(title) {
+  const user = auth.currentUser;
+  if(!user){ showNotice('Not signed in'); return; }
+
+  openModal(`
+    <h2>${title}</h2>
+    <p>Enter the phone number (in international format, e.g. +91xxxxxxxxxx)</p>
+    <input id="phoneInput" class="input" placeholder="+91..." />
+    <div class="small" style="margin-top:8px">We will send an OTP to this number.</div>
+    <div class="actions">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" id="sendOtpBtn">Send OTP</button>
+    </div>
+  `);
+
+  modalEl.querySelector('#sendOtpBtn').onclick = async function(){
+    const phone = modalEl.querySelector('#phoneInput').value.trim();
+    if(!phone){ alert('Enter phone number'); return; }
+
+    try {
+      // create or reset recaptcha verifier
+      if(window.recaptchaVerifier) {
+        try { window.recaptchaVerifier.clear(); } catch(e){}
+      }
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
+      await window.recaptchaVerifier.render();
+
+      const provider = new firebase.auth.PhoneAuthProvider(firebase.auth());
+      const verificationId = await provider.verifyPhoneNumber(phone, window.recaptchaVerifier);
+      currentVerificationId = verificationId;
+
+      openModal(`
+        <h2>Enter OTP</h2>
+        <p>We sent an SMS to ${phone}. Enter the code below.</p>
+        <input id="otpCode" class="input" placeholder="123456" maxlength="6" />
+        <div class="actions">
+          <button class="btn ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn primary" id="verifyOtpBtn">Verify & Save</button>
+        </div>
+      `);
+
+      modalEl.querySelector('#verifyOtpBtn').onclick = async function(){
+        const code = modalEl.querySelector('#otpCode').value.trim();
+        if(!code){ alert('Enter OTP'); return; }
+        try {
+          const cred = firebase.auth.PhoneAuthProvider.credential(currentVerificationId, code);
+
+          if (user.phoneNumber) {
+            // Update existing phone number
+            await auth.currentUser.updatePhoneNumber(cred);
+            showNotice('Phone number updated successfully.', 5000);
+          } else {
+            // Link phone number to account
+            await auth.currentUser.updatePhoneNumber(cred);
+            showNotice('Phone number added successfully.', 5000);
+          }
+
+          closeModal();
+          await auth.currentUser.reload();
+          populateUserUI(auth.currentUser);
+        } catch(err){
+          console.error('phone verify error', err);
+          alert('OTP verification failed: ' + (err.message || err));
+        }
+      };
+
+    } catch(err){
+      console.error('send OTP error', err);
+      alert('Could not send OTP: ' + (err.message || err) + '\nMake sure the phone number is correct and in international format.');
+    }
+  };
+}
+
+/* ========== CHANGE PASSWORD FLOW ========== */
+document.getElementById('changePasswordBtn').addEventListener('click', function(){
+  const user = auth.currentUser;
+  if(!user){ showNotice('Not signed in'); return; }
+
+  const hasPasswordProvider = (user.providerData || []).some(p => p.providerId === 'password');
+  if(!hasPasswordProvider){
+    openModal(`
+      <h2>Change password</h2>
+      <p style="margin-top:8px;color:#444">Your account doesn't have a password sign-in method. If you need to change login methods contact support: support.cynviaone@outlook.com</p>
+      <div class="actions">
+        <button class="btn ghost" onclick="closeModal()">Close</button>
+      </div>
+    `);
+    return;
+  }
+
+  openModal(`
+    <h2>Confirm current password</h2>
+    <p>Enter your current password to continue.</p>
+    <input id="oldPass" type="password" class="input" placeholder="Current password" />
+    <div class="actions">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" id="verifyOldBtn">Verify</button>
+    </div>
+    <p style="margin-top:10px;font-size:13px;color:#666">Forgot password? Contact <strong>support.cynviaone@outlook.com</strong></p>
+  `);
+
+  modalEl.querySelector('#verifyOldBtn').onclick = async function(){
+    const oldPass = modalEl.querySelector('#oldPass').value || '';
+    if(!oldPass){ alert('Enter current password'); return; }
+    try {
+      const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, oldPass);
+      await auth.currentUser.reauthenticateWithCredential(credential);
+      openModal(`
+        <h2>Set new password</h2>
+        <input id="newPass" type="password" class="input" placeholder="New password" />
+        <input id="newPass2" type="password" class="input" placeholder="Confirm new password" />
+        <div class="actions">
+          <button class="btn ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn primary" id="saveNewPassBtn">Save</button>
+        </div>
+      `);
+      modalEl.querySelector('#saveNewPassBtn').onclick = async function(){
+        const p1 = modalEl.querySelector('#newPass').value || '';
+        const p2 = modalEl.querySelector('#newPass2').value || '';
+        if(p1.length < 6){ alert('Password must be at least 6 characters'); return; }
+        if(p1 !== p2){ alert('Passwords do not match'); return; }
+        try {
+          await auth.currentUser.updatePassword(p1);
+          closeModal();
+          showNotice('Password updated successfully.', 5000);
+          await auth.currentUser.reload();
+          populateUserUI(auth.currentUser);
+        } catch(err){
+          console.error('updatePassword', err);
+          alert('Could not update password: ' + (err.message || err));
+        }
+      };
+    } catch(err){
+      console.error('reauth failed', err);
+      alert('Reauthentication failed. If you forgot your password, contact support at support.cynviaone@outlook.com');
+    }
+  };
+});
+
+/* prepare recaptcha lazily; nothing else needed here */
+window.onload = function(){
+  // safe no-op
+};
+
+/* Expose closeModal to inline onclicks in modal HTML */
+window.closeModal = closeModal;
+
+/* ========== HELP FUNCTION ========== */
+function openMailSupport(){
+  window.open('mailto:support.cynviaone@outlook.com?subject=Help%20with%20Security%20Settings&body=Hello%20CynviaOne%20Team,%0A%0AI%20need%20help%20with%20my%20security%20settings.%0A%0APlease%20describe%20your%20issue:%0A', '_blank');
+}
+
+/* ========== DELETE ACCOUNT FUNCTION ========== */
+document.addEventListener('DOMContentLoaded', function() {
+  const signOutBtn = document.getElementById('signOutBtn');
+  const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+
+  if(signOutBtn) {
+    signOutBtn.addEventListener('click', function(){
+      openModal(`
+        <h2>Sign out</h2>
+        <p style="margin:8px 0;">Are you sure you want to sign out of your CynviaOne account?</p>
+        <div class="actions">
+          <button class="btn ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn primary" style="background:#dc3545;" id="confirmSignOutBtn">Sign out</button>
+        </div>
+      `);
+
+      modalEl.querySelector('#confirmSignOutBtn').onclick = async function(){
+        try {
+          await auth.signOut();
+          closeModal();
+          showNotice('Signed out successfully. Redirecting...', 2000);
+          setTimeout(() => location.href = 'signin.html', 1000);
+        } catch(err) {
+          console.error('Sign out error', err);
+          alert('Failed to sign out: ' + (err.message || err));
+        }
+      };
+    });
+  }
+
+  if(deleteAccountBtn) {
+    deleteAccountBtn.addEventListener('click', function(){
+      const user = auth.currentUser;
+      if(!user){ showNotice('Not signed in'); return; }
+
+      openModal(`
+        <h2 style="color:#dc3545;">⚠️ Delete Account</h2>
+        <div style="background:#fff3cd;padding:12px;border-radius:8px;border:1px solid #ffeaa7;margin:12px 0;">
+          <p style="margin:0;font-size:14px;color:#856404;"><strong>Warning:</strong> This action cannot be undone!</p>
+        </div>
+        <p style="margin:8px 0;">Deleting your account will permanently remove:</p>
+        <ul style="margin:8px 0;padding-left:20px;font-size:14px;color:#666;">
+          <li>Your profile information</li>
+          <li>All your data and settings</li>
+          <li>Account history and preferences</li>
+          <li>Access to CynviaOne services</li>
+        </ul>
+        <p style="margin:8px 0;font-size:14px;color:#dc3545;font-weight:600;">This action is permanent and cannot be reversed.</p>
+        <div class="actions">
+          <button class="btn ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn primary" style="background:#dc3545;" id="confirmDeleteBtn">Delete My Account</button>
+        </div>
+      `);
+
+      modalEl.querySelector('#confirmDeleteBtn').onclick = async function(){
+        openModal(`
+          <h2 style="color:#dc3545;">Final Confirmation</h2>
+          <p style="margin:8px 0;">Type "<strong>DELETE</strong>" to confirm account deletion:</p>
+          <input id="deleteConfirmText" class="input" placeholder="Type DELETE here" style="margin:12px 0;" />
+          <div style="background:#ffebee;padding:12px;border-radius:8px;border:1px solid #ffcdd2;margin:12px 0;">
+            <p style="margin:0;font-size:13px;color:#c62828;">⚠️ Your account and all data will be permanently deleted immediately.</p>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn primary" style="background:#dc3545;" id="finalDeleteBtn">Delete Forever</button>
+          </div>
+        `);
+
+        modalEl.querySelector('#finalDeleteBtn').onclick = async function(){
+          const confirmText = modalEl.querySelector('#deleteConfirmText').value.trim();
+          if(confirmText !== 'DELETE'){
+            alert('Please type "DELETE" exactly to confirm.');
+            return;
+          }
+
+          try {
+            await user.delete();
+            closeModal();
+            showNotice('Account deleted successfully. Redirecting...', 3000);
+            setTimeout(() => location.href = 'signin.html', 2000);
+          } catch(err) {
+            console.error('Delete account error', err);
+            if(err.code === 'auth/requires-recent-login') {
+              alert('For security, you need to sign in again before deleting your account. Please sign out and sign in again, then try deleting your account.');
+            } else {
+              alert('Failed to delete account: ' + (err.message || err) + '\n\nIf this persists, contact support: support.cynviaone@outlook.com');
+            }
+          }
+        };
+      };
+    });
+  }
+});
+</script>
+</body>
+</html>
