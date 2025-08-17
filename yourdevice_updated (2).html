@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CynviaOne — Your device</title>
+
+<!-- Fonts / icons -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,600,1,0" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=help" />
+
+<style>
+:root{
+  --bg:#fbf9fb;
+  --card:#e6e4e7;
+  --muted:#a7a5a6;
+  --title:#0b0b0b;
+  --accent:#3f5f90;
+  --radius:18px;
+  --max-w:380px;
+  --icon-size-lg:32px;
+  --icon-size-md:24px;
+  --icon-slot:56px;
+  --gap-22:18px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:"Roboto",system-ui,Arial;color:var(--title);-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max-w);margin:6px auto;padding:8px 12px 36px}
+.material-rounded{font-family: 'Material Symbols Rounded';font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 40;display:inline-block;line-height:1;vertical-align:middle}
+
+/* Topbar - updated to match personalinfo.html style */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:6px}
+.left{display:flex;align-items:center;gap:8px}
+.btn-close{background:transparent;border:0;padding:0;margin:0;font-size:18px;cursor:pointer;color:var(--title);display:inline-flex;align-items:center;justify-content:center;border-radius:8px}
+.logo{font-weight:700;font-size:20px}.logo .one{color:var(--accent);font-weight:600}
+.actions{display:flex;gap:12px;align-items:center}
+.action-icon{background:transparent;border:0;padding:6px;font-size:24px;cursor:pointer;color:var(--title)}
+.action-icon:focus{outline:2px solid rgba(0,0,0,0.06);outline-offset:2px;border-radius:6px}
+
+/* Header */
+.page-header{padding:16px 2px 20px}
+.page-header h1{margin:0 0 8px;font-size:32px;font-weight:700;line-height:1.1}
+.page-header .subtitle{margin:0 0 12px;font-size:16px;font-weight:600;color:var(--title)}
+.page-header .description{margin:0;font-size:14px;line-height:1.4;color:var(--title);opacity:0.8;font-weight:400}
+
+/* device card */
+.device-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  overflow:hidden;
+  padding:14px;
+  margin-top:18px;
+}
+
+/* rows */
+.device-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:12px 0;
+  min-height:72px;
+  position:relative;
+}
+.device-row:first-child{padding-top:0}
+.device-row:last-child{padding-bottom:0}
+.device-row + .device-row::before{
+  content: "";
+  display: block;
+  position: absolute;
+  left: -14px;
+  right: -14px;
+  height: 4px;
+  top: -6px;
+  background: var(--bg);
+  border-radius: 2px;
+}
+
+.icon-slot{width:var(--icon-slot);height:var(--icon-slot);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.icon-slot .material-rounded{font-size:var(--icon-size-lg);color:#000}
+.row-content{flex:1}
+.row-content h3{margin:0 0 6px;font-size:16px;font-weight:800}
+.row-content p{margin:0;font-size:14px;color:var(--muted);font-weight:600}
+
+/* status dot */
+.status-dot{width:16px;height:16px;border-radius:50%;background:#000;display:inline-block;box-shadow:none}
+
+/* options */
+.more{font-weight:700;font-size:20px;margin-top:26px;padding-left:2px}
+.profile-section{background:var(--card);border-radius:var(--radius);padding:14px;margin-top:12px}
+.profile-item{display:flex;align-items:center;gap:12px;padding:12px 0;cursor:pointer;position:relative;transition:all 0.2s ease}
+.profile-item:hover{opacity:0.95;transform:translateX(2px)}
+.profile-item:first-child{padding-top:0}
+.profile-item:last-child{padding-bottom:0}
+
+/* divider only between adjacent profile-items */
+.profile-item + .profile-item::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: -14px;
+  right: -14px;
+  height: 4px;
+  top: -6px;
+  background: var(--bg);
+  border-radius: 2px;
+}
+
+/* JS will add .first-visible to the first visible item; hide its divider */
+.profile-item.first-visible::before {
+  display: none !important;
+  content: none !important;
+}
+
+.profile-item .icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent;border-radius:12px}
+.icon-lg{font-size:var(--icon-size-lg)}
+.profile-item .content{flex:1}
+.profile-item .content h3{margin:0 0 3px;font-size:16px;font-weight:600;color:var(--title)}
+.profile-item .content p{margin:0;font-size:13px;color:var(--muted);font-weight:400;line-height:1.3}
+
+/* signout button */
+.signout-btn{border:0;background:transparent;color:var(--accent);font-weight:700;padding:6px 10px;border-radius:8px;cursor:pointer}
+.small-muted{font-size:12px;color:var(--muted)}
+
+.notice{margin-top:12px;padding:10px;background:#fff;border-radius:12px;color:#333;border:1px solid rgba(0,0,0,0.04);font-size:13px;display:none}
+
+/* Loading animation */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  margin: 30px 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid transparent;
+  border-top: 4px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Skeleton loading for content */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* responsive */
+@media (max-width:420px){
+  :root{--max-w:100%}
+  .wrap{padding-left:12px;padding-right:12px}
+  .page-header h1{font-size:30px}
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Topbar updated to match personalinfo.html -->
+    <div class="topbar">
+      <div class="left">
+        <button class="btn-close" aria-label="Go back" onclick="goBack()">
+          <span class="material-rounded" style="font-size:22px">arrow_back</span>
+        </button>
+        <div class="logo">Cynvia<span class="one">One</span></div>
+      </div>
+      <div class="actions" aria-hidden="true">
+        <button class="action-icon" title="Help" aria-label="Help" onclick="openMailSupport()">
+          <span class="material-rounded icon-md">help</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>Your device</h1>
+      <p class="subtitle">Information about your device</p>
+      <p class="description">View details about the device you're signed in on, including Android version, battery status, and other system information.</p>
+    </div>
+
+    <!-- Loading animation in center -->
+    <div id="loadingContainer" class="loading-container">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Main content - hidden initially -->
+    <div id="mainContent" style="display: none;">
+      <div class="device-card" role="list" aria-label="Device information">
+        <div class="device-row" role="listitem" id="androidVersionRow">
+          <div class="icon-slot"><span class="material-rounded">android</span></div>
+          <div class="row-content">
+            <h3>Android version</h3>
+            <p id="androidVersionText">(User android version show here)</p>
+          </div>
+        </div>
+
+        <div class="device-row" role="listitem" id="screenResRow">
+          <div class="icon-slot"><span class="material-rounded">straighten</span></div>
+          <div class="row-content">
+            <h3>Screen resolutions</h3>
+            <p id="screenResText">(user mobile screen resolutions show here)</p>
+          </div>
+        </div>
+
+        <div class="device-row" role="listitem" id="statusRow">
+          <div class="icon-slot"><span class="status-dot" id="statusDot" title="status indicator"></span></div>
+          <div class="row-content">
+            <h3>Status</h3>
+            <p id="statusText">(user online or offline show here)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="more">Looking for something else?</div>
+
+      <div class="profile-section" role="list" aria-label="More options">
+        <!-- Removed user info block per request: only show two static options below -->
+
+        <div class="profile-item" id="aboutItem" tabindex="0" role="button" onclick="alert('About CynviaOne - Coming soon!')">
+          <div class="icon"><span class="material-rounded icon-lg">info</span></div>
+          <div class="content"><h3>About CynviaOne</h3><p>Learn more about CynviaOne</p></div>
+        </div>
+
+        <div class="profile-item" id="feedbackItem" tabindex="0" role="button" onclick="window.location.href='mailto:support.cynviaone@outlook.com?subject=Feedback'">
+          <div class="icon"><span class="material-rounded icon-lg">feedback</span></div>
+          <div class="content"><h3>Send feedback</h3><p>Share your thoughts with us</p></div>
+        </div>
+      </div>
+
+      <div id="notice" class="notice"></div>
+    </div>
+  </div>
+
+  <!-- Firebase compat scripts (client-side only) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
+    authDomain: "ouruiofficial.firebaseapp.com",
+    projectId: "ouruiofficial",
+    storageBucket: "ouruiofficial.firebasestorage.app",
+    messagingSenderId: "513335403025",
+    appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+    measurementId: "G-X5QWNP8DMK"
+  };
+
+  // initialize firebase safely (avoid double-init)
+  try {
+    if (!window.firebase || !firebase.apps || !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+  } catch(e) {
+    console.warn('Firebase init error:', e);
+  }
+  const auth = firebase.auth();
+
+  // UX helpers
+  function goBack(){ if (window.history.length>1) window.history.back(); else window.location.href='index.html'; }
+
+  // Help function
+  function openMailSupport(){
+    window.open('mailto:support.cynviaone@outlook.com?subject=Help%20with%20Device%20Information&body=Hello%20CynviaOne%20Team,%0A%0AI%20need%20help%20with%20my%20device%20information.%0A%0APlease%20describe%20your%20issue:%0A', '_blank');
+  }
+
+  // Device info functions
+  function detectAndroidVersion() {
+    try {
+      if (navigator.userAgentData && navigator.userAgentData.brands) {
+        // client hints often don't expose Android version — fallback to UA
+      }
+    } catch(e){}
+    const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+    const m = ua.match(/Android\s+([\d\.]+)/i) || ua.match(/Android\/([\d\.]+)/i);
+    if (m && m[1]) return m[1];
+    const m2 = ua.match(/Android\s*([0-9]+)/i);
+    if (m2 && m2[1]) return m2[1];
+    return 'Unknown';
+  }
+  function setAndroidVersionText() {
+    const el = document.getElementById('androidVersionText');
+    const ver = detectAndroidVersion();
+    el.textContent = ver ? ver : 'Unknown';
+  }
+  function setScreenResolutionText() {
+    const w = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
+    const h = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
+    const dpr = window.devicePixelRatio || 1;
+    document.getElementById('screenResText').textContent = `${w} × ${h} (dpr ${dpr})`;
+  }
+  function setStatusText() {
+    const online = navigator.onLine;
+    document.getElementById('statusText').textContent = online ? 'Online' : 'Offline';
+    document.getElementById('statusDot').style.background = '#000';
+  }
+
+  // Function to populate device data and show main content
+  function populateDeviceData() {
+    setAndroidVersionText();
+    setScreenResolutionText();
+    setStatusText();
+    
+    // Hide loading and show main content after data is populated
+    const loadingContainer = document.getElementById('loadingContainer');
+    const mainContent = document.getElementById('mainContent');
+    
+    loadingContainer.style.display = 'none';
+    mainContent.style.display = 'block';
+  }
+
+  // events & initial populate
+  window.addEventListener('resize', setScreenResolutionText);
+  window.addEventListener('orientationchange', setScreenResolutionText);
+  window.addEventListener('online', setStatusText);
+  window.addEventListener('offline', setStatusText);
+
+  // Simulate loading delay and then populate data
+  setTimeout(() => {
+    populateDeviceData();
+  }, 1500); // Show loading for 1.5 seconds
+
+  setInterval(function(){ 
+    if (document.getElementById('mainContent').style.display !== 'none') {
+      setAndroidVersionText(); 
+      setScreenResolutionText(); 
+      setStatusText(); 
+    }
+  }, 1500);
+
+  // ---------- Divider helper ----------
+  function adjustDividers(){
+    try {
+      const items = Array.from(document.querySelectorAll('.profile-section .profile-item'));
+      // remove class from all
+      items.forEach(it => it.classList.remove('first-visible'));
+      // find first visible item
+      const visible = items.find(it => {
+        const cs = window.getComputedStyle(it);
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && it.offsetParent !== null;
+      });
+      if (visible) visible.classList.add('first-visible');
+    } catch(e){
+      console.warn('adjustDividers error', e);
+    }
+  }
+
+  // call once on load (ensures divider correct before auth settles)
+  document.addEventListener('DOMContentLoaded', adjustDividers);
+
+  // ---------- Auth + UI ----------
+  const REDIRECT_FLAG = 'cynvia_auth_redirected';
+
+  function showNotice(text) {
+    const n = document.getElementById('notice');
+    n.style.display = text ? 'block' : 'none';
+    n.textContent = text || '';
+  }
+
+  // We intentionally removed the user-info block per request.
+  // updateUserUI now leaves only the two static options visible.
+  function updateUserUI(user) {
+    // don't attempt to populate any removed user elements
+    adjustDividers();
+    if (!user) {
+      // if not signed in, keep options visible and don't show user data
+      const isSigninPage = /\/?signin\.html$/i.test(location.pathname);
+      if (!isSigninPage) {
+        if (!sessionStorage.getItem(REDIRECT_FLAG)) {
+          const apiKeyLooksReal = firebaseConfig && firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('YOUR_API_KEY') && firebaseConfig.apiKey.length > 10;
+          if (apiKeyLooksReal) {
+            // keep original redirect behavior
+            sessionStorage.setItem(REDIRECT_FLAG, '1');
+            window.location.href = 'signin.html';
+          } else {
+            showNotice("Firebase config missing/invalid — paste your firebaseConfig into this file so auth redirect works.");
+          }
+        } else {
+          showNotice("Auth check: no user found. If you're signed in on another page, ensure this file uses the same firebaseConfig.");
+        }
+      }
+      return;
+    }
+
+    // user is signed in — we intentionally do not display a user info block here.
+    sessionStorage.removeItem(REDIRECT_FLAG);
+    showNotice('');
+    console.log('User signed in (hidden UI):', user.uid || user.email);
+  }
+
+  // Listen for auth state changes
+  try {
+    auth.onAuthStateChanged(function(user){
+      updateUserUI(user);
+    });
+  } catch(e) {
+    console.warn('Auth listener error:', e);
+    showNotice('Auth initialization error. Check console for details.');
+    // still ensure dividers are correct
+    adjustDividers();
+  }
+
+  // also re-adjust when window gains focus (useful if sign-in happened in another tab)
+  window.addEventListener('focus', adjustDividers);
+</script>
+</body>
+</html>
