@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CynviaOne — Login</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; }
+        .logo { font-size:22px; font-weight:700; }
+        .help-icon { width:30px; height:30px; border-radius:50%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+
+        .container { width:100%; max-width:420px; margin: 48px auto 24px; padding: 0 20px; display:flex; flex-direction:column; align-items:center; }
+        .welcome-title { font-size:34px; font-weight:700; text-align:center; margin-bottom:8px; }
+        .subtitle { color:#8b949e; font-size:16px; text-align:center; margin-bottom:28px; }
+
+        form { width:100%; }
+        .input-group { margin-bottom:14px; }
+        .input-field { width:100%; padding:14px 16px; border-radius:12px; border:0; background:#f1f3f4; font-size:16px; }
+        .input-field:focus { outline: 2px solid #000000; outline-offset: 2px; background-color: #ffffff; box-shadow: none; }
+        input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+            box-shadow: 0 0 0px 1000px white inset !important;
+            -webkit-text-fill-color: #000 !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .password-container { position:relative; }
+        .show-password { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#5f6368; }
+
+        .next-button { width:100%; padding:14px; border-radius:999px; border:0; background:#1677ff; color:#fff; font-weight:700; font-size:16px; cursor:pointer; margin-top:8px; }
+        .divider { margin:28px 0; color:#bfc7cc; text-align:center; font-size:13px; }
+
+        .google-signin { display:flex; flex-direction:column; align-items:center; cursor:pointer; margin-top:6px; }
+        .google-icon { width:56px; height:56px; border-radius:50%; background-size:cover; margin-bottom:8px; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iMjQiIGZpbGw9IndoaXRlIiBzdHJva2U9IiNlOWVjZWYiLz4KPHBhdGggZD0iTTM1LjMyIDI0LjU0NjFDMzUuMzIgMjMuNjQ2MSAzNS4yNDMgMjIuNzg5NCAzNS4xMDkgMjEuOTc2MUgyNC4xNDFWMjYuNzM5NEgzMC4yMDlDMjkuOTMgMjguMDQ2MSAyOS4xNjMgMjkuMDgwMSAyOC4xIDI5Ljc4NjFWMzIuNTQ2MUgzMS44NjRDMzMuNzM4IDMwLjg0NjEgMzUuMzIgMjcuOTQ2MSAzNS4zMiAyNC41NDYxWiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNMjQuMTQxIDM1LjIwNjFDMjcuMTQxIDM1LjIwNjEgMjkuNjY0IDM0LjI3NTggMzEuODY0IDMyLjU0NjFMMjguMSAyOS43ODYxQzI3LjIzNyAzMC4zODYxIDI2LjA5MSAzMC43MDYxIDI0LjE0MSAzMC43MDYxQzIxLjI2NCAzMC43MDYxIDE4LjgwNSAyOC45NjYxIDE3Ljk0MiAyNi41MzMxSDEzLjk5N1YyOS4zOTMxQzE2LjE5MyAzMy43NDYxIDI5Ljc5IDM1LjIwNjEgMjQuMTQxIDM1LjIwNjFaIiBmaWxsPSIjMzFBODUzIi8+CjxwYXRoIGQ9Ik0xNy45NDIgMjYuNTMzMUMxNy42NjMgMjUuNzMzMSAxNy41MDkgMjQuOTA2MSAxNy41MDkgMjQuMDQ2MUMxNy41MDkgMjMuMTg2MSAxNy42NjMgMjIuMzU5MSAxNy45NDIgMjEuNTU5MVYxOC42OTkxSDEzLjk5N0MxMy4xMzQgMjAuMzk5MSAxMi42NCAyMi4xODYxIDEyLjY0IDI0LjA0NjFDMTIuNjQgMjUuOTA2MSAxMy4xMzQgMjcuNjkzMSAxMy45OTcgMjkuMzkzMUwxNy45NDIgMjYuNTMzMVoiIGZpbGw9IiNGQkJDMDUiLz4KPHBhdGggZD0iTTI0LjE0MSAxNy4zODYxQzI2LjI0MSAxNy4zODYxIDI4LjA4MSAxOC4xMzkxIDI5LjUwNSAxOS40ODYxTDMyLjkwNSAxNi4wODYxQzMwLjY2MyAxNC4wMDYxIDI3LjY2MyAxMi44ODYxIDI0LjE0MSAxMi44ODYxQzE5Ljc5IDEyLjg4NjEgMTYuMTkzIDE1LjM0NjEgMTMuOTk3IDE4LjY5OTFMMTcuOTQyIDIxLjU1OTFDMTguODA1IDE5LjEyNjEgMjEuMjY0IDE3LjM4NjEgMjQuMTQxIDE3LjM4NjFaIiBmaWxsPSIjRUE0MzM1Ii8+Cjwvc3ZnPgo='); }
+
+        .footer { text-align:center; padding:16px; color:#bfc7cc; font-size:13px; }
+        .footer a { color:#bfc7cc; text-decoration:none; }
+        .footer a:hover { text-decoration:none; }
+
+        /* Bottom modal (reused) + rise-up animation */
+        .verify-modal-backdrop { position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center; background:rgba(0,0,0,0.28); z-index:20000; padding: 0 12px 18px; }
+        .verify-modal-backdrop.show { display:flex; }
+        .verify-modal { width:100%; max-width:420px; background:#ffffff; border-radius:20px; padding:18px 18px 20px; box-shadow: 0 18px 36px rgba(0,0,0,0.35); text-align:center; transform: translateY(0); position: relative; }
+        .verify-modal .sheet-handle { width:44px; height:6px; background:#e6e9ee; border-radius:6px; margin:6px auto 10px; display:block; }
+        .verify-modal h3 { font-size:24px; font-weight:800; margin:6px 0 6px; color:#0b0b0b; }
+        .verify-modal p { color:#7f8b91; font-size:15px; margin:0 10px 14px; line-height:1.45; }
+        .verify-icon { width:160px; height:120px; margin:10px auto 6px; display:block; object-fit:contain; }
+        .check-btn { background:none; border:0; color:#1677ff; font-weight:800; font-size:18px; padding:14px 6px; cursor:pointer; display:block; margin:6px auto 0; }
+        .small-note { color:#98a2a8; font-size:13px; margin-top:10px; }
+
+        /* Rise-up animation applied to all bottom-sheet popups */
+        .verify-modal-backdrop.show .verify-modal,
+        #genericModal.show .verify-modal {
+            animation: riseUp 360ms cubic-bezier(.2,.9,.2,1) both;
+        }
+        @keyframes riseUp {
+            0% { transform: translateY(28px); opacity: 0; }
+            60% { transform: translateY(-6px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (min-width:700px) {
+            .container { margin-top:80px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">CynviaOne</div>
+        <div class="help-icon">?</div>
+    </div>
+
+    <div class="container">
+        <h1 class="welcome-title">Sign in to CynviaOne</h1>
+        <p class="subtitle">Enter your account details to continue.</p>
+
+        <form id="loginForm" autocomplete="off">
+            <div id="step1" class="step active">
+                <div class="input-group">
+                    <input id="email" class="input-field" type="email" placeholder="E-mail" required />
+                </div>
+                <div class="input-group password-container">
+                    <input id="password" class="input-field" type="password" placeholder="Password" required />
+                    <button type="button" class="show-password" onclick="togglePassword()">Show</button>
+                </div>
+            </div>
+
+            <button type="button" id="signInBtn" class="next-button" onclick="signIn()">Sign in</button>
+        </form>
+
+        <div class="divider">——— Supported Service for continue ———</div>
+
+        <div class="google-signin" onclick="signInWithGoogle()">
+            <div class="google-icon"></div>
+            <div>Google</div>
+        </div>
+    </div>
+
+    <div class="footer"><a id="aboutLink" href="about/index.html">About</a> <span class="footer-separator">|</span> <a id="privacyLink" href="privacy-policy/index.html">Privacy policy</a></div>
+
+    <!-- Verification modal (bottom sheet) -->
+    <div id="verifyModal" class="verify-modal-backdrop" aria-hidden="true">
+        <div class="verify-modal" role="dialog" aria-modal="true" aria-labelledby="verifyTitle">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <h3 id="verifyTitle">Please verify your email</h3>
+            <p id="verifyDesc">Go to inbox in spam folder and verify your email.</p>
+            <img src="ic/verifyic.svg" alt="verify icon" class="verify-icon" onerror="this.style.display='none'"/>
+            <button id="checkVerifyBtn" class="check-btn" onclick="checkVerification()">Check</button>
+            <div class="small-note">If you don't see the email, check your spam/junk folder.</div>
+        </div>
+    </div>
+
+    <!-- Generic bottom modal for messages (reuses verify modal styling) -->
+    <div id="genericModal" class="verify-modal-backdrop" aria-hidden="true" style="display:none;">
+        <div class="verify-modal" role="dialog" aria-modal="true" aria-labelledby="genericTitle">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <h3 id="genericTitle">Message</h3>
+            <p id="genericDesc">This is a message.</p>
+            <img id="genericIcon" src="ic/verifyic.svg" alt="" class="verify-icon" onerror="this.style.display='none'"/>
+            <button id="genericOkBtn" class="check-btn" onclick="hideGenericModal()">Ok</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
+            authDomain: "ouruiofficial.firebaseapp.com",
+            projectId: "ouruiofficial",
+            storageBucket: "ouruiofficial.firebasestorage.app",
+            messagingSenderId: "513335403025",
+            appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+            measurementId: "G-X5QWNP8DMK"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Determine redirect target: ?redirect=... OR referrer (if same origin) OR fallback
+        const params = new URLSearchParams(window.location.search);
+        const redirectParam = params.get('redirect');
+        let redirectTo = '/u/account/index.html';
+        if (redirectParam) {
+            redirectTo = redirectParam;
+        } else if (document.referrer && document.referrer.startsWith(location.origin)) {
+            try { redirectTo = new URL(document.referrer).pathname || redirectTo; } catch(e) {}
+        }
+
+        function togglePassword() {
+            const p = document.getElementById('password');
+            const btn = document.querySelector('.show-password');
+            if (!p) return;
+            if (p.type === 'password') { p.type = 'text'; btn.textContent = 'Hide'; }
+            else { p.type = 'password'; btn.textContent = 'Show'; }
+        }
+
+        async function signIn() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showNetworkToast('Please enter both email and password');
+                return;
+            }
+
+            try {
+                const credential = await auth.signInWithEmailAndPassword(email, password);
+                const user = credential.user;
+                if (user.emailVerified) {
+                    // redirect back
+                    window.location.href = redirectTo;
+                } else {
+                    // show verification modal
+                    showVerifyModal();
+                }
+            } catch (err) {
+                console.error('Sign in error', err);
+                let msg = 'Unable to sign in. Please check your credentials.';
+                if (err.code === 'auth/user-not-found') msg = 'User not found. Please sign up first.';
+                else if (err.code === 'auth/wrong-password') msg = 'Incorrect password.';
+                else if (err.code === 'auth/invalid-email') msg = 'Invalid email address.';
+                showNetworkToast(msg);
+            }
+        }
+
+        async function signInWithGoogle() {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.addScope('profile');
+                provider.addScope('email');
+
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+
+                // Save user if new
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (!userDoc.exists) {
+                    await db.collection('users').doc(user.uid).set({
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName,
+                        photoURL: user.photoURL,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        authProvider: 'google'
+                    });
+                }
+
+                if (user.emailVerified) {
+                    window.location.href = redirectTo;
+                } else {
+                    showVerifyModal();
+                }
+            } catch (err) {
+                console.error('Google sign in error', err);
+                if (err.code !== 'auth/popup-closed-by-user') showNetworkToast('Failed to sign in with Google. Please try again.');
+            }
+        }
+
+        function showVerifyModal() {
+            const modal = document.getElementById('verifyModal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+            modal.classList.add('show');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        async function checkVerification() {
+            const btn = document.getElementById('checkVerifyBtn');
+            btn.disabled = true;
+            btn.textContent = 'Checking...';
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    showNetworkToast('No user found. Please sign in again.');
+                    btn.disabled = false;
+                    btn.textContent = 'Check';
+                    return;
+                }
+                await user.reload();
+                if (user.emailVerified) {
+                    window.location.href = redirectTo;
+                    return;
+                } else {
+                    showNetworkToast('Email not verified yet. Please check your inbox (and spam).');
+                    btn.disabled = false;
+                    btn.textContent = 'Check';
+                }
+            } catch (e) {
+                console.error(e);
+                showNetworkToast('Unable to check verification right now. Try again.');
+                btn.disabled = false;
+                btn.textContent = 'Check';
+            }
+        }
+
+        // Generic modal functions reused from signup
+        function showNetworkToast(message='Network error. Please try again later') {
+            const verifyBackdrop = document.getElementById('verifyModal');
+            const generic = document.getElementById('genericModal');
+            const titleEl = document.getElementById('genericTitle');
+            const descEl = document.getElementById('genericDesc');
+            const iconEl = document.getElementById('genericIcon');
+
+            titleEl.textContent = 'Notice';
+            descEl.textContent = message || 'Something happened';
+
+            if (iconEl) iconEl.style.display = 'none';
+
+            if (verifyBackdrop && verifyBackdrop.classList.contains('show')) {
+                showQuickInlineToast(message);
+                return;
+            }
+
+            if (generic) {
+                generic.style.display = 'flex';
+                generic.classList.add('show');
+                generic.setAttribute('aria-hidden', 'false');
+
+                setTimeout(() => { hideGenericModal(); }, 3800);
+            } else {
+                showQuickInlineToast(message);
+            }
+        }
+
+        function hideGenericModal() {
+            const generic = document.getElementById('genericModal');
+            if (!generic) return;
+            generic.classList.remove('show');
+            generic.style.display = 'none';
+            generic.setAttribute('aria-hidden', 'true');
+        }
+
+        function showQuickInlineToast(message) {
+            const existing = document.getElementById('tempToast');
+            if (existing) existing.remove();
+            const t = document.createElement('div');
+            t.id = 'tempToast';
+            t.style.position = 'fixed';
+            t.style.left = '50%';
+            t.style.bottom = '28px';
+            t.style.transform = 'translateX(-50%)';
+            t.style.background = '#fff';
+            t.style.padding = '12px 18px';
+            t.style.borderRadius = '12px';
+            t.style.boxShadow = '0 8px 30px rgba(0,0,0,0.2)';
+            t.style.zIndex = '30000';
+            t.style.fontWeight = '700';
+            t.textContent = message;
+            document.body.appendChild(t);
+            setTimeout(()=>{ t.remove(); }, 3200);
+        }
+
+        // Enter key to sign in when focus is inside form
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'Enter') {
+                const focused = document.activeElement;
+                const form = document.getElementById('loginForm');
+                if (form && form.contains(focused)) {
+                    e.preventDefault();
+                    signIn();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
