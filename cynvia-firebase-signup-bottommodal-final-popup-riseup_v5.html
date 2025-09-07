@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CynviaOne — Sign up</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Material Symbols (help) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=help" />
+
+  <style>
+    :root{
+      --blue:#0052CC;
+      --gray-light:#F7F8FA;
+      --card-bg:#E5E7EB;
+      --text-dark:#0A0A0A;
+      --text-muted:#333333;
+      --header-height:64px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: 'Roboto', sans-serif;
+      background:var(--gray-light);
+      color:var(--text-dark);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      padding:0;
+    }
+
+    /* Header: same as login v5 */
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0.5rem 0.75rem;
+      height:var(--header-height);
+      width:100%;
+      background:transparent;
+    }
+    .logo{ font-family:'Noto Sans',sans-serif; font-weight:700; font-size:1.25rem; color:var(--text-dark); user-select:none; }
+    .logo span{ color:var(--blue); }
+
+    .help-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      background:none; padding:8px 0 8px 8px; border-radius:6px; cursor:pointer; margin-right:0;
+    }
+    .help-btn .material-symbols-outlined{
+      font-variation-settings: "FILL" 1, "wght" 700;
+      font-size:28px; color:#000; line-height:1; user-select:none;
+    }
+
+    /* Center container (match login max width + padding) */
+    .container{ max-width:480px; width:100%; margin:0 auto; padding:1rem; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; }
+
+    .signup-card{
+      width:100%; background:var(--card-bg); border-radius:16px; padding:2rem 1.5rem; margin-top:2rem;
+      box-shadow:0 8px 28px rgba(0,0,0,0.06); text-align:center;
+    }
+
+    .welcome-title{ font-family:'Noto Sans',sans-serif; font-weight:700; font-size:2rem; margin-bottom:0.5rem; color:var(--text-dark) }
+    .welcome-title span{ color:var(--blue) }
+    .subtitle{ color:var(--text-muted); font-size:1rem; margin-bottom:1.5rem }
+
+    form{ width:100% }
+    .input-group{ margin-bottom:1rem }
+    .input-field{
+      width:100%; padding:0.75rem 1rem; border-radius:12px; border:2px solid transparent; background:#fff;
+      font-size:1rem; font-family:'Roboto',sans-serif; transition:all 0.18s ease;
+    }
+    .input-field:focus{ outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,82,204,0.1) }
+
+    .password-container{ position:relative }
+    .show-password{ position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-muted); font-weight:600; font-size:0.875rem }
+
+    .btn{ padding:0.75rem 1.5rem; font-size:1rem; font-weight:700; border-radius:999px; border:2px solid transparent; cursor:pointer; font-family:'Roboto',sans-serif }
+    .btn.primary{ background:var(--blue); color:#fff; width:100%; margin-top:0.5rem }
+    .btn.primary:hover{ background:#004299 }
+    .btn.primary:disabled{ background:#ccc; cursor:not-allowed }
+
+    .divider{ margin:2rem 0; color:var(--text-muted); text-align:center; font-size:0.875rem; position:relative }
+    .divider::before{ content:''; position:absolute; top:50%; left:0; right:0; height:1px; background:#ddd; z-index:1 }
+    .divider span{ background:var(--card-bg); padding:0 1rem; position:relative; z-index:2 }
+
+    .google-signin{ display:flex; flex-direction:column; align-items:center; cursor:pointer; padding:1rem; border-radius:12px; transition:background 0.18s ease }
+    .google-signin:hover{ background: rgba(0,82,204,0.05) }
+    .google-icon{ width:56px; height:56px; border-radius:50%; background-size:cover; margin-bottom:0.5rem; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iMjQiIGZpbGw9IndoaXRlIiBzdHJva2U9IiNlOWVjZWYiLz4KPHBhdGggZD0iTTM1LjMyIDI0LjU0NjFDMzUuMzIgMjMuNjQ2MSAzNS4yNDMgMjIuNzg5NCAzNS4xMDkgMjEuOTc2MUgyNC4xNDFWMjYuNzM5NEgzMC4yMDlDMjkuOTMgMjguMDQ2MSAyOS4xNjMgMjkuMDgwMSAyOC4xIDI5Ljc4NjFWMzIuNTQ2MUgzMS44NjRDMzMuNzM4IDMwLjg0NjEgMzUuMzIgMjcuOTQ2MSAzNS4zMiAyNC41NDYxWiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNMjQuMTQxIDM1LjIwNjFDMjcuMTQxIDM1LjIwNjEgMjkuNjY0IDM0LjI3NTggMzEuODY0IDMyLjU0NjFMMjguMSAyOS43ODYxQzI3LjIzNyAzMC4zODYxIDI2LjA5MSAzMC43MDYxIDI0LjE0MSAzMC43MDYxQzIxLjI2NCAzMC43MDYxIDE4LjgwNSAyOC45NjYxIDE3Ljk0MiAyNi41MzMxSDEzLjk5N1YyOS4zOTMxQzE2LjE5MyAzMy43NDYxIDI5Ljc5IDM1LjIwNjEgMjQuMTQxIDM1LjIwNjFaIiBmaWxsPSIjMzFBODUzIi8+CjxwYXRoIGQ9Ik0xNy45NDIgMjYuNTMzMUMxNy42NjMgMjUuNzMzMSAxNy41MDkgMjQuOTA2MSAxNy41MDkgMjQuMDQ2MUMxNy41MDkgMjMuMTg2MSAxNy42NjMgMjIuMzU5MSAxNy45NDIgMjEuNTU5MVYxOC42OTkxSDEzLjk5N0MxMy4xMzQgMjAuMzk5MSAxMi42NCAyMi4xODYxIDEyLjY0IDI0LjA0NjFDMTIuNjQgMjUuOTA2MSAxMy4xMzQgMjcuNjkzMSAxMy45OTcgMjkuMzkzMUwxNy45NDIgMjYuNTMzMVoiIGZpbGw9IiNGQkJDMDUiLz4KPHBhdGggZD0iTTI0LjE0MSAxNy4zODYxQzI2LjI0MSAxNy4zODYxIDI4LjA4MSAxOC4xMzkxIDI5LjUwNSAxOS40ODYxTDMyLjkwNSAxNi4wODYxQzMwLjY2MyAxNC4wMDYxIDI3LjY2MyAxMi44ODYxIDI0LjE0MSAxMi44ODYxQzE5Ljc5IDEyLjg4NjEgMTYuMTkzIDE1LjM0NjEgMTMuOTk3IDE4LjY5OTFMMTcuOTQyIDIxLjU1OTFDMTguODA1IDE5LjEyNjEgMjEuMjY0IDE3LjM4NjEgMjQuMTQxIDE3LjM4NjFaIiBmaWxsPSIjRUE0MzM1Ii8+Cjwvc3ZnPgo=') }
+
+    /* Footer */
+    .footer{ text-align:center; padding:1.5rem 0 1rem; color:var(--text-muted); font-size:0.875rem; margin-top:auto }
+    .footer a{ color:var(--blue); text-decoration:none }
+
+    /* Verify modal (show = rise up, hide = rise down) */
+    .verify-modal-backdrop{
+      position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center;
+      background:rgba(0,0,0,0.0); z-index:20000; padding:0 12px 12px;
+      transition: background-color 240ms ease, opacity 240ms ease;
+      opacity:0; visibility:hidden;
+    }
+    .verify-modal-backdrop.show{
+      display:flex;
+      background: rgba(0,0,0,0.28);
+      opacity:1; visibility:visible;
+    }
+    .verify-modal{
+      width:100%; max-width:420px; background:var(--card-bg); border-radius:20px; padding:18px;
+      box-shadow:0 18px 36px rgba(0,0,0,0.35); text-align:center; transform-origin:center;
+      opacity:0; transform: translateY(18px) scale(0.98);
+    }
+
+    /* Rise-up animation */
+    .verify-modal-backdrop.show .verify-modal{
+      animation: riseUp 360ms cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes riseUp {
+      0% { transform: translateY(28px) scale(0.96); opacity: 0; }
+      60% { transform: translateY(-6px) scale(1.02); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* Rise-down (hide) animation */
+    .verify-modal-backdrop.hide{
+      background: rgba(0,0,0,0.0);
+      opacity:0; visibility:hidden;
+    }
+    .verify-modal-backdrop.hide .verify-modal{
+      animation: riseDown 260ms cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes riseDown {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(28px) scale(0.96); opacity: 0; }
+    }
+
+    .verify-modal .sheet-handle{ width:44px; height:6px; background:#ccc; border-radius:6px; margin:6px auto 10px; display:block }
+    .verify-modal h3{ font-family:'Noto Sans',sans-serif; font-size:1.5rem; font-weight:700; margin:6px 0; color:var(--text-dark) }
+    .verify-modal p{ color:var(--text-muted); font-size:0.95rem; margin:0 10px 14px; line-height:1.45 }
+
+    /* Larger verify icon to match your request */
+    .verify-icon{ width:160px; height:160px; margin:10px auto 6px; display:block; object-fit:contain; }
+
+    .check-btn{ background:var(--blue); border:0; color:#fff; font-weight:700; font-size:1rem; padding:0.75rem 1.5rem; cursor:pointer; display:block; margin:6px auto 0; border-radius:999px }
+    .check-btn:hover{ background:#004299 }
+    .small-note{ color:var(--text-muted); font-size:0.8rem; margin-top:10px }
+
+    @media(min-width:700px){ .signup-card{ margin-top:3rem } }
+
+    /* Autofill fixes */
+    input:-webkit-autofill{ -webkit-box-shadow:0 0 0px 1000px #fff inset !important; box-shadow:0 0 0px 1000px #fff inset !important; -webkit-text-fill-color:#000 !important }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Cynvia<span>One</span></div>
+    <div class="help-btn" id="helpBtn" title="Help"><span class="material-symbols-outlined" aria-hidden="true">help</span></div>
+  </header>
+
+  <main class="container">
+    <section class="signup-card" aria-labelledby="signupTitle">
+      <h1 id="signupTitle" class="welcome-title">Create your Cynvia<span>One</span> account</h1>
+      <p class="subtitle">Sign up to access CynviaOne services</p>
+
+      <form id="signupForm" autocomplete="off" onsubmit="return false;">
+        <div id="step1" class="step active">
+          <div class="input-group"><input id="email" class="input-field" type="email" placeholder="E‑mail" required></div>
+          <div class="input-group password-container">
+            <input id="password" class="input-field" type="password" placeholder="Password" required>
+            <button type="button" class="show-password" onclick="togglePassword()">Show</button>
+          </div>
+        </div>
+
+        <div id="step2" class="step" style="display:none">
+          <div class="input-group"><input id="displayName" class="input-field" type="text" placeholder="Display name" required></div>
+        </div>
+
+        <button id="nextBtn" type="button" class="btn primary" onclick="nextStep()">Next</button>
+      </form>
+
+      <div class="divider"><span>Supported Service for continue</span></div>
+
+      <div class="google-signin" onclick="signInWithGoogle()">
+        <div class="google-icon" aria-hidden="true"></div>
+        <div class="google-text">Google</div>
+      </div>
+    </section>
+
+    <div class="footer"><a href="about/index.html">About</a> | <a href="privacy-policy/index.html">Privacy policy</a></div>
+  </main>
+
+  <!-- Verify modal (now supports riseUp and riseDown animations) -->
+  <div id="verifyModal" class="verify-modal-backdrop" aria-hidden="true">
+    <div class="verify-modal" role="dialog" aria-modal="true" aria-labelledby="verifyTitle">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <h3 id="verifyTitle">Please verify your email</h3>
+      <p id="verifyDesc">Go to inbox (and spam) and verify your email address.</p>
+      <img class="verify-icon" src="ic/verifyic.svg" alt="verify icon" onerror="this.style.display='none'">
+      <button id="checkVerifyBtn" class="check-btn" onclick="checkVerification()">Check</button>
+      <div class="small-note">If you don't see the email, check your spam/junk folder.</div>
+    </div>
+  </div>
+
+  <!-- Generic modal -->
+  <div id="genericModal" class="verify-modal-backdrop" aria-hidden="true" style="display:none">
+    <div class="verify-modal" role="dialog" aria-modal="true" aria-labelledby="genericTitle">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <h3 id="genericTitle">Message</h3>
+      <p id="genericDesc">This is a message.</p>
+      <img id="genericIcon" class="verify-icon" src="ic/verifyic.svg" alt="" onerror="this.style.display='none'">
+      <button id="genericOkBtn" class="check-btn" onclick="hideGenericModal()">Ok</button>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Firebase config (kept same)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDaRo6aKcg5Tju7spWUtLKOUBEItUpgF90",
+      authDomain: "ouruiofficial.firebaseapp.com",
+      projectId: "ouruiofficial",
+      storageBucket: "ouruiofficial.firebasestorage.app",
+      messagingSenderId: "513335403025",
+      appId: "1:513335403025:web:b965e1187d5386d52d87b0",
+      measurementId: "G-X5QWNP8DMK"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentStep = 1;
+
+    function togglePassword() {
+      const p = document.getElementById('password');
+      const btn = document.querySelector('.show-password');
+      if (!p) return;
+      if (p.type === 'password') { p.type = 'text'; btn.textContent = 'Hide'; }
+      else { p.type = 'password'; btn.textContent = 'Show'; }
+    }
+
+    function nextStep(){
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (currentStep === 1){
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        if (!email || !password){ showNetworkToast('Please fill required fields'); return; }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)){ showNetworkToast('Enter a valid email'); return; }
+        if (password.length < 8 || !/[A-Za-z]/.test(password)){ showNetworkToast('Password must be at least 8 chars and include a letter'); return; }
+
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+        nextBtn.textContent = 'Create Account';
+        currentStep = 2;
+        return;
+      }
+
+      // create account
+      if (currentStep === 2) createAccount();
+    }
+
+    async function createAccount(){
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = true;
+      nextBtn.textContent = 'Creating...';
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const displayName = document.getElementById('displayName').value.trim();
+
+      try{
+        const credential = await auth.createUserWithEmailAndPassword(email,password);
+        const user = credential.user;
+        if (displayName) await user.updateProfile({ displayName });
+        await db.collection('users').doc(user.uid).set({
+          uid: user.uid, email, displayName: displayName||'', createdAt: firebase.firestore.FieldValue.serverTimestamp(), authProvider: 'email'
+        });
+        await user.sendEmailVerification();
+        showVerifyModal();
+      }catch(err){
+        console.error(err);
+        let msg = 'Failed to create account. Try again.';
+        if (err.code === 'auth/email-already-in-use') msg = 'Email address already in use.';
+        else if (err.code === 'auth/weak-password') msg = 'Password is too weak.';
+        else if (err.code === 'auth/invalid-email') msg = 'Invalid email address.';
+        showNetworkToast(msg);
+        nextBtn.disabled = false;
+        nextBtn.textContent = 'Create Account';
+      }
+    }
+
+    function showVerifyModal(){
+      const modal = document.getElementById('verifyModal');
+      // ensure display & animation: remove any hide class, set display flex and add show class
+      modal.classList.remove('hide');
+      modal.style.display = 'flex';
+      // force reflow so animation restarts reliably
+      void modal.offsetWidth;
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+
+      // reset next button
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = false;
+      nextBtn.textContent = 'Create Account';
+    }
+
+    function hideVerifyModal(callback){
+      const modal = document.getElementById('verifyModal');
+      if (!modal.classList.contains('show')) {
+        // already hidden
+        if (callback) callback();
+        return;
+      }
+      // replace 'show' with 'hide' which triggers riseDown animation
+      modal.classList.remove('show');
+      modal.classList.add('hide');
+
+      // listen for animation end on the inner .verify-modal element to then fully hide
+      const sheet = modal.querySelector('.verify-modal');
+      const onAnimEnd = function(e){
+        // remove classes and hide
+        modal.style.display = 'none';
+        modal.classList.remove('hide');
+        modal.removeEventListener('animationend', onAnimEnd);
+        modal.setAttribute('aria-hidden','true');
+        if (typeof callback === 'function') callback();
+      };
+      // in case animationend doesn't fire, set a timeout fallback
+      modal.addEventListener('animationend', onAnimEnd);
+      setTimeout(()=> {
+        if (modal.style.display !== 'none') {
+          // fallback
+          modal.style.display = 'none';
+          modal.classList.remove('hide');
+          modal.setAttribute('aria-hidden','true');
+          try { modal.removeEventListener('animationend', onAnimEnd); } catch(e){}
+          if (typeof callback === 'function') callback();
+        }
+      }, 420);
+    }
+
+    async function checkVerification(){
+      const btn = document.getElementById('checkVerifyBtn');
+      btn.disabled = true;
+      btn.textContent = 'Checking...';
+      try{
+        const user = auth.currentUser;
+        if (!user){ showNetworkToast('No user found. Please sign in again.'); btn.disabled=false; btn.textContent='Check'; return; }
+        await user.reload();
+        if (user.emailVerified){
+          // play hide animation then redirect
+          hideVerifyModal(function(){
+            window.location.href = '/u/account/index.html';
+          });
+          return;
+        } else {
+          showNetworkToast('Email not verified yet. Check your inbox (spam).');
+          btn.disabled=false;
+          btn.textContent='Check';
+        }
+      }catch(e){ console.error(e); showNetworkToast('Unable to check verification. Try again.'); btn.disabled=false; btn.textContent='Check'; }
+    }
+
+    // Prevent clicking backdrop from closing modal (keep persistent)
+    document.getElementById('verifyModal').addEventListener('click', function(e){
+      if (e.target === this) { /* intentionally do nothing */ }
+    });
+
+    // Help button mailto (match login behavior)
+    document.getElementById('helpBtn').addEventListener('click', function(){ window.location.href = 'mailto:support.cynviaone@outlook.com'; });
+
+    // Google sign-in (same as before)
+    async function signInWithGoogle(){
+      try{
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('profile'); provider.addScope('email');
+        const result = await auth.signInWithPopup(provider);
+        const user = result.user;
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (!userDoc.exists){
+          await db.collection('users').doc(user.uid).set({
+            uid: user.uid, email: user.email, displayName: user.displayName, photoURL: user.photoURL, createdAt: firebase.firestore.FieldValue.serverTimestamp(), authProvider: 'google'
+          });
+        }
+        if (user.emailVerified) {
+          hideVerifyModal(function(){ window.location.href = '/u/account/index.html'; });
+        } else showVerifyModal();
+      }catch(err){ console.error(err); if (err.code !== 'auth/popup-closed-by-user') showNetworkToast('Failed to sign in with Google. Please try again.'); }
+    }
+
+    // Toast helpers (generic modal still auto-hides; verify modal remains until hideVerifyModal)
+    function showNetworkToast(message='Network error') {
+      const generic = document.getElementById('genericModal');
+      const titleEl = document.getElementById('genericTitle');
+      const descEl = document.getElementById('genericDesc');
+      const iconEl = document.getElementById('genericIcon');
+      titleEl.textContent = 'Notice'; descEl.textContent = message || 'Something happened';
+      if (iconEl) iconEl.style.display = 'none';
+      if (document.getElementById('verifyModal').classList.contains('show')) { showQuickInlineToast(message); return; }
+      if (generic) { generic.style.display = 'flex'; generic.classList.add('show'); generic.setAttribute('aria-hidden','false'); setTimeout(hideGenericModal,3800); } else showQuickInlineToast(message);
+    }
+    function hideGenericModal(){ const generic = document.getElementById('genericModal'); if(!generic) return; generic.classList.remove('show'); generic.style.display='none'; generic.setAttribute('aria-hidden','true'); }
+    function showQuickInlineToast(message){ const existing=document.getElementById('tempToast'); if(existing) existing.remove(); const t=document.createElement('div'); t.id='tempToast'; t.style.position='fixed'; t.style.left='50%'; t.style.bottom='28px'; t.style.transform='translateX(-50%)'; t.style.background='var(--card-bg)'; t.style.padding='12px 18px'; t.style.borderRadius='12px'; t.style.boxShadow='0 8px 30px rgba(0,0,0,0.2)'; t.style.zIndex='30000'; t.style.fontWeight='700'; t.style.color='var(--text-dark)'; t.textContent=message; document.body.appendChild(t); setTimeout(()=>t.remove(),3200); }
+
+    // form submit prevention and enter key behavior
+    document.getElementById('signupForm').addEventListener('submit', function(e){ e.preventDefault(); nextStep(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ const step2Visible = document.getElementById('step2').style.display !== 'none'; const activeInputs = step2Visible ? document.querySelectorAll('#step2 .input-field') : document.querySelectorAll('#step1 .input-field'); const focused = document.activeElement; for (let i=0;i<activeInputs.length;i++){ if (activeInputs[i] === focused){ e.preventDefault(); nextStep(); break; } } } });
+  </script>
+</body>
+</html>
