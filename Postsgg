@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Posts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&family=Quicksand:wght@300..700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
+    <style>
+        /* Your existing styles */
+        body { font-family: "Ubuntu", sans-serif; background: #f5f5f5; padding: 20px; }
+        .posts-text { font-size: 65px; font-family:"Bitcount prop Single", sans-serif; margin-top:45px; margin-bottom:0; }
+        .description { font-size: 18px; margin-top:0; }
+        .dev-box { background:black; color:white; border-radius:20px; padding:18px; margin-bottom:20px; }
+        .dev-about { margin-top:8px; margin-bottom:0; font-size:20px; }
+        .up-img { width:100%; max-height: 300px; object-fit:cover; border-radius:10px; margin:12px 0; }
+        .scroll-container { display:flex; overflow-x:auto; gap:10px; padding:10px 0; }
+        .scroll-btn { display:flex; align-items:center; gap:8px; background:white; color:black; border-radius:32px; padding:6px 10px; font-family:"Ubuntu",sans-serif; font-size:15px; text-decoration:none; border:0; }
+        .btn-ic { height:20px; width:20px; }
+        .like-btn { display:flex; align-items:center; gap:8px; background:white; color:black; border-radius:32px; padding:6px 10px; border:0; cursor:pointer; font-family:"Ubuntu", sans-serif; font-size:15px; }
+        .like-btn.liked { background:black; color:white; }
+        .empty-box { height:20px; }
+    </style>
+</head>
+<body>
+
+<h1 class="posts-text">Posts</h1>
+<p class="description">This page is a reflection of my journey, ideas, and imagination.</p>
+
+<div id="posts-container"></div>
+
+<script>
+async function loadPosts() {
+    try {
+        const response = await fetch('data.json');
+        const posts = await response.json();
+        const container = document.getElementById('posts-container');
+
+        posts.forEach(post => {
+            const devBox = document.createElement('div');
+            devBox.classList.add('dev-box');
+
+            // Post text
+            const postText = document.createElement('p');
+            postText.classList.add('dev-about');
+            postText.textContent = post.text;
+            devBox.appendChild(postText);
+
+            // Post image if exists
+            if(post.img){
+                const img = document.createElement('img');
+                img.src = post.img;
+                img.classList.add('up-img');
+                devBox.appendChild(img);
+            }
+
+            // Like button
+            const likeBtn = document.createElement('button');
+            likeBtn.classList.add('like-btn');
+            likeBtn.innerHTML = `<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"> Like`;
+            likeBtn.addEventListener('click', () => {
+                likeBtn.classList.toggle('liked');
+                likeBtn.innerHTML = likeBtn.classList.contains('liked') 
+                    ? `<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=ffffff" class="btn-ic"> Liked`
+                    : `<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"> Like`;
+            });
+            devBox.appendChild(likeBtn);
+
+            // Connected links if exist
+            if(post.links && post.links.length > 0){
+                const linkHeader = document.createElement('h4');
+                linkHeader.textContent = "• Connected Links";
+                linkHeader.style.marginTop = "12px";
+                devBox.appendChild(linkHeader);
+
+                const scrollContainer = document.createElement('div');
+                scrollContainer.classList.add('scroll-container');
+
+                post.links.forEach(link => {
+                    const a = document.createElement('a');
+                    a.href = link.url;
+                    a.classList.add('scroll-btn');
+                    a.target = "_blank";
+                    a.innerHTML = `<img src="https://img.icons8.com/?size=100&id=11101&format=png&color=000000" class="btn-ic"> ${link.name}`;
+                    scrollContainer.appendChild(a);
+                });
+                devBox.appendChild(scrollContainer);
+            }
+
+            container.appendChild(devBox);
+        });
+
+    } catch (error) {
+        console.error("Error loading posts:", error);
+    }
+}
+
+loadPosts();
+</script>
+</body>
+</html>
