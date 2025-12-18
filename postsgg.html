@@ -1,101 +1,330 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Posts</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single:wght@100..900&family=Quicksand:wght@300..700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=apps" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:
+opsz,wght,FILL,GRAD@20..48,100..700,1,-50..200&icon_names=verified"/>
     <style>
-        /* Your existing styles */
-        body { font-family: "Ubuntu", sans-serif; background: #f5f5f5; padding: 20px; }
-        .posts-text { font-size: 65px; font-family:"Bitcount prop Single", sans-serif; margin-top:45px; margin-bottom:0; }
-        .description { font-size: 18px; margin-top:0; }
-        .dev-box { background:black; color:white; border-radius:20px; padding:18px; margin-bottom:20px; }
-        .dev-about { margin-top:8px; margin-bottom:0; font-size:20px; }
-        .up-img { width:100%; max-height: 300px; object-fit:cover; border-radius:10px; margin:12px 0; }
-        .scroll-container { display:flex; overflow-x:auto; gap:10px; padding:10px 0; }
-        .scroll-btn { display:flex; align-items:center; gap:8px; background:white; color:black; border-radius:32px; padding:6px 10px; font-family:"Ubuntu",sans-serif; font-size:15px; text-decoration:none; border:0; }
-        .btn-ic { height:20px; width:20px; }
-        .like-btn { display:flex; align-items:center; gap:8px; background:white; color:black; border-radius:32px; padding:6px 10px; border:0; cursor:pointer; font-family:"Ubuntu", sans-serif; font-size:15px; }
-        .like-btn.liked { background:black; color:white; }
-        .empty-box { height:20px; }
+        .des-font {
+            font-family: "Ubuntu", sans serif;
+        }
+        
+        .posts-text {
+            font-size: 65px;
+            text-align: left;
+            margin-top: 45px;
+            margin-bottom: 0;
+            font-family:"Bitcount prop Single", sans serif;
+        }
+        .description {
+            font-size: 18px;
+            text-align: left;
+            margin-top: 0;
+        }
+        .empty-box {
+            height: 42px;
+        }
+        .menu-box {
+            background-color: black;
+            color: white;
+            text-align: right;
+            wieth: 100%;
+    height: fit-content;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 8px;
+    padding-bottom: 7px;
+    border-radius: 16px;
+    position: fixed;
+    z-index: 20000;
+    top: 8px;
+    right: 8px;
+        }
+        .menu-ic {
+            font-size: 28px;
+            color: white;
+            text-decoration: none;
+        }
+        .circle {
+            width: 100px;
+            height: 100px;
+            background: black;
+            border-radius: 50%;
+        }
+        .circle-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .empty-box2{
+            height: 12px;
+        }
+        .dev-box {
+            color: white;
+            background-color: black;
+            height: fit-content;
+            border-radius: 20px;
+            padding-left: 18px;
+            padding-top: 18px;
+            padding-bottom: 18px;
+            padding-right: 22px;
+            margin-bottom: 18px;
+        }
+        .dev-name {
+            font-size: 20px;
+            text-align: left;
+            font-family: "Bitcount Prop Single", sans serif;
+            margin: 0;
+        }
+        .tick-ic {
+            font-size: 20px;
+            vertical-align: middle;
+        }
+        .dev-roll {
+            font-size: 11px;
+            text-align: left;
+            margin: 0;
+        }
+        .dev-about {
+            font-size: 20px;
+            text-align: left;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+        .ic-box {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .scroll-container { 
+        display: flex; 
+        overflow-x: auto; 
+        gap: 10px; 
+        padding: 10px;
+        }
+        .scroll-btn {
+            background-color: white;
+            color: black;
+            border-radius: 32px;
+            height: fit-content;
+            width: fit-content;
+            padding-left: 8px;
+            padding-right: 10px;
+            padding-top: 6px;
+            padding-bottom: 6px;
+            border: 0;
+            font-size: 20px;
+            font-family: "Ubuntu", sans serif;
+            align-items: center;
+            gap: 8px;
+            display: flex;
+            text-decoration: none;
+        }
+        .scroll-btn2 {
+            background-color: white;
+            color: black;
+            border-radius: 32px;
+            height: fit-content;
+            width: fit-content;
+            padding-left: 8px;
+            padding-right: 10px;
+            padding-top: 6px;
+            padding-bottom: 6px;
+            border: 0;
+            font-size: 15px;
+            font-family: "Ubuntu", sans serif;
+            align-items: center;
+            gap: 8px;
+            display: flex;
+            text-decoration: none;
+        }
+        .btn-ic {
+            height: 20px;
+            width: 20px
+            
+        }
+        .con-link {
+        font-size: 25px;
+        font-family: "Ubuntu", sans serif;
+        text-align: left;
+        font-weight: 700;
+        }
+        .empty-box3 {
+            height: 10px;
+            width: 20px;
+        }
+        .box-cen {
+            align-items: center;
+            text-align: center;
+        }
+        .up-img {
+            height: 205px;
+            margin-top: 0;
+            border-radius: 10px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            width: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
+    <div class="menu-box">
+        <a href="menu.html"><span class="material-symbols-outlined menu-ic">apps</span></a>
+    </div>
+    <div class="empty-box"></div>            
+    <h1 class="posts-text">Posts</h1>
+    <p class="description des-font">This page is a reflection of my journey, ideas, and imagination. Here, I share my upcoming artworks, paintings in progress, creative thoughts, and inspirations behind each piece.
 
-<h1 class="posts-text">Posts</h1>
-<p class="description">This page is a reflection of my journey, ideas, and imagination.</p>
+Every post tells a story — sometimes through colors, sometimes through words. Stay connected to see what I’m creating next and what’s inspiring me along the way.</p>
+    <div class="empty-box2"></div>
 
-<div id="posts-container"></div>
+    <!-- Static profile box (your existing content) -->
+    <div class="dev-box">
+        <p class="dev-name">Vishal Vaishnav
+        <span class="material-symbols-outlined tick-ic">verified</span></p>
+        <p class="dev-roll">Primary Creator</p>
+        <p class="dev-about">Here show text..
+        </p>
+        <div class="box-cen">
+            <img src="https://photo-cdn2.icons8.com/NivAMgVEQwfQqUVpUrJVR2QFkFb5rm_OEFGhS4TnIGQ/rs:fit:1607:1072/wm:1:re:0:0:0.65/wmid:moose/q:98/czM6Ly9pY29uczgu/bW9vc2UtcHJvZC5h/c3NldHMvYXNzZXRz/L3NhdGEvb3JpZ2lu/YWwvMC82Yzk0ODk4/Ni00ODUzLTRhYmEt/OTQ1Ni1iNTBmMjg1/YzU0MDAuanBn.jpg" class="up-img"/>
+        </div>
+        <button class="scroll-btn like-static-btn">
+            <img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"/>
+            Like
+        </button>
+        <div class="empty-box3"></div>
+        <h class="con-link">• Connected Links</h>
+        <div class="scroll-container">
+            <a href="https://pinterest.com/Vishalvaishnavofficial" class="scroll-btn" target="_blank">
+                <img src="https://img.icons8.com/?size=100&id=11101&format=png&color=#000000" class="btn-ic"/> Pinterest
+            </a>
+            <a href="https://youtube.com/@VisualistVishal" class="scroll-btn" target="_blank">
+                <img src="https://img.icons8.com/?size=100&id=37326&format=png&color=000000" class="btn-ic"/> Youtube
+            </a>
+            <a href="https://open.spotify.com/user/31z3cs2aew3ntj573lgg3bxzmy7e?si=tQE3WK0nRgGxPiwHSfQeqQ" class="scroll-btn" target="_blank">
+                <img src="https://img.icons8.com/?size=100&id=11116&format=png&color=000000" class="btn-ic"/> Spotify
+            </a>
+        </div>
+    </div>
 
+    <!-- Dynamic posts will be appended here (script only touches this div) -->
+    <div id="posts-wrapper"></div>
+
+    <div class="ic-box">
+        <img src="https://clipart-library.com/8300/2368/di6LRjArT.jpg" width="120" height="30" class="img-ic" />
+    </div>
+
+<!-- ====== JavaScript: only this added ====== -->
 <script>
-async function loadPosts() {
+/*
+  Script behavior:
+  - Fetches "data.json" (an array of post objects).
+  - For each post object: { "text": "...", "img": "optional-url", "links": [ { "name":"", "url":"" }, ... ] }
+  - Creates a new .dev-box block (keeps your styles).
+  - Adds a Like button that toggles filled/outlined look by changing inline styles and text.
+*/
+
+(async function(){
+    const wrapper = document.getElementById('posts-wrapper');
+
+    // attempt to fetch data.json
     try {
-        const response = await fetch('data.json');
-        const posts = await response.json();
-        const container = document.getElementById('posts-container');
+        const res = await fetch('data.json');
+        if(!res.ok) throw new Error('data.json not found or not served (HTTP ' + res.status + ')');
+        const posts = await res.json();
+        if(!Array.isArray(posts)) throw new Error('data.json must be an array of posts');
 
         posts.forEach(post => {
-            const devBox = document.createElement('div');
-            devBox.classList.add('dev-box');
+            const box = document.createElement('div');
+            box.className = 'dev-box';
 
+            // Post author/name optionally (you can add author field later)
             // Post text
-            const postText = document.createElement('p');
-            postText.classList.add('dev-about');
-            postText.textContent = post.text;
-            devBox.appendChild(postText);
+            const pText = document.createElement('p');
+            pText.className = 'dev-about';
+            pText.textContent = post.text || '';
+            box.appendChild(pText);
 
-            // Post image if exists
+            // Image if provided
             if(post.img){
-                const img = document.createElement('img');
-                img.src = post.img;
-                img.classList.add('up-img');
-                devBox.appendChild(img);
+                const im = document.createElement('img');
+                im.className = 'up-img';
+                im.src = post.img;
+                im.alt = post.text ? post.text.substring(0,60) : 'post image';
+                box.appendChild(im);
             }
 
-            // Like button
+            // Like button (uses your scroll-btn style)
             const likeBtn = document.createElement('button');
-            likeBtn.classList.add('like-btn');
-            likeBtn.innerHTML = `<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"> Like`;
-            likeBtn.addEventListener('click', () => {
-                likeBtn.classList.toggle('liked');
-                likeBtn.innerHTML = likeBtn.classList.contains('liked') 
-                    ? `<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=ffffff" class="btn-ic"> Liked`
-                    : `<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"> Like`;
+            likeBtn.className = 'scroll-btn';
+            // initial outlined icon (black) and text "Like"
+            likeBtn.innerHTML = '<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"> Like';
+            likeBtn.dataset.liked = 'false';
+
+            likeBtn.addEventListener('click', function(){
+                const liked = this.dataset.liked === 'true';
+                if(!liked){
+                    // change to filled (black background, white text)
+                    this.style.backgroundColor = 'black';
+                    this.style.color = 'white';
+                    // replace icon with white icon (icons8)
+                    this.innerHTML = '<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=ffffff" class="btn-ic"> Liked';
+                    this.dataset.liked = 'true';
+                } else {
+                    // revert to outlined
+                    this.style.backgroundColor = '';
+                    this.style.color = '';
+                    this.innerHTML = '<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"> Like';
+                    this.dataset.liked = 'false';
+                }
             });
-            devBox.appendChild(likeBtn);
 
-            // Connected links if exist
-            if(post.links && post.links.length > 0){
-                const linkHeader = document.createElement('h4');
-                linkHeader.textContent = "• Connected Links";
-                linkHeader.style.marginTop = "12px";
-                devBox.appendChild(linkHeader);
+            box.appendChild(likeBtn);
 
-                const scrollContainer = document.createElement('div');
-                scrollContainer.classList.add('scroll-container');
+            // Small spacer (keeps your layout)
+            const spacer = document.createElement('div');
+            spacer.className = 'empty-box3';
+            box.appendChild(spacer);
 
-                post.links.forEach(link => {
+            // Links (if any)
+            if(Array.isArray(post.links) && post.links.length){
+                const header = document.createElement('h');
+                header.className = 'con-link';
+                header.textContent = '• Connected Links';
+                box.appendChild(header);
+
+                const sc = document.createElement('div');
+                sc.className = 'scroll-container';
+
+                post.links.forEach(l => {
                     const a = document.createElement('a');
-                    a.href = link.url;
-                    a.classList.add('scroll-btn');
-                    a.target = "_blank";
-                    a.innerHTML = `<img src="https://img.icons8.com/?size=100&id=11101&format=png&color=000000" class="btn-ic"> ${link.name}`;
-                    scrollContainer.appendChild(a);
+                    a.className = 'scroll-btn';
+                    a.href = l.url || '#';
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    // small generic icon for links (keeps look consistent)
+                    a.innerHTML = '<img src="https://img.icons8.com/?size=100&id=11101&format=png&color=000000" class="btn-ic"> ' + (l.name || l.url);
+                    sc.appendChild(a);
                 });
-                devBox.appendChild(scrollContainer);
+
+                box.appendChild(sc);
             }
 
-            container.appendChild(devBox);
+            wrapper.appendChild(box);
         });
 
-    } catch (error) {
-        console.error("Error loading posts:", error);
+    } catch (err) {
+        console.error(err);
+        // show a simple visible error so you know when data.json is missing
+        const errBox = document.createElement('div');
+        errBox.className = 'dev-box';
+        errBox.innerHTML = '<p class="dev-about">Error loading posts: ' + (err.message || 'unknown') + '</p>';
+        wrapper.appendChild(errBox);
     }
-}
-
-loadPosts();
+})();
 </script>
 </body>
-</html>
+        </html>
