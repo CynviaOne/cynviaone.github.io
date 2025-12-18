@@ -217,20 +217,23 @@ Every post tells a story — sometimes through colors, sometimes through words. 
         <img src="https://clipart-library.com/8300/2368/di6LRjArT.jpg" width="120" height="30" class="img-ic" />
     </div>
 
-<!-- ====== JavaScript: only this added ====== -->
 <script>
 /*
-  Script behavior:
-  - Fetches "data.json" (an array of post objects).
-  - For each post object: { "text": "...", "img": "optional-url", "links": [ { "name":"", "url":"" }, ... ] }
-  - Creates a new .dev-box block (keeps your styles).
-  - Adds a Like button that toggles filled/outlined look by changing inline styles and text.
+  - Adds dev header (Vishal Vaishnav + verified) to each post
+  - Adds default social links to every post (Pinterest, YouTube, Spotify)
+  - Appends any post-specific links after the default links
+  - Like button toggles between outlined / filled and changes text
 */
 
 (async function(){
     const wrapper = document.getElementById('posts-wrapper');
 
-    // attempt to fetch data.json
+    const defaultLinks = [
+        { name: "Pinterest", url: "https://pinterest.com/Vishalvaishnavofficial", iconId: "11101" },
+        { name: "YouTube", url: "https://youtube.com/@VisualistVishal", iconId: "37326" },
+        { name: "Spotify", url: "https://open.spotify.com/user/31z3cs2aew3ntj573lgg3bxzmy7e?si=tQE3WK0nRgGxPiwHSfQeqQ", iconId: "11116" }
+    ];
+
     try {
         const res = await fetch('data.json');
         if(!res.ok) throw new Error('data.json not found or not served (HTTP ' + res.status + ')');
@@ -241,7 +244,18 @@ Every post tells a story — sometimes through colors, sometimes through words. 
             const box = document.createElement('div');
             box.className = 'dev-box';
 
-            // Post author/name optionally (you can add author field later)
+            // DEV HEADER (default on all posts)
+            const nameP = document.createElement('p');
+            nameP.className = 'dev-name';
+            nameP.innerHTML = 'Vishal Vaishnav <span class="material-symbols-outlined tick-ic">verified</span>';
+            box.appendChild(nameP);
+
+            // role (optional, matching your static box)
+            const roleP = document.createElement('p');
+            roleP.className = 'dev-roll';
+            roleP.textContent = 'Primary Creator';
+            box.appendChild(roleP);
+
             // Post text
             const pText = document.createElement('p');
             pText.className = 'dev-about';
@@ -260,21 +274,17 @@ Every post tells a story — sometimes through colors, sometimes through words. 
             // Like button (uses your scroll-btn style)
             const likeBtn = document.createElement('button');
             likeBtn.className = 'scroll-btn';
-            // initial outlined icon (black) and text "Like"
             likeBtn.innerHTML = '<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"> Like';
             likeBtn.dataset.liked = 'false';
 
             likeBtn.addEventListener('click', function(){
                 const liked = this.dataset.liked === 'true';
                 if(!liked){
-                    // change to filled (black background, white text)
                     this.style.backgroundColor = 'black';
                     this.style.color = 'white';
-                    // replace icon with white icon (icons8)
                     this.innerHTML = '<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=ffffff" class="btn-ic"> Liked';
                     this.dataset.liked = 'true';
                 } else {
-                    // revert to outlined
                     this.style.backgroundColor = '';
                     this.style.color = '';
                     this.innerHTML = '<img src="https://img.icons8.com/?size=100&id=83997&format=png&color=000000" class="btn-ic"> Like';
@@ -284,41 +294,50 @@ Every post tells a story — sometimes through colors, sometimes through words. 
 
             box.appendChild(likeBtn);
 
-            // Small spacer (keeps your layout)
+            // Small spacer
             const spacer = document.createElement('div');
             spacer.className = 'empty-box3';
             box.appendChild(spacer);
 
-            // Links (if any)
+            // Connected Links header
+            const header = document.createElement('h');
+            header.className = 'con-link';
+            header.textContent = '• Connected Links';
+            box.appendChild(header);
+
+            const sc = document.createElement('div');
+            sc.className = 'scroll-container';
+
+            // Add default links first
+            defaultLinks.forEach(d => {
+                const a = document.createElement('a');
+                a.className = 'scroll-btn';
+                a.href = d.url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.innerHTML = `<img src="https://img.icons8.com/?size=100&id=${d.iconId}&format=png&color=000000" class="btn-ic"> ${d.name}`;
+                sc.appendChild(a);
+            });
+
+            // Then append any post-specific links (if present)
             if(Array.isArray(post.links) && post.links.length){
-                const header = document.createElement('h');
-                header.className = 'con-link';
-                header.textContent = '• Connected Links';
-                box.appendChild(header);
-
-                const sc = document.createElement('div');
-                sc.className = 'scroll-container';
-
                 post.links.forEach(l => {
                     const a = document.createElement('a');
                     a.className = 'scroll-btn';
                     a.href = l.url || '#';
                     a.target = '_blank';
                     a.rel = 'noopener noreferrer';
-                    // small generic icon for links (keeps look consistent)
-                    a.innerHTML = '<img src="https://img.icons8.com/?size=100&id=11101&format=png&color=000000" class="btn-ic"> ' + (l.name || l.url);
+                    a.innerHTML = `<img src="https://img.icons8.com/?size=100&id=11101&format=png&color=000000" class="btn-ic"> ${l.name || l.url}`;
                     sc.appendChild(a);
                 });
-
-                box.appendChild(sc);
             }
 
+            box.appendChild(sc);
             wrapper.appendChild(box);
         });
 
     } catch (err) {
         console.error(err);
-        // show a simple visible error so you know when data.json is missing
         const errBox = document.createElement('div');
         errBox.className = 'dev-box';
         errBox.innerHTML = '<p class="dev-about">Error loading posts: ' + (err.message || 'unknown') + '</p>';
